@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="table_todos">todos</string>
+    <string name="column_id">id</string>
+    <string name="column_name">name</string>
+    <string name="column_description">description</string>
+    <string name="column_is_done">is_done</string>
+    <string name="column_is_favourite">is_favourite</string>
+    <string name="column_is_deadline">deadline</string>
+
+
+
+</resources>
