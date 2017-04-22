@@ -16,6 +16,15 @@ public class Todo extends Model {
 
     //endregion
 
+    public Todo(String name, String description, boolean isDone, boolean isFavourite, Date deadline) {
+        this.name = name;
+        this.description = description;
+        this.isDone = isDone;
+        this.isFavourite = isFavourite;
+        this.deadline = deadline;
+    }
+
+
     //region Getter und Setter
 
     public String getName() {

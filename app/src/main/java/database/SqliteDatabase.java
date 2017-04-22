@@ -121,12 +121,12 @@ public class SqliteDatabase extends SQLiteOpenHelper {
                     if (cursor.moveToFirst()) {
                         do {
 
-                            Todo category = new Todo();
+                            //Todo category = new Todo();
 
                            // category.setID(cursor.getLong(cursor.getColumnIndex(columns[0])));
                            // category.setName(cursor.getString(cursor.getColumnIndex(columns[1])));
 
-                            list.add(category);
+                            //list.add(category);
                             //Log.d("Category", category.toString());
 
                         } while (cursor.moveToNext());
