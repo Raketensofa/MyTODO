@@ -10,12 +10,11 @@
     android:background="@android:color/white"
     tools:context="cgellner.mytodo.MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_todolist"
+    <ListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/listview_todolist"
         android:scrollbars="vertical"
-        android:background="#818486"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        xmlns:android="http://schemas.android.com/apk/res/android" />
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

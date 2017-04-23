@@ -4,51 +4,48 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-import models.Todo;
+import model.Todo;
 
 public class MainActivity extends Activity {
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-
 
     private ArrayList<Todo> todolist;
-
+    private  ListView listviewTodos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
+        createListviewTodos();
+    }
+
+
+    private void createListviewTodos(){
 
         try {
-
             todolist = new ArrayList<>();
             todolist.add(new Todo("Testtodo", "Das ist ein Test.", false, false, new Date(2017, 4, 22)));
             todolist.add(new Todo("Testtodo", "Das ist ein Test.", true, false, new Date(2017, 4, 22)));
-            todolist.add(new Todo("Testtodo", "Das ist ein Test.", false, true, new Date(2017,4,22)));
+            todolist.add(new Todo("Testtodo", "Das ist ein Test.", false, true, new Date(2017, 4, 22)));
 
+            TodolistArrayAdapter adapter = new TodolistArrayAdapter(this, todolist);
 
-            mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_todolist);
-            mRecyclerView.setHasFixedSize(true);
+            listviewTodos = (ListView) findViewById(R.id.listview_todolist);
+            listviewTodos.setAdapter(adapter);
 
-            mLayoutManager = new LinearLayoutManager(this);
-            mRecyclerView.setLayoutManager(mLayoutManager);
+        }catch (Exception ex){
 
-            mAdapter = new Todolist_recyclerview_adapter(todolist);
-            mRecyclerView.setAdapter(mAdapter);
-
-        } catch (Exception ex) {
-
+            Log.d(this.getClass().getName(), ex.getMessage());
         }
-
-
     }
 
 }
