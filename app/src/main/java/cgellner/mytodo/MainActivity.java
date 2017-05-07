@@ -45,12 +45,6 @@ public class MainActivity extends Activity {
 
         try {
 
-            todolist = new ArrayList<>();
-            todolist.add(new Todo("Testtodo", "Das ist ein Test.", false, false, new Date(2017, 4, 22)));
-            todolist.add(new Todo("Testtodo", "Das ist ein Test.", true, false, new Date(2017, 4, 22)));
-            todolist.add(new Todo("Testtodo", "Das ist ein Test.", false, true, new Date(2017, 4, 22)));
-
-
             Cursor todoCursor = database.getDatabase().rawQuery("SELECT  * FROM todo_items", null);
             listviewTodos = (ListView) findViewById(R.id.listview_todolist);
             TodoCursorAdapter todoCursorAdapter = new TodoCursorAdapter(this, todoCursor);

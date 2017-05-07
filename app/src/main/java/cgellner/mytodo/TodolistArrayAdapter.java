@@ -49,17 +49,16 @@ public class TodolistArrayAdapter extends ArrayAdapter<Todo> {
 
         //Werte zuweisen
         todoName.setText(todo.getName());
-        todoDeadline.setText("Fälligkeit: " + todo.getDeadline().toString());
-        todoIsDone.setChecked(todo.isDone());
+        todoDeadline.setText("Fälligkeit: " + todo.getDeadlineDate().toString() + " " + todo.getDeadlineTime().toString());
 
-        if(todo.isFavourite()){
+        boolean isdone = false;
+        if(todo.getIsDone() == 1){
 
-            todoIsFavourite.setRating(1);
-
-        }else{
-
-            todoIsFavourite.setRating(0);
+            isdone = true;
         }
+
+        todoIsDone.setChecked(isdone);
+        todoIsFavourite.setRating(todo.getIsFavourite());
 
         setListener();
 

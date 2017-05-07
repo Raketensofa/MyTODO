@@ -6,28 +6,27 @@ import android.app.TimePickerDialog;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Locale;
 
+import model.Todo;
+
 public class ActivityTodoForm extends Activity {
 
     private Button buttonSave;
-    private EditText name;
-    private EditText description;
-    private TextView dateEditText;
-    private TextView time;
-    private Switch isFavourite;
-
-    private DatePicker datePicker;
-    private TimePicker timePicker;
-
+    private EditText nameEdittext;
+    private EditText descriptionEdittext;
+    private TextView dateTextview;
+    private TextView timeTextview;
+    private CheckBox isFavouriteCheckbox;
 
 
     @Override
@@ -35,12 +34,7 @@ public class ActivityTodoForm extends Activity {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_activity_todo_form);
-
-        //name = (EditText)findViewById(R.id.todo_name_edittext);
-        //description = (EditText)findViewById(R.id.todo_description_edittext);
-        //dateEditText = (EditText)findViewById(R.id.todo_date_edittext);
-        //isFavourite = (Switch)findViewById(R.id.todo_isfavourite_switch);
+        setContentView(R.layout.activity_todo_form);
 
         setListener();
     }
@@ -49,8 +43,8 @@ public class ActivityTodoForm extends Activity {
 
     private void setListener(){
 
-        dateEditText = (EditText)findViewById(R.id.todo_date_edittext);
-        dateEditText.setOnClickListener(new View.OnClickListener() {
+        dateTextview = (TextView) findViewById(R.id.todo_date_textview);
+        dateTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -65,7 +59,7 @@ public class ActivityTodoForm extends Activity {
                         String myFormat = "dd.MM.yyyy";
                         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
 
-                        dateEditText.setText(sdf.format(myCalendar.getTime()));
+                        dateTextview.setText(sdf.format(myCalendar.getTime()));
                     }
 
                 };
@@ -75,8 +69,8 @@ public class ActivityTodoForm extends Activity {
         });
 
 
-        time = (EditText)findViewById(R.id.todo_time_edittext);
-        time.setOnClickListener(new View.OnClickListener() {
+        timeTextview = (TextView) findViewById(R.id.todo_time_textview);
+        timeTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -92,7 +86,7 @@ public class ActivityTodoForm extends Activity {
 
                                 String myFormat = "HH:mm";
                                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
-                                time.setText(sdf.format(myCalendar.getTime()));
+                                timeTextview.setText(sdf.format(myCalendar.getTime()));
                             }
                         };
 
@@ -100,13 +94,42 @@ public class ActivityTodoForm extends Activity {
 
             }
         });
-/**
-        buttonSave = (Button)findViewById(R.id.button_newTodo_save);
+
+        buttonSave = (Button)findViewById(R.id.button_save);
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                Todo newTodo = readTodoData(v);
+
+                Log.d("TODO", newTodo.toString());
             }
-        });*/
+        });
+    }
+
+
+    private Todo readTodoData(View v){
+
+        nameEdittext = (EditText)v.findViewById(R.id.todo_name_edittext);
+        descriptionEdittext = (EditText)v.findViewById(R.id.todo_description_edittext);
+        dateTextview = (TextView)v.findViewById(R.id.todo_date_textview);
+        timeTextview = (TextView)v.findViewById(R.id.todo_time_textview);
+        isFavouriteCheckbox = (CheckBox)v.findViewById(R.id.todo_isfavourite_checkbox);
+
+
+        String name = nameEdittext.getText().toString();
+        String description = descriptionEdittext.getText().toString();
+        String date = dateTextview.getText().toString();
+        String time = timeTextview.getText().toString();
+
+        int fav = 0;
+        if(isFavouriteCheckbox.isChecked()){
+            fav = 1;
+        }
+
+        Todo todoItem = new Todo(name, description, 0, fav, date, time);
+        todoItem.setCreated(Calendar.getInstance().getTime());
+
+        return todoItem;
     }
 }

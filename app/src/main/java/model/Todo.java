@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -10,18 +11,20 @@ public class Todo extends Model{
     //region Attribute
     private String name;
     private String description;
-    private boolean isDone;
-    private boolean isFavourite;
-    private Date deadline;
+    private int isDone;
+    private int isFavourite;
+    private String deadlineDate;
+    private String deadlineTime;
 
     //endregion
 
-    public Todo(String name, String description, boolean isDone, boolean isFavourite, Date deadline) {
+    public Todo(String name, String description, int isDone, int isFavourite, String date, String time) {
         this.name = name;
         this.description = description;
         this.isDone = isDone;
         this.isFavourite = isFavourite;
-        this.deadline = deadline;
+        this.deadlineTime = time;
+        this.deadlineDate = date;
     }
 
 
@@ -43,31 +46,53 @@ public class Todo extends Model{
         this.description = description;
     }
 
-    public boolean isDone() {
+    public int getIsDone() {
         return isDone;
     }
 
-    public void setDone(boolean done) {
-        isDone = done;
+    public void setIsDone(int isDone) {
+        this.isDone = isDone;
     }
 
-    public boolean isFavourite() {
+    public int getIsFavourite() {
         return isFavourite;
     }
 
-    public void setFavourite(boolean favourite) {
-        isFavourite = favourite;
+    public void setIsFavourite(int isFavourite) {
+        this.isFavourite = isFavourite;
     }
 
-    public Date getDeadline() {
-        return deadline;
+    public String getDeadlineDate() {
+        return deadlineDate;
     }
 
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
+    public void setDeadlineDate(String deadlineDate) {
+        this.deadlineDate = deadlineDate;
+    }
+
+    public String getDeadlineTime() {
+        return deadlineTime;
+    }
+
+    public void setDeadlineTime(String deadlineTime) {
+        this.deadlineTime = deadlineTime;
     }
 
     //endregion
+
+
+    @Override
+    public String toString() {
+        return "Todo{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", isDone=" + isDone +
+                ", isFavourite=" + isFavourite +
+                ", deadlineDate='" + deadlineDate + '\'' +
+                ", deadlineTime='" + deadlineTime + '\'' +
+                ", created='" + getCreated().toString() + '\'' +
+                '}';
+    }
 
 
 }
