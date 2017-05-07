@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by Carolin on 21.04.2017.
  */
-public class Todo extends Model {
+public class Todo extends Model{
 
     //region Attribute
     private String name;

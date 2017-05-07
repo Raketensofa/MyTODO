@@ -8,13 +8,45 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@android:color/white"
-    tools:context="cgellner.mytodo.MainActivity">
+    tools:context="cgellner.mytodo.MainActivity"
+    android:clickable="true">
 
     <ListView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/listview_todolist"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        style="@android:style/Widget.Material.Light.ListView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:choiceMode="singleChoice"
+        android:footerDividersEnabled="false"
+        android:theme="@android:style/Widget.Material.Light"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="false"
+        android:layout_above="@+id/todolist_button_newTodo"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TO-DO hinzufügen"
+        android:id="@+id/todolist_button_newTodo"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        style="@android:style/TextAppearance.Material.Button"
+        android:layout_centerVertical="true"
+        android:visibility="visible"
+        android:singleLine="true"
+        android:layout_marginBottom="3dp"
+        android:clickable="true"
+        android:enabled="true" />
 
 </RelativeLayout>

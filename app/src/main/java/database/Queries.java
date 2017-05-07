@@ -9,20 +9,20 @@ import cgellner.mytodo.R;
  */
 public abstract class Queries {
 
-    private final static String DATATYPE_TEXT = "TEXT";
-    private final static String DATATYPE_NUMERIC = "NUMERIC";
-    private final static String DATATYPE_INTEGER = "INTEGER";
-    private final static String PRIMARY_KEY_AUTO = "PRIMARY KEY AUTOINCREMENT";
-    private final static String NOT_NOLL = "NOT NULL";
+    public final static String DATATYPE_TEXT = "TEXT";
+    public final static String DATATYPE_NUMERIC = "NUMERIC";
+    public final static String DATATYPE_INTEGER = "INTEGER";
+    public final static String PRIMARY_KEY_AUTO = "PRIMARY KEY AUTOINCREMENT";
+    public final static String NOT_NOLL = "NOT NULL";
 
-    private final static String TABLE_TODOS = "todos";
+    public final static String TABLE_TODOS = "todos";
 
-    private final static String COLUMN_ID = "id";
-    private final static String COLUMN_NAME = "name";
-    private final static String COLUMN_DESCRIPTION = "description";
-    private final static String COLUMN_DEADLINE = "deadline";
-    private final static String COLUMN_ISFAVOURITE = "is_favourite";
-    private final static String COLUMN_ISDONE = "is_done";
+    public final static String COLUMN_ID = "id";
+    public final static String COLUMN_NAME = "name";
+    public final static String COLUMN_DESCRIPTION = "description";
+    public final static String COLUMN_DEADLINE = "deadline";
+    public final static String COLUMN_ISFAVOURITE = "is_favourite";
+    public final static String COLUMN_ISDONE = "is_done";
 
 
 

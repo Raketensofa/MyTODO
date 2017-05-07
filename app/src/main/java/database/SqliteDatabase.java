@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 import model.Todo;
@@ -15,7 +16,7 @@ import model.Todo;
 /**
  * Created by Carolin on 21.04.2017.
  */
-public class SqliteDatabase extends SQLiteOpenHelper {
+public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD {
 
     private static final String DATABASE_NAME = "Mytodo_Sqlite.db";
     private static final int DATABASE_VERSION = 1;
@@ -103,62 +104,14 @@ public class SqliteDatabase extends SQLiteOpenHelper {
     //region Private Methods
 
 
-    private ArrayList<Todo> getAllTodos(){
-
-        ArrayList<Todo> list = null;
-
-        if(Database.isOpen()) {
-
-            try {
-
-                list = new ArrayList<>();
-
-                Cursor cursor = Database.query(Queries.CREATE_TABLE_TODOS, Queries.COLUMNS_TABLE_TODOS, null, null, null, null, null);
-
-                if (cursor != null) {
-
-                    if (cursor.moveToFirst()) {
-                        do {
-
-                            //Todo category = new Todo();
-
-                           // category.setID(cursor.getLong(cursor.getColumnIndex(columns[0])));
-                           // category.setName(cursor.getString(cursor.getColumnIndex(columns[1])));
-
-                            //list.add(category);
-                            //Log.d("Category", category.toString());
-
-                        } while (cursor.moveToNext());
-                    }
-                }
-
-                cursor.close();
-
-            } catch (Exception ex) {
-
-                return null;
-
-            }
-        }
-
-        return list;
-    }
-
-
-    private Todo getTodo(long id) {
 
 
 
 
-        return null;
-    }
+    @Override
+    public Todo createTodo(Todo todoItem) {
 
-
-
-    private void insertData(String sql){
-
-
-        if(sql != null){
+      /**  if(sql != null){
 
             try{
 
@@ -176,8 +129,68 @@ public class SqliteDatabase extends SQLiteOpenHelper {
                 Log.e("Database", ex.getMessage());
 
             }}
+*/
+
+        return null;
     }
 
+    @Override
+    public List<Todo> readAllTodoItems() {
+
+        List<Todo> list = null;
+
+        if(Database.isOpen()) {
+
+            try {
+
+                list = new ArrayList<>();
+
+                Cursor cursor = Database.query(Queries.CREATE_TABLE_TODOS, Queries.COLUMNS_TABLE_TODOS, null, null, null, null, null);
+
+                if (cursor != null) {
+
+                    if (cursor.moveToFirst()) {
+                        do {
+
+                            //Todo category = new Todo();
+
+                            // category.setID(cursor.getLong(cursor.getColumnIndex(columns[0])));
+                            // category.setName(cursor.getString(cursor.getColumnIndex(columns[1])));
+
+                            //list.add(category);
+                            //Log.d("Category", category.toString());
+
+                        } while (cursor.moveToNext());
+                    }
+                }
+
+                cursor.close();
+
+            } catch (Exception ex) {
+
+                return null;
+
+            }
+
+        }
+
+        return list;
+    }
+
+    @Override
+    public Todo readTodoItem(long todoItemId) {
+        return null;
+    }
+
+    @Override
+    public Todo updateTodoItem(Todo item) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteTodoItem(long todoItemId) {
+        return false;
+    }
 
 
     //endregion
