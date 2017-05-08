@@ -3,7 +3,7 @@ package model;
 /**
  * Created by Carolin on 21.04.2017.
  */
-public class Contact extends Model{
+public class Contact{
 
 
 

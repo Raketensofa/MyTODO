@@ -1,5 +1,6 @@
 package cgellner.mytodo;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,17 +12,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
 
+import database.Queries;
 import database.SqliteDatabase;
 import model.Todo;
 
 public class MainActivity extends Activity {
 
 
-    private ArrayList<Todo> todolist;
     private ListView listviewTodos;
     private SqliteDatabase database;
     private Button buttonNewTodo;
@@ -45,7 +47,7 @@ public class MainActivity extends Activity {
 
         try {
 
-            Cursor todoCursor = database.getDatabase().rawQuery("SELECT  * FROM todo_items", null);
+            Cursor todoCursor = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS, null);
             listviewTodos = (ListView) findViewById(R.id.listview_todolist);
             TodoCursorAdapter todoCursorAdapter = new TodoCursorAdapter(this, todoCursor);
             listviewTodos.setAdapter(todoCursorAdapter);
@@ -77,8 +79,50 @@ public class MainActivity extends Activity {
     private void showFormForNewTodo(){
 
         Intent intent = new Intent(this, ActivityTodoForm.class);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+          if (requestCode == 1) {
+
+              if (resultCode == RESULT_OK) {
+
+                  //Daten auslesen die vom Benutzer eingegeben wurden
+                 Todo newTodo = createTodoIitem(data);
+
+                  //Daten speichern in der DB
+                  database.open();
+                  long id = database.createTodo(newTodo);
+
+
+                  if(id > 0){
+
+                      Toast.makeText(getApplicationContext(), "TODO gespeichert!", Toast.LENGTH_SHORT).show();
+
+                  }else{
+
+                      Toast.makeText(getApplicationContext(), "TODO konnte nicht gespeichert werden.", Toast.LENGTH_SHORT).show();
+                  }
+              }
+          }
+    }
+
+
+    private Todo createTodoIitem(Intent data){
+
+        Todo todoItem = new Todo();
+        todoItem.setName(data.getStringExtra(Queries.COLUMN_NAME));
+        todoItem.setDescription(data.getStringExtra(Queries.COLUMN_DESCRIPTION));
+        todoItem.setDeadlineDate(data.getStringExtra(Queries.COLUMN_DEADLINE_DATE));
+        todoItem.setDeadlineTime(data.getStringExtra(Queries.COLUMN_DEADLINE_TIME));
+        todoItem.setIsFavourite(data.getIntExtra(Queries.COLUMN_ISFAVOURITE, 0));
+        todoItem.setIsDone(data.getIntExtra(Queries.COLUMN_ISDONE, 0));
+
+        return todoItem;
     }
 
 }

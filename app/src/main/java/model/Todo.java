@@ -1,24 +1,36 @@
 package model;
 
-import java.sql.Time;
-import java.util.Date;
-
 /**
  * Created by Carolin on 21.04.2017.
  */
-public class Todo extends Model{
+public class Todo{
 
     //region Attribute
+    private long _id;
     private String name;
     private String description;
-    private int isDone;
-    private int isFavourite;
+    private int isDone; //1=is done - 0=is not done
+    private int isFavourite;  //1=is favourite - 0=is not favourite
     private String deadlineDate;
     private String deadlineTime;
 
     //endregion
 
-    public Todo(String name, String description, int isDone, int isFavourite, String date, String time) {
+
+
+
+    public Todo(String name, String description, int isDone, int isFavourite, String deadlineDate, String deadlineTime) {
+        this.name = name;
+        this.description = description;
+        this.isDone = isDone;
+        this.isFavourite = isFavourite;
+        this.deadlineDate = deadlineDate;
+        this.deadlineTime = deadlineTime;
+    }
+
+    public Todo(int id, String name, String description, int isDone, int isFavourite, String date, String time) {
+
+        this._id = id;
         this.name = name;
         this.description = description;
         this.isDone = isDone;
@@ -27,8 +39,19 @@ public class Todo extends Model{
         this.deadlineDate = date;
     }
 
+    public Todo() {
+    }
 
-    //region Getter und Setter
+//region Getter und Setter
+
+
+    public long get_id() {
+        return _id;
+    }
+
+    public void set_id(long _id) {
+        this._id = _id;
+    }
 
     public String getName() {
         return name;
@@ -84,15 +107,13 @@ public class Todo extends Model{
     @Override
     public String toString() {
         return "Todo{" +
-                "name='" + name + '\'' +
+                "_id=" + _id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", isDone=" + isDone +
                 ", isFavourite=" + isFavourite +
                 ", deadlineDate='" + deadlineDate + '\'' +
                 ", deadlineTime='" + deadlineTime + '\'' +
-                ", created='" + getCreated().toString() + '\'' +
                 '}';
     }
-
-
 }

@@ -3,6 +3,7 @@ package cgellner.mytodo;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TimePicker;
 
 import java.util.Locale;
 
+import database.Queries;
 import model.Todo;
 
 public class ActivityTodoForm extends Activity {
@@ -100,21 +102,33 @@ public class ActivityTodoForm extends Activity {
             @Override
             public void onClick(View v) {
 
-                Todo newTodo = readTodoData(v);
+                //Eingegebene Daten an die MainActivity zur Verarbeitung uebergeben
+
+                Todo newTodo = readTodoData();
 
                 Log.d("TODO", newTodo.toString());
+
+                Intent intent = new Intent();
+                intent.putExtra(Queries.COLUMN_NAME, newTodo.getName());
+                intent.putExtra(Queries.COLUMN_DESCRIPTION, newTodo.getDescription());
+                intent.putExtra(Queries.COLUMN_ISFAVOURITE, newTodo.getIsFavourite());
+                intent.putExtra(Queries.COLUMN_ISDONE, newTodo.getIsDone());
+                intent.putExtra(Queries.COLUMN_DEADLINE_DATE, newTodo.getDeadlineDate());
+                intent.putExtra(Queries.COLUMN_DEADLINE_TIME, newTodo.getDeadlineTime());
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
     }
 
 
-    private Todo readTodoData(View v){
+    private Todo readTodoData(){
 
-        nameEdittext = (EditText)v.findViewById(R.id.todo_name_edittext);
-        descriptionEdittext = (EditText)v.findViewById(R.id.todo_description_edittext);
-        dateTextview = (TextView)v.findViewById(R.id.todo_date_textview);
-        timeTextview = (TextView)v.findViewById(R.id.todo_time_textview);
-        isFavouriteCheckbox = (CheckBox)v.findViewById(R.id.todo_isfavourite_checkbox);
+        nameEdittext = (EditText)findViewById(R.id.todo_name_edittext);
+        descriptionEdittext = (EditText)findViewById(R.id.todo_description_edittext);
+        dateTextview = (TextView)findViewById(R.id.todo_date_textview);
+        timeTextview = (TextView)findViewById(R.id.todo_time_textview);
+        isFavouriteCheckbox = (CheckBox)findViewById(R.id.todo_isfavourite_checkbox);
 
 
         String name = nameEdittext.getText().toString();
@@ -128,7 +142,6 @@ public class ActivityTodoForm extends Activity {
         }
 
         Todo todoItem = new Todo(name, description, 0, fav, date, time);
-        todoItem.setCreated(Calendar.getInstance().getTime());
 
         return todoItem;
     }

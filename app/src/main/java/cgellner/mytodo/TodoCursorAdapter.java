@@ -42,23 +42,22 @@ public class TodoCursorAdapter extends CursorAdapter {
 
         //Werte aus Cursor auslesen
         String itemName = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_NAME));
-        String itemDedline = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE));
-        String itemIsDone =  cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISDONE));
-        String isFavourite =  cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISFAVOURITE));
+        String itemDedlineDate = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_DATE));
+        String itemDeadlineTime = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_TIME));
+        int itemIsDone =  cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISDONE));
+        int isFavourite =  cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISFAVOURITE));
 
 
         //Werte zuweisen
         todoName.setText(itemName);
-        todoDeadline.setText("Fälligkeit: " + itemDedline);
-        todoIsDone.setChecked(Boolean.parseBoolean(itemIsDone));
+        todoDeadline.setText("Fälligkeit: " + itemDedlineDate + " " + itemDeadlineTime);
+        todoIsDone.setChecked(false);
+        if(itemIsDone == 1){
 
-        if(Boolean.parseBoolean(isFavourite) == Boolean.TRUE){
-
-            todoIsFavourite.setRating(1);
-
-        }else{
-
-            todoIsFavourite.setRating(0);
+            todoIsDone.setChecked(true);
         }
+
+        todoIsFavourite.setRating(isFavourite);
+
     }
 }

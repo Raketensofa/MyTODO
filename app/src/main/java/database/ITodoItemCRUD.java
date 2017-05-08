@@ -9,10 +9,10 @@ import model.Todo;
  */
 public interface ITodoItemCRUD {
 
-    public Todo createTodo(Todo todoItem);
-    public List<Todo> readAllTodoItems();
-    public Todo readTodoItem(long todoItemId);
-    public Todo updateTodoItem(Todo item);
-    public boolean deleteTodoItem(long todoItemId);
+     long createTodo(Todo todoItem);
+     List<Todo> readAllTodoItems();
+     Todo readTodoItem(long todoItemId);
+     Todo updateTodoItem(Todo item);
+     boolean deleteTodoItem(long todoItemId);
     
 }
