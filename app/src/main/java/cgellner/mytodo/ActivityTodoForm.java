@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -38,6 +37,8 @@ public class ActivityTodoForm extends Activity {
 
         setContentView(R.layout.activity_todo_form);
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         setListener();
     }
 
@@ -45,6 +46,7 @@ public class ActivityTodoForm extends Activity {
 
     private void setListener(){
 
+        //DatePickerDialog oeffnen bei Klick auf Datum-Textbox
         dateTextview = (TextView) findViewById(R.id.todo_date_textview);
         dateTextview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +72,7 @@ public class ActivityTodoForm extends Activity {
             }
         });
 
-
+        //TimePickerDialog oeffnen bei Klick auf Uhrzeit-Textbox
         timeTextview = (TextView) findViewById(R.id.todo_time_textview);
         timeTextview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,20 +105,20 @@ public class ActivityTodoForm extends Activity {
             public void onClick(View v) {
 
                 //Eingegebene Daten an die MainActivity zur Verarbeitung uebergeben
-
                 Todo newTodo = readTodoData();
 
-                Log.d("TODO", newTodo.toString());
+                if(newTodo != null) {
 
-                Intent intent = new Intent();
-                intent.putExtra(Queries.COLUMN_NAME, newTodo.getName());
-                intent.putExtra(Queries.COLUMN_DESCRIPTION, newTodo.getDescription());
-                intent.putExtra(Queries.COLUMN_ISFAVOURITE, newTodo.getIsFavourite());
-                intent.putExtra(Queries.COLUMN_ISDONE, newTodo.getIsDone());
-                intent.putExtra(Queries.COLUMN_DEADLINE_DATE, newTodo.getDeadlineDate());
-                intent.putExtra(Queries.COLUMN_DEADLINE_TIME, newTodo.getDeadlineTime());
-                setResult(RESULT_OK, intent);
-                finish();
+                    Intent intent = new Intent();
+                    intent.putExtra(Queries.COLUMN_NAME, newTodo.getName());
+                    intent.putExtra(Queries.COLUMN_DESCRIPTION, newTodo.getDescription());
+                    intent.putExtra(Queries.COLUMN_ISFAVOURITE, newTodo.getIsFavourite());
+                    intent.putExtra(Queries.COLUMN_ISDONE, newTodo.getIsDone());
+                    intent.putExtra(Queries.COLUMN_DEADLINE_DATE, newTodo.getDeadlineDate());
+                    intent.putExtra(Queries.COLUMN_DEADLINE_TIME, newTodo.getDeadlineTime());
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         });
     }
@@ -124,24 +126,34 @@ public class ActivityTodoForm extends Activity {
 
     private Todo readTodoData(){
 
-        nameEdittext = (EditText)findViewById(R.id.todo_name_edittext);
-        descriptionEdittext = (EditText)findViewById(R.id.todo_description_edittext);
-        dateTextview = (TextView)findViewById(R.id.todo_date_textview);
-        timeTextview = (TextView)findViewById(R.id.todo_time_textview);
-        isFavouriteCheckbox = (CheckBox)findViewById(R.id.todo_isfavourite_checkbox);
+        Todo todoItem = null;
+
+        try {
+
+            nameEdittext = (EditText) findViewById(R.id.todo_name_edittext);
+            descriptionEdittext = (EditText) findViewById(R.id.todo_description_edittext);
+            dateTextview = (TextView) findViewById(R.id.todo_date_textview);
+            timeTextview = (TextView) findViewById(R.id.todo_time_textview);
+            isFavouriteCheckbox = (CheckBox) findViewById(R.id.todo_isfavourite_checkbox);
 
 
-        String name = nameEdittext.getText().toString();
-        String description = descriptionEdittext.getText().toString();
-        String date = dateTextview.getText().toString();
-        String time = timeTextview.getText().toString();
+            String name = nameEdittext.getText().toString();
+            String description = descriptionEdittext.getText().toString();
+            String date = dateTextview.getText().toString();
+            String time = timeTextview.getText().toString();
 
-        int fav = 0;
-        if(isFavouriteCheckbox.isChecked()){
-            fav = 1;
+            int fav = 0;
+            if (isFavouriteCheckbox.isChecked()) {
+                fav = 1;
+            }
+
+            todoItem = new Todo(name, description, 0, fav, date, time);
+
+        }catch (Exception ex){
+
+
+            return todoItem;
         }
-
-        Todo todoItem = new Todo(name, description, 0, fav, date, time);
 
         return todoItem;
     }

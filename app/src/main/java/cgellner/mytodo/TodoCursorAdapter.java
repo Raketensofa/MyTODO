@@ -1,6 +1,7 @@
 package cgellner.mytodo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import database.Queries;
+import model.Todo;
 
 /**
  * Created by Carolin on 07.05.2017.
@@ -41,16 +43,18 @@ public class TodoCursorAdapter extends CursorAdapter {
 
 
         //Werte aus Cursor auslesen
-        String itemName = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_NAME));
-        String itemDedlineDate = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_DATE));
-        String itemDeadlineTime = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_TIME));
-        int itemIsDone =  cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISDONE));
-        int isFavourite =  cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISFAVOURITE));
+        final long itemId = cursor.getLong(cursor.getColumnIndexOrThrow(Queries.COLUMN_ID));
+        final String itemName = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_NAME));
+        final String itemDescription = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DESCRIPTION));
+        final String itemDeadlineDate = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_DATE));
+        final String itemDeadlineTime = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_TIME));
+        final int itemIsDone =  cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISDONE));
+        final int isFavourite =  cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISFAVOURITE));
 
 
-        //Werte zuweisen
+        //Werte den Elementen in der Listen-Ansicht zuweisen
         todoName.setText(itemName);
-        todoDeadline.setText("Fälligkeit: " + itemDedlineDate + " " + itemDeadlineTime);
+        todoDeadline.setText("Fälligkeit: " + itemDeadlineDate + " " + itemDeadlineTime);
         todoIsDone.setChecked(false);
         if(itemIsDone == 1){
 
@@ -58,6 +62,6 @@ public class TodoCursorAdapter extends CursorAdapter {
         }
 
         todoIsFavourite.setRating(isFavourite);
-
     }
+
 }

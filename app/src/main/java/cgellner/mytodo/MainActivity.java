@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -27,6 +28,8 @@ public class MainActivity extends Activity {
     private ListView listviewTodos;
     private SqliteDatabase database;
     private Button buttonNewTodo;
+    private TodoCursorAdapter todoCursorAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,7 @@ public class MainActivity extends Activity {
 
             Cursor todoCursor = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS, null);
             listviewTodos = (ListView) findViewById(R.id.listview_todolist);
-            TodoCursorAdapter todoCursorAdapter = new TodoCursorAdapter(this, todoCursor);
+            todoCursorAdapter = new TodoCursorAdapter(this, todoCursor);
             listviewTodos.setAdapter(todoCursorAdapter);
 
 
@@ -78,7 +81,7 @@ public class MainActivity extends Activity {
 
     private void showFormForNewTodo(){
 
-        Intent intent = new Intent(this, ActivityTodoForm.class);
+        Intent intent = new Intent(getBaseContext(), ActivityTodoForm.class);
         startActivityForResult(intent, 1);
     }
 
@@ -102,6 +105,9 @@ public class MainActivity extends Activity {
                   if(id > 0){
 
                       Toast.makeText(getApplicationContext(), "TODO gespeichert!", Toast.LENGTH_SHORT).show();
+
+                      Cursor cur = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS, null);
+                      todoCursorAdapter.changeCursor(cur);
 
                   }else{
 

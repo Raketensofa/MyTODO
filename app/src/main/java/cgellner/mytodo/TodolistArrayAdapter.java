@@ -36,10 +36,8 @@ public class TodolistArrayAdapter extends ArrayAdapter<Todo> {
 
         Todo todo = getItem(position);
 
-        if (itemView == null) {
+        itemView = LayoutInflater.from(getContext()).inflate(R.layout.todo_list_item, parent, false);
 
-            itemView = LayoutInflater.from(getContext()).inflate(R.layout.todo_list_item, parent, false);
-        }
 
         //Bestandteile der View
         todoName = (TextView)itemView.findViewById(R.id.todo_textview_name);
