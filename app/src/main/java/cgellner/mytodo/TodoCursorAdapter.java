@@ -12,13 +12,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import database.Queries;
-import model.Todo;
 
 /**
  * Created by Carolin on 07.05.2017.
  */
 public class TodoCursorAdapter extends CursorAdapter {
-
 
     public TodoCursorAdapter(Context context, Cursor cursor) {
 
@@ -33,7 +31,7 @@ public class TodoCursorAdapter extends CursorAdapter {
 
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(final View view, final Context context, Cursor cursor) {
 
         //Bestandteile der View
         TextView todoName = (TextView)view.findViewById(R.id.todo_textview_name);
@@ -62,6 +60,26 @@ public class TodoCursorAdapter extends CursorAdapter {
         }
 
         todoIsFavourite.setRating(isFavourite);
+
+        //OnClickListener der View
+        //Detailview wird gestartet, wenn auf ein Item geklickt wird
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(v.getContext(), ActivityTodoDetail.class);
+
+                intent.putExtra(Queries.COLUMN_ID, itemId);
+                intent.putExtra(Queries.COLUMN_NAME, itemName);
+                intent.putExtra(Queries.COLUMN_DESCRIPTION, itemDescription);
+                intent.putExtra(Queries.COLUMN_ISFAVOURITE, isFavourite);
+                intent.putExtra(Queries.COLUMN_ISDONE, itemIsDone);
+                intent.putExtra(Queries.COLUMN_DEADLINE_DATE, itemDeadlineDate);
+                intent.putExtra(Queries.COLUMN_DEADLINE_TIME, itemDeadlineTime);
+
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 
 }
