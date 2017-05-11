@@ -1,5 +1,6 @@
 package model;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -178,7 +179,18 @@ public class Todo{
         isDone = newTodoData.getIsDone();
     }
 
+    public ContentValues createContentValues(){
 
+        ContentValues todoValues = new ContentValues();
+        todoValues.put(Queries.COLUMN_NAME, name);
+        todoValues.put(Queries.COLUMN_DESCRIPTION, description);
+        todoValues.put(Queries.COLUMN_ISFAVOURITE, isFavourite);
+        todoValues.put(Queries.COLUMN_ISDONE, isDone);
+        todoValues.put(Queries.COLUMN_DEADLINE_DATE, deadlineDate);
+        todoValues.put(Queries.COLUMN_DEADLINE_TIME, deadlineTime);
+
+        return todoValues;
+    }
 
 
 }

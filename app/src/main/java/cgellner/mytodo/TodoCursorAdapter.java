@@ -18,6 +18,14 @@ import model.Todo;
  */
 public class TodoCursorAdapter extends CursorAdapter {
 
+
+    private MainActivity MainActivity;
+
+    public void setMainActivity(MainActivity mainActivity) {
+        this.MainActivity = mainActivity;
+    }
+
+
     public TodoCursorAdapter(Context context, Cursor cursor) {
 
         super(context, cursor, 0);
@@ -33,6 +41,8 @@ public class TodoCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(final View view, final Context context, Cursor cursor) {
 
+        view.setClickable(true);
+
         //Werte aus Cursor auslesen
         final Todo todo = new Todo();
         todo.setAllDataFromCursor(cursor);
@@ -42,14 +52,14 @@ public class TodoCursorAdapter extends CursorAdapter {
 
         //OnClickListener der View
         //Detailview wird gestartet, wenn auf ein Item geklickt wird
-        view.setOnClickListener(new View.OnClickListener() {
+       view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(v.getContext(), ActivityTodoDetail.class);
-                intent.putExtra("type", "detail");
+                intent.putExtra(String.valueOf(R.string.view_mode), R.integer.VIEW_MODE_DETAIL);
                 todo.putToIntentExtras(intent);
-                context.startActivity(intent);
+                MainActivity.startActivityForResult(intent, R.integer.DETAIL_ACTIVITY);
             }
         });
     }

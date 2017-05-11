@@ -108,26 +108,20 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD {
 
         long newTodoId = 0;
 
-        ContentValues todoValues = new ContentValues();
-        todoValues.put(Queries.COLUMN_NAME, todoItem.getName());
-        todoValues.put(Queries.COLUMN_DESCRIPTION, todoItem.getDescription());
-        todoValues.put(Queries.COLUMN_ISFAVOURITE, todoItem.getIsFavourite());
-        todoValues.put(Queries.COLUMN_ISDONE, todoItem.getIsDone());
-        todoValues.put(Queries.COLUMN_DEADLINE_DATE, todoItem.getDeadlineDate());
-        todoValues.put(Queries.COLUMN_DEADLINE_TIME, todoItem.getDeadlineTime());
+        ContentValues todoValues = todoItem.createContentValues();
 
-            try{
+        try {
 
-                if(Database.isOpen()) {
+            if (Database.isOpen()) {
 
-                    newTodoId = Database.insert(Queries.TABLE_TODOS, null, todoValues);
-                }
-
-            }catch (Exception ex){
-
-                Log.e(this.getClass().getName(), ex.getMessage());
-                return -1;
+                newTodoId = Database.insert(Queries.TABLE_TODOS, null, todoValues);
             }
+
+        } catch (Exception ex) {
+
+            Log.e(this.getClass().getName(), ex.getMessage());
+            return -1;
+        }
 
         return newTodoId;
     }
@@ -153,26 +147,8 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD {
 
                             do {
 
-                                //Daten aus Cursor auslesen
-                                long todoId = cursor.getLong(cursor.getColumnIndexOrThrow(Queries.COLUMN_ID));
-                                String todoName = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_NAME));
-                                String todoDescr = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DESCRIPTION));
-                                String deadlineDate = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_DATE));
-                                String deadlineTime = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_TIME));
-                                int isFavourite = cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISFAVOURITE));
-                                int isDone = cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISDONE));
-
-                                //Daten einem neuen To-Do-Objekt zuweisen
                                 Todo todoItem = new Todo();
-                                todoItem.set_id(todoId);
-                                todoItem.setName(todoName);
-                                todoItem.setDescription(todoDescr);
-                                todoItem.setDeadlineDate(deadlineDate);
-                                todoItem.setDeadlineTime(deadlineTime);
-                                todoItem.setIsDone(isDone);
-                                todoItem.setIsFavourite(isFavourite);
-
-                                //To-Do zur Liste hinzufuegen
+                                todoItem.setAllDataFromCursor(cursor);
                                 list.add(todoItem);
 
                             } while (cursor.moveToNext());
@@ -202,6 +178,7 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD {
 
         try {
 
+
             if(Database.isOpen()) {
 
                 //Abfrage
@@ -212,25 +189,8 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD {
 
                         do {
 
-                            //Daten aus Cursor auslesen
-                            long todoId = cursor.getLong(cursor.getColumnIndexOrThrow(Queries.COLUMN_ID));
-                            String todoName = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_NAME));
-                            String todoDescr = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DESCRIPTION));
-                            String deadlineDate = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_DATE));
-                            String deadlineTime = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_TIME));
-                            int isFavourite = cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISFAVOURITE));
-                            int isDone = cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISDONE));
-
-                            //Daten einem neuen To-Do-Objekt zuweisen
                             todoItem = new Todo();
-                            todoItem.set_id(todoId);
-                            todoItem.setName(todoName);
-                            todoItem.setDescription(todoDescr);
-                            todoItem.setDeadlineDate(deadlineDate);
-                            todoItem.setDeadlineTime(deadlineTime);
-                            todoItem.setIsDone(isDone);
-                            todoItem.setIsFavourite(isFavourite);
-
+                            todoItem.setAllDataFromCursor(cursor);
 
                         } while (cursor.moveToNext());
                     }
@@ -251,17 +211,29 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD {
     }
 
 
-    //TODO Update-Implementierung
     @Override
-    public Todo updateTodoItem(Todo item) {
+    public boolean updateTodoItem(Todo item) {
 
+        boolean isUpdated = false;
 
+        if(Database.isOpen()) {
 
+            try {
 
+                ContentValues todoValues = item.createContentValues();
 
+                int result = Database.update(Queries.TABLE_TODOS, todoValues, "_id=" + item.get_id(), null);
 
+                if(result > 0){
+                    isUpdated = true;
+                }
 
-        return null;
+            } catch (Exception ex) {
+
+            }
+        }
+
+        return isUpdated;
     }
 
 
@@ -288,7 +260,6 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD {
 
             Log.e(this.getClass().getName(), ex.getMessage());
             return false;
-
         }
 
         return isDeleted;

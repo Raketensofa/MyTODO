@@ -1,8 +1,10 @@
 package cgellner.mytodo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import database.Queries;
 import model.Todo;
 
 public class ActivityTodoDetail extends Activity {
@@ -37,7 +40,7 @@ public class ActivityTodoDetail extends Activity {
     private MenuItem itemSave;
 
     private Todo CurrentTodo;
-    private String ViewMode;
+    private int ViewMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +53,12 @@ public class ActivityTodoDetail extends Activity {
         initToolbar();
 
         //Detailansicht oder Formular fuer ein neues To-Do
-        ViewMode = extraData.getString("type");
-        if(ViewMode.equals("new")){
+        ViewMode = extraData.getInt(String.valueOf(R.string.view_mode));
+        if(ViewMode == R.integer.VIEW_MODE_NEW){
             initNewTodoView();
             setListener();
 
-        }else if(ViewMode.equals("detail")){
+        }else if(ViewMode == R.integer.VIEW_MODE_DETAIL){
             initDetailView();
             CurrentTodo = new Todo();
             CurrentTodo.setDataFromIntentExtras(extraData);
@@ -82,7 +85,7 @@ public class ActivityTodoDetail extends Activity {
 
                 Intent intent = new Intent();
                 CurrentTodo.putToIntentExtras(intent);
-                setResult(RESULT_OK, intent);
+                setResult(R.integer.SAVE_TODO, intent);
                 finish();
 
                 return false;
@@ -125,9 +128,10 @@ public class ActivityTodoDetail extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                //Sind Sie sich sicher-Dialog?
-                //Wenn sicher, dann löschen aus DB
-
+                //Zeigt einen AlertDialog an und prueft, ob tatsaechlich geloescht werden soll
+                //Wenn geloescht werden soll, wird die ID des to-dos an die MainActitivy ueber einen Intent zureckgegeben
+                //Das Loeschen in der DB wird in der MainActivity dann ausgefuehrt
+                showDeleteAcceptDialog();
 
                 return false;
             }
@@ -169,8 +173,13 @@ public class ActivityTodoDetail extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-
-
+                Intent intent = new Intent();
+                long id = CurrentTodo.get_id();
+                CurrentTodo = readTodoDataFromComponents();
+                CurrentTodo.set_id(id);
+                CurrentTodo.putToIntentExtras(intent);
+                setResult(R.integer.UPDATE_TODO, intent);
+                finish();
 
                 return false;
             }
@@ -181,11 +190,11 @@ public class ActivityTodoDetail extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        if(ViewMode.equals("new")){
+        if(ViewMode == R.integer.VIEW_MODE_NEW){
 
             createNewTodoMenu(menu);
 
-        }else if(ViewMode.equals("detail")){
+        }else if(ViewMode == R.integer.VIEW_MODE_DETAIL){
 
             createTodoDetailStartMenu(menu);
         }
@@ -379,29 +388,32 @@ public class ActivityTodoDetail extends Activity {
     }
 
 
-    private void startTodoEdit(){
+    private void showDeleteAcceptDialog(){
 
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
+        alertDialogBuilder.setTitle("TODO löschen");
 
+        alertDialogBuilder
+                .setMessage("TODO tatsächlich löschen?")
+                .setCancelable(false)
+                .setPositiveButton("Ja",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
 
-    }
+                        Intent intent = new Intent();
+                        intent.putExtra(Queries.COLUMN_ID, CurrentTodo.get_id());
+                        setResult(R.integer.DELETE_TODO, intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("Nein",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
 
+                        dialog.cancel();
+                    }
+                });
 
-    private void cancelTodoEdit(){
-
-
-
-    }
-
-
-    private void deleteTodo(){
-
-
-    }
-
-
-    private void updateTodo(){
-
-
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

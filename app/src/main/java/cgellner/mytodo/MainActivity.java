@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -45,7 +46,6 @@ public class MainActivity extends Activity {
     }
 
 
-
     private void createListviewTodos(){
 
         try {
@@ -53,7 +53,9 @@ public class MainActivity extends Activity {
             Cursor todoCursor = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS, null);
             listviewTodos = (ListView) findViewById(R.id.listview_todolist);
             todoCursorAdapter = new TodoCursorAdapter(this, todoCursor);
+            todoCursorAdapter.setMainActivity(this);
             listviewTodos.setAdapter(todoCursorAdapter);
+
 
 
             // Switch to new cursor and update contents of ListView
@@ -82,8 +84,8 @@ public class MainActivity extends Activity {
     private void showFormForNewTodo(){
 
         Intent intent = new Intent(getBaseContext(), ActivityTodoDetail.class);
-        intent.putExtra("type", "new");
-        startActivityForResult(intent, 1);
+        intent.putExtra(String.valueOf(R.string.view_mode), R.integer.VIEW_MODE_NEW);
+        startActivityForResult(intent, R.integer.DETAIL_ACTIVITY);
     }
 
 
@@ -91,9 +93,9 @@ public class MainActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-          if (requestCode == 1) {
+          if (requestCode == R.integer.DETAIL_ACTIVITY) {
 
-              if (resultCode == RESULT_OK) {
+              if (resultCode == R.integer.SAVE_TODO) {
 
                   //Daten auslesen die vom Benutzer eingegeben wurden
                   Todo newTodo = new Todo();
@@ -102,7 +104,6 @@ public class MainActivity extends Activity {
                   //Daten speichern in der DB
                   database.open();
                   long id = database.createTodo(newTodo);
-
 
                   if(id > 0){
 
@@ -115,8 +116,44 @@ public class MainActivity extends Activity {
 
                       Toast.makeText(getApplicationContext(), "TODO konnte nicht gespeichert werden.", Toast.LENGTH_SHORT).show();
                   }
+
+              }else if(resultCode == R.integer.DELETE_TODO){
+
+                    long todoId = data.getLongExtra(Queries.COLUMN_ID, 0);
+                    database.open();
+                    boolean deleted = database.deleteTodoItem(todoId);
+
+                  if(deleted == true){
+
+                      Toast.makeText(getApplicationContext(), "TODO wurde gelöscht.", Toast.LENGTH_SHORT).show();
+                      Cursor cur = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS, null);
+                      todoCursorAdapter.changeCursor(cur);
+
+                  }else{
+
+                      Toast.makeText(getApplicationContext(), "Fehler beim Löschen aufgetreten.", Toast.LENGTH_SHORT).show();
+                  }
+              }else if(requestCode == R.integer.UPDATE_TODO){
+
+                  Todo newTodoData = new Todo();
+                  newTodoData.setDataFromIntentExtras(data.getExtras());
+
+                  database.open();
+                  boolean updated = database.updateTodoItem(newTodoData);
+
+                  if(updated == true){
+
+                      Toast.makeText(getApplicationContext(), "Daten geändert", Toast.LENGTH_SHORT).show();
+                      Cursor cur = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS, null);
+                      todoCursorAdapter.changeCursor(cur);
+
+                  }else{
+
+                      Toast.makeText(getApplicationContext(), "Daten nicht geändert", Toast.LENGTH_SHORT).show();
+                  }
               }
           }
     }
+
 
 }
