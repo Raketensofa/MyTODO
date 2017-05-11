@@ -121,11 +121,23 @@ public class ActivityTodoDetail extends Activity {
                 2, "Löschen");
         itemDelete.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         itemDelete.setIcon(R.drawable.ic_delete_white_24dp);
+        itemDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                //Sind Sie sich sicher-Dialog?
+                //Wenn sicher, dann löschen aus DB
+
+
+                return false;
+            }
+        });
+
 
 
         itemCancel = menu.add(Menu.NONE,
                 R.id.action_cancel_todo,
-                3, "Abbrechen");
+                4, "Abbrechen");
         itemCancel.setVisible(false);
         itemCancel.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         itemCancel.setIcon(R.drawable.ic_cancel_white_24dp);
@@ -133,8 +145,8 @@ public class ActivityTodoDetail extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                setComponentsEditMode(false);
                 setTodoDataToComponents();
+                setComponentsEditMode(false);
 
                 itemEdit.setVisible(true);
                 itemDelete.setVisible(true);
@@ -148,11 +160,21 @@ public class ActivityTodoDetail extends Activity {
 
         itemSave = menu.add(Menu.NONE,
                 R.id.action_delete_todo,
-                4, "Speichern");
+                3, "Speichern");
         itemSave.setVisible(false);
         itemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         itemSave.setIcon(R.drawable.ic_done_white_24dp);
 
+        itemSave.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+
+
+
+                return false;
+            }
+        });
     }
 
 
@@ -360,23 +382,14 @@ public class ActivityTodoDetail extends Activity {
     private void startTodoEdit(){
 
 
-        //IDEE: Menue neu erstellen
 
-        //Buttons in der Titelleiste anpassen
-        // menu.findItem(R.id.action_edit_todo).setVisible(false);
-        // menu.findItem(R.id.action_delete_todo).setVisible(false);
-        // menu.findItem(R.id.action_cancel_todo).setVisible(true);
-        // menu.findItem(R.id.action_todo_save).setVisible(true);
 
     }
 
 
     private void cancelTodoEdit(){
 
-        // menu.findItem(R.id.action_edit_todo).setVisible(true);
-        // menu.findItem(R.id.action_delete_todo).setVisible(true);
-        // menu.findItem(R.id.action_cancel_todo).setVisible(false);
-        // menu.findItem(R.id.action_todo_save).setVisible(false);
+
 
     }
 
