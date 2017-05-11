@@ -1,23 +1,15 @@
 package cgellner.mytodo;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.app.Activity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 import database.Queries;
 import database.SqliteDatabase;
@@ -89,7 +81,8 @@ public class MainActivity extends Activity {
 
     private void showFormForNewTodo(){
 
-        Intent intent = new Intent(getBaseContext(), ActivityTodoForm.class);
+        Intent intent = new Intent(getBaseContext(), ActivityTodoDetail.class);
+        intent.putExtra("type", "new");
         startActivityForResult(intent, 1);
     }
 
@@ -103,7 +96,8 @@ public class MainActivity extends Activity {
               if (resultCode == RESULT_OK) {
 
                   //Daten auslesen die vom Benutzer eingegeben wurden
-                 Todo newTodo = createTodoIitem(data);
+                  Todo newTodo = new Todo();
+                  newTodo.setDataFromIntentExtras(data.getExtras());
 
                   //Daten speichern in der DB
                   database.open();
@@ -123,20 +117,6 @@ public class MainActivity extends Activity {
                   }
               }
           }
-    }
-
-
-    private Todo createTodoIitem(Intent data){
-
-        Todo todoItem = new Todo();
-        todoItem.setName(data.getStringExtra(Queries.COLUMN_NAME));
-        todoItem.setDescription(data.getStringExtra(Queries.COLUMN_DESCRIPTION));
-        todoItem.setDeadlineDate(data.getStringExtra(Queries.COLUMN_DEADLINE_DATE));
-        todoItem.setDeadlineTime(data.getStringExtra(Queries.COLUMN_DEADLINE_TIME));
-        todoItem.setIsFavourite(data.getIntExtra(Queries.COLUMN_ISFAVOURITE, 0));
-        todoItem.setIsDone(data.getIntExtra(Queries.COLUMN_ISDONE, 0));
-
-        return todoItem;
     }
 
 }

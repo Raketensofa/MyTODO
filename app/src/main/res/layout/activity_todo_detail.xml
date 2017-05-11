@@ -14,7 +14,10 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+
+        >
+
     </Toolbar>
 
 
@@ -31,7 +34,7 @@
         android:inputType="text"
         android:singleLine="true"
         android:textSize="20dp"
-        android:layout_below="@+id/toolbar_details"
+        android:layout_below="@+id/todo_form_toolbar"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="false"
         android:layout_alignParentLeft="true"
@@ -145,22 +148,20 @@
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp" />
 
-
-    <Button
-        android:layout_width="wrap_content"
+    <CheckBox
+        style="@android:style/Widget.Material.CompoundButton.CheckBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Speichern"
-        android:id="@+id/button_save"
-        android:layout_marginBottom="24dp"
-        android:enabled="true"
+        android:text="Erledigt"
+        android:id="@+id/todo_isdone_checkbox"
+        android:textSize="20sp"
         android:clickable="true"
-        style="@android:style/TextAppearance.Material.Button"
-        android:layout_alignParentEnd="true"
+        android:enabled="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_below="@+id/todo_isfavourite_checkbox"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/todo_isfavourite_checkbox" />
+        android:layout_marginBottom="5dp" />
 
 
 </RelativeLayout>

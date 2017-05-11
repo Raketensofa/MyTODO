@@ -8,31 +8,31 @@
         app:showAsAction="always"
         android:icon="@drawable/ic_mode_edit_white_24dp"
         android:title="Bearbeiten"
-        android:orderInCategory="100"
+        android:orderInCategory="1"
         />
 
     <item
         android:id="@+id/action_delete_todo"
         android:title="Löschen"
-        android:orderInCategory="100"
+        android:orderInCategory="2"
         android:icon="@drawable/ic_delete_white_24dp"
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/action_cancel_todo"
+        android:id="@+id/action_todo_save"
         android:title="Löschen"
-        android:visible="false"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_cancel_white_24dp"
+        android:visible="true"
+        android:orderInCategory="3"
+        android:icon="@drawable/ic_done_white_24dp"
         app:showAsAction="always"/>
 
 
     <item
-        android:id="@+id/action_todo_save"
+        android:id="@+id/action_cancel_todo"
         android:title="Löschen"
-        android:visible="false"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_done_white_24dp"
+        android:visible="true"
+        android:orderInCategory="4"
+        android:icon="@drawable/ic_cancel_white_24dp"
         app:showAsAction="always"/>
 
 

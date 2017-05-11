@@ -1,5 +1,11 @@
 package model;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.os.Bundle;
+
+import database.Queries;
+
 /**
  * Created by Carolin on 21.04.2017.
  */
@@ -116,4 +122,63 @@ public class Todo{
                 ", deadlineTime='" + deadlineTime + '\'' +
                 '}';
     }
+
+
+    public void putToIntentExtras(Intent intent){
+
+        intent.putExtra(Queries.COLUMN_ID, _id);
+        intent.putExtra(Queries.COLUMN_NAME, name);
+        intent.putExtra(Queries.COLUMN_DESCRIPTION, description);
+        intent.putExtra(Queries.COLUMN_ISFAVOURITE, isFavourite);
+        intent.putExtra(Queries.COLUMN_ISDONE, isDone);
+        intent.putExtra(Queries.COLUMN_DEADLINE_DATE, deadlineDate);
+        intent.putExtra(Queries.COLUMN_DEADLINE_TIME, deadlineTime);
+
+    }
+
+
+    public void setDataFromIntentExtras(Bundle data){
+
+        if(data != null) {
+
+            _id = data.getLong(Queries.COLUMN_ID);
+             name = data.getString(Queries.COLUMN_NAME);
+            description = data.getString(Queries.COLUMN_DESCRIPTION);
+            deadlineDate = data.getString(Queries.COLUMN_DEADLINE_DATE);
+            deadlineTime = data.getString(Queries.COLUMN_DEADLINE_TIME);
+            isDone = data.getInt(Queries.COLUMN_ISDONE, -1);
+            isFavourite = data.getInt(Queries.COLUMN_ISFAVOURITE, -1);
+        }
+    }
+
+
+    public void setAllDataFromCursor(Cursor cursor) {
+
+        if(cursor != null) {
+
+            _id = cursor.getLong(cursor.getColumnIndexOrThrow(Queries.COLUMN_ID));
+            name = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_NAME));
+            description = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DESCRIPTION));
+            deadlineDate = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_DATE));
+            deadlineTime = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_TIME));
+            isDone = cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISDONE));
+            isFavourite = cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISFAVOURITE));
+        }
+    }
+
+
+    public void updateData(Todo newTodoData){
+
+        _id = newTodoData.get_id();
+        name = newTodoData.getName();
+        description = newTodoData.getDescription();
+        deadlineDate = newTodoData.getDeadlineDate();
+        deadlineTime = newTodoData.getDeadlineTime();
+        isFavourite = newTodoData.getIsFavourite();
+        isDone = newTodoData.getIsDone();
+    }
+
+
+
+
 }
