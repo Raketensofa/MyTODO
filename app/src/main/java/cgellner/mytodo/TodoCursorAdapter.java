@@ -67,7 +67,7 @@ public class TodoCursorAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(v.getContext(), ActivityTodoDetail.class);
+                Intent intent = new Intent(v.getContext(), ActivityTodoForm.class);
 
                 intent.putExtra(Queries.COLUMN_ID, itemId);
                 intent.putExtra(Queries.COLUMN_NAME, itemName);

@@ -21,7 +21,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ActivityTodoForm" />
-        <activity android:name=".ActivityTodoDetail"></activity>
     </application>
 
 </manifest>

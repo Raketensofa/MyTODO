@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toolbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,6 +32,13 @@ public class ActivityTodoForm extends Activity {
     private TextView timeTextview;
     private CheckBox isFavouriteCheckbox;
 
+    private MenuItem itemEdit;
+    private MenuItem itemDelete;
+    private MenuItem itemCancel;
+    private MenuItem itemSave;
+
+    private Bundle extraData;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +47,14 @@ public class ActivityTodoForm extends Activity {
 
         setContentView(R.layout.activity_todo_form);
 
+        Toolbar toolbar = (android.widget.Toolbar)findViewById(R.id.todo_form_toolbar);
+        setActionBar(toolbar);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle("TODO Details");
+
+        extraData = getIntent().getExtras();
+        setTodoDataToElements(extraData);
+
 
         setListener();
     }
@@ -160,16 +176,115 @@ public class ActivityTodoForm extends Activity {
     }
 
 
+    //TODO
+    private void setTodoDataToElements(Bundle data){
+
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        itemEdit = menu.add(Menu.NONE,
+                R.id.action_edit_todo,
+                1, "Bearbeiten");
+        itemEdit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        itemEdit.setIcon(R.drawable.ic_mode_edit_white_24dp);
+
+
+
+        itemDelete = menu.add(Menu.NONE,
+                R.id.action_delete_todo,
+                2, "Löschen");
+        itemDelete.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        itemDelete.setIcon(R.drawable.ic_delete_white_24dp);
+
+
+        itemCancel = menu.add(Menu.NONE,
+                R.id.action_cancel_todo,
+                3, "Abbrechen");
+        itemCancel.setVisible(false);
+        itemCancel.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        itemCancel.setIcon(R.drawable.ic_cancel_white_24dp);
+
+
+        itemSave = menu.add(Menu.NONE,
+                R.id.action_delete_todo,
+                4, "Speichern");
+        itemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        itemSave.setVisible(false);
+        itemSave.setIcon(R.drawable.ic_done_white_24dp);
+
+
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case android.R.id.home:
-                finish();
+            case R.id.action_edit_todo:
+
+                startTodoEdit();
+
+            case R.id.action_delete_todo:
+
+                deleteTodo();
+
+            case R.id.action_cancel_todo:
+
+                cancelTodoEdit();
+
+            case R.id.action_todo_save:
+
+                updateTodo();
+
+                // case android.R.id.home:
+                //   finish();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+    private void startTodoEdit(){
+
+
+        //IDEE: Menue neu erstellen
+
+        //Buttons in der Titelleiste anpassen
+        // menu.findItem(R.id.action_edit_todo).setVisible(false);
+        // menu.findItem(R.id.action_delete_todo).setVisible(false);
+        // menu.findItem(R.id.action_cancel_todo).setVisible(true);
+        // menu.findItem(R.id.action_todo_save).setVisible(true);
+
+    }
+
+    private void cancelTodoEdit(){
+
+        // menu.findItem(R.id.action_edit_todo).setVisible(true);
+        // menu.findItem(R.id.action_delete_todo).setVisible(true);
+        // menu.findItem(R.id.action_cancel_todo).setVisible(false);
+        // menu.findItem(R.id.action_todo_save).setVisible(false);
+
+    }
+
+    private void deleteTodo(){
+
+
+    }
+
+    private void updateTodo(){
+
+
     }
 }
