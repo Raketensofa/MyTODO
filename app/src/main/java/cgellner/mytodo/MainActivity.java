@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import database.Queries;
 import database.SqliteDatabase;
@@ -21,9 +21,12 @@ public class MainActivity extends Activity {
 
     private ListView listviewTodos;
     private SqliteDatabase database;
-    private Button buttonNewTodo;
     private TodoCursorAdapter todoCursorAdapter;
 
+    private MenuItem itemNew;
+    private MenuItem itemSort;
+    private MenuItem itemSortMode1;
+    private MenuItem itemSortMode2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +38,43 @@ public class MainActivity extends Activity {
         database = new SqliteDatabase(this);
         database.open();
 
-        setButtonListener();
         createListviewTodos();
+
+        initToolbar();
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        createToolbarButtons(menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+
+    private void createToolbarButtons(Menu menu){
+
+        itemNew = menu.add(Menu.NONE,
+                R.id.action_new_todo,
+                1, "Neu");
+        itemNew.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        itemNew.setIcon(R.drawable.ic_add_white_24dp);
+
+        itemNew.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                showFormForNewTodo();
+                return false;
+            }
+        });
+
+        itemSort = menu.add(Menu.NONE,
+                R.id.action_sort_todolist,
+                2, "Sortieren");
+        itemSort.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        itemSort.setIcon(R.drawable.ic_sort_white_24dp);
+
+
     }
 
 
@@ -50,7 +82,7 @@ public class MainActivity extends Activity {
 
         try {
 
-            Cursor todoCursor = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS, null);
+            Cursor todoCursor = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS + " ORDER BY " + Queries.COLUMN_ISDONE + "," + Queries.COLUMN_DEADLINE_DATE + "," + Queries.COLUMN_DEADLINE_TIME + " ASC", null);
             listviewTodos = (ListView) findViewById(R.id.listview_todolist);
             todoCursorAdapter = new TodoCursorAdapter(this, todoCursor);
             todoCursorAdapter.setMainActivity(this);
@@ -65,19 +97,6 @@ public class MainActivity extends Activity {
 
             Log.d(this.getClass().getName(), ex.getMessage());
         }
-    }
-
-
-    private void setButtonListener(){
-
-        buttonNewTodo = (Button)findViewById(R.id.todolist_button_newTodo);
-        buttonNewTodo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                showFormForNewTodo();
-            }
-        });
     }
 
 
@@ -153,6 +172,14 @@ public class MainActivity extends Activity {
                   }
               }
           }
+    }
+
+
+    private void initToolbar(){
+
+        Toolbar toolbar = (android.widget.Toolbar)findViewById(R.id.todo_main_toolbar);
+        toolbar.setTitle("MyTODO");
+        setActionBar(toolbar);
     }
 
 

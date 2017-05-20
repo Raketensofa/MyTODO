@@ -43,7 +43,6 @@ public class TodolistArrayAdapter extends ArrayAdapter<Todo> {
         todoName = (TextView)itemView.findViewById(R.id.todo_textview_name);
         todoDeadline = (TextView)itemView.findViewById(R.id.todo_textview_deadline);
         todoIsDone = (CheckBox)itemView.findViewById(R.id.todo_checkbox_isdone);
-        todoIsFavourite = (RatingBar)itemView.findViewById(R.id.todo_start_isfavourite);
 
         //Werte zuweisen
         todoName.setText(todo.getName());
@@ -56,7 +55,6 @@ public class TodolistArrayAdapter extends ArrayAdapter<Todo> {
         }
 
         todoIsDone.setChecked(isdone);
-        todoIsFavourite.setRating(todo.getIsFavourite());
 
         setListener();
 
