@@ -13,19 +13,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import cgellner.mytodo.R;
 import model.Todo;
 
 
 /**
  * Created by Carolin on 21.04.2017.
  */
-public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD {
+public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, IMainSettingsCRUD {
 
 
     //region Fields
 
     private static final String DATABASE_NAME = "Mytodo_Sqlite.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 6;
     private Context context;
     private SQLiteDatabase Database;
 
@@ -69,6 +70,8 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD {
 
             Database = sqLiteDatabase;
             Database.execSQL(Queries.CREATE_TABLE_TODOS);
+            Database.execSQL(Queries.CREATE_TABLE_MAIN_SETTINGS);
+
 
         }catch (Exception ex){
 
@@ -94,6 +97,8 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Queries.TABLE_TODOS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Queries.TABLE_MAIN_SETTINGS);
+
         this.onCreate(sqLiteDatabase);
     }
 
@@ -266,5 +271,93 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD {
     }
 
 
+    @Override
+    public long createMainSettings() {
 
+        long mainSettingId = -1;
+
+        try {
+
+            ContentValues settingValues = new ContentValues();
+            settingValues.put(Queries.COLUMN_SORTMODE, R.integer.SORT_MODE_DEADLINE_FAVOURITE);
+
+            if (Database.isOpen()) {
+
+                mainSettingId = Database.insert(Queries.TABLE_MAIN_SETTINGS, null, settingValues);
+            }
+
+        } catch (Exception ex) {
+
+            Log.e(this.getClass().getName(), ex.getMessage());
+            return mainSettingId;
+        }
+
+        return mainSettingId;
+    }
+
+
+    @Override
+    public int readSortMode() {
+
+        int mode = -1;
+        Cursor cursor = null;
+
+        try {
+
+            if(Database.isOpen()) {
+
+                cursor = Database.query(Queries.TABLE_MAIN_SETTINGS, new String[]{Queries.COLUMN_SORTMODE}, null, null, null, null, null);
+
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+
+                        do {
+                             mode = cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_SORTMODE));
+
+                        } while (cursor.moveToNext());
+                    }
+                }
+            }
+
+        } catch (Exception ex) {
+
+            Log.e(this.getClass().getName(), ex.getMessage());
+            return mode;
+
+        }finally {
+
+            cursor.close();
+        }
+
+        return mode;
+    }
+
+
+    @Override
+    public boolean updateSortMode(int mode) {
+
+        boolean isUpdated = false;
+
+        if(Database.isOpen()) {
+
+            try {
+
+                ContentValues settingValues = new ContentValues();
+                settingValues.put(Queries.COLUMN_SORTMODE, mode);
+
+                int result = Database.update(Queries.TABLE_MAIN_SETTINGS, settingValues, null, null);
+
+                if(result > 0){
+                    isUpdated = true;
+                }
+
+            } catch (Exception ex) {
+
+                Log.e(this.getClass().getName(), ex.getMessage());
+
+            }
+        }
+
+        return isUpdated;
+    }
 }

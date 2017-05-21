@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_new_todo"
         android:title="Neu"
-        android:orderInCategory="2"
+        android:orderInCategory="1"
         android:icon="@drawable/ic_add_white_24dp"
         app:showAsAction="always"/>
 
@@ -13,21 +13,8 @@
     <item
         android:id="@+id/action_sort_todolist"
         app:showAsAction="always"
-        android:icon="@drawable/ic_sort_white_24dp"
+        android:icon="@drawable/ic_swap_vert_white_24dp"
         android:title="Sortieren"
-        android:orderInCategory="2" >
-
-         <menu xmlns:android="http://schemas.android.com/apk/res/android">
-            <item android:id="@+id/action_sort_date_isFavourite"
-                android:title="Fälligkeit + Wichtigkeit"
-                app:showAsAction="ifRoom|withText" />
-
-            <item android:id="@+id/action_sort_isFavourite_date"
-                android:title="Wichtigkeit + Fälligkeit"
-                app:showAsAction="ifRoom|withText" />
-
-        </menu>
-    </item>
-
+        android:orderInCategory="2" />
 
 </menu>

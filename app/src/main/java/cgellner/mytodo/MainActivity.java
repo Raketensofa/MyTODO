@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -25,8 +24,9 @@ public class MainActivity extends Activity {
 
     private MenuItem itemNew;
     private MenuItem itemSort;
-    private MenuItem itemSortMode1;
-    private MenuItem itemSortMode2;
+
+    private int SortMode; //1 = Faelligkeit+Wichtigkeit  - 2= Wichtigkeit+Faelligkeit
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +38,17 @@ public class MainActivity extends Activity {
         database = new SqliteDatabase(this);
         database.open();
 
-        createListviewTodos();
-
         initToolbar();
 
+        SortMode = database.readSortMode();
+        if (SortMode < 1) {
+            database.createMainSettings();
+            SortMode = database.readSortMode();
+        }
+
+        Log.e("SortMode", String.valueOf(SortMode));
+
+        initTodoListView();
     }
 
     @Override
@@ -68,35 +75,98 @@ public class MainActivity extends Activity {
             }
         });
 
+
+
         itemSort = menu.add(Menu.NONE,
                 R.id.action_sort_todolist,
-                2, "Sortieren");
+                2, "Sortiermodus");
+
+        if(SortMode == R.integer.SORT_MODE_DEADLINE_FAVOURITE){
+
+            itemSort.setIcon(R.drawable.ic_swap_vert_white_24dp);
+
+        }else if(SortMode == R.integer.SORT_MODE_FAVOURITE_DEADLINE){
+
+            itemSort.setIcon(R.drawable.ic_swap_vertical_circle_white_24dp);
+        }
+
         itemSort.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        itemSort.setIcon(R.drawable.ic_sort_white_24dp);
 
+        itemSort.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
 
+                if(SortMode == R.integer.SORT_MODE_DEADLINE_FAVOURITE){   //Datum + Wichtigkeit
+
+                    boolean updated = database.updateSortMode(R.integer.SORT_MODE_FAVOURITE_DEADLINE);
+                    Log.e("Sortmode updated", String.valueOf(updated));
+
+                    if(updated == true) {
+                        SortMode = R.integer.SORT_MODE_FAVOURITE_DEADLINE;
+                        item.setIcon(R.drawable.ic_swap_vertical_circle_white_24dp);
+                        initTodoListView();
+                        Toast.makeText(getApplicationContext(), "Sortierung nach Wichtigkeit + Fälligkeit", Toast.LENGTH_SHORT).show();
+                    }
+
+                }else if(SortMode == R.integer.SORT_MODE_FAVOURITE_DEADLINE) { //Wichtigkeit + Datum
+
+                    boolean updated = database.updateSortMode(R.integer.SORT_MODE_DEADLINE_FAVOURITE);
+
+                    if (updated == true) {
+
+                        SortMode = R.integer.SORT_MODE_DEADLINE_FAVOURITE;
+                        item.setIcon(R.drawable.ic_swap_vert_white_24dp);
+                        initTodoListView();
+                        Toast.makeText(getApplicationContext(), "Sortierung nach Fälligkeit + Wichtigkeit", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                return false;
+            }
+        });
     }
 
 
-    private void createListviewTodos(){
+    private void initTodoListView(){
 
         try {
 
-            Cursor todoCursor = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS + " ORDER BY " + Queries.COLUMN_ISDONE + "," + Queries.COLUMN_DEADLINE_DATE + "," + Queries.COLUMN_DEADLINE_TIME + " ASC", null);
             listviewTodos = (ListView) findViewById(R.id.listview_todolist);
-            todoCursorAdapter = new TodoCursorAdapter(this, todoCursor);
+            todoCursorAdapter = new TodoCursorAdapter(this, createTodoListCursor(SortMode));
             todoCursorAdapter.setMainActivity(this);
             listviewTodos.setAdapter(todoCursorAdapter);
 
-
-
-            // Switch to new cursor and update contents of ListView
-            // todoAdapter.changeCursor(newCursor);
-
-        }catch (Exception ex){
+        }catch (Exception ex) {
 
             Log.d(this.getClass().getName(), ex.getMessage());
         }
+    }
+
+
+    private Cursor createTodoListCursor(int sortMode){
+
+        Cursor cursor = null;
+
+        if(sortMode == R.integer.SORT_MODE_DEADLINE_FAVOURITE){
+
+            cursor = database.getDatabase().rawQuery("SELECT  * FROM "
+                    + Queries.TABLE_TODOS + " ORDER BY "
+                    + Queries.COLUMN_ISDONE + " ASC,"
+                    + Queries.COLUMN_DEADLINE_DATE + " ASC,"
+                    + Queries.COLUMN_DEADLINE_TIME + " ASC,"
+                    + Queries.COLUMN_ISFAVOURITE + " DESC", null);
+
+        }else if(sortMode == R.integer.SORT_MODE_FAVOURITE_DEADLINE){
+
+            cursor = database.getDatabase().rawQuery("SELECT  * FROM "
+                    + Queries.TABLE_TODOS + " ORDER BY "
+                    + Queries.COLUMN_ISDONE + " ASC,"
+                    + Queries.COLUMN_ISFAVOURITE + " DESC,"
+                    + Queries.COLUMN_DEADLINE_DATE + " ASC,"
+                    + Queries.COLUMN_DEADLINE_TIME + " ASC", null);
+        }
+
+        return cursor;
     }
 
 
@@ -128,8 +198,7 @@ public class MainActivity extends Activity {
 
                       Toast.makeText(getApplicationContext(), "TODO gespeichert!", Toast.LENGTH_SHORT).show();
 
-                      Cursor cur = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS, null);
-                      todoCursorAdapter.changeCursor(cur);
+                      initTodoListView();
 
                   }else{
 
@@ -145,8 +214,7 @@ public class MainActivity extends Activity {
                   if(deleted == true){
 
                       Toast.makeText(getApplicationContext(), "TODO wurde gelöscht.", Toast.LENGTH_SHORT).show();
-                      Cursor cur = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS, null);
-                      todoCursorAdapter.changeCursor(cur);
+                      initTodoListView();
 
                   }else{
 
@@ -163,8 +231,7 @@ public class MainActivity extends Activity {
                   if(updated == true){
 
                       Toast.makeText(getApplicationContext(), "Daten geändert", Toast.LENGTH_SHORT).show();
-                      Cursor cur = database.getDatabase().rawQuery("SELECT  * FROM " + Queries.TABLE_TODOS, null);
-                      todoCursorAdapter.changeCursor(cur);
+                      initTodoListView();
 
                   }else{
 

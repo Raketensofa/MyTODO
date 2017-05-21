@@ -168,17 +168,6 @@ public class Todo{
     }
 
 
-    public void updateData(Todo newTodoData){
-
-        _id = newTodoData.get_id();
-        name = newTodoData.getName();
-        description = newTodoData.getDescription();
-        deadlineDate = newTodoData.getDeadlineDate();
-        deadlineTime = newTodoData.getDeadlineTime();
-        isFavourite = newTodoData.getIsFavourite();
-        isDone = newTodoData.getIsDone();
-    }
-
     public ContentValues createContentValues(){
 
         ContentValues todoValues = new ContentValues();

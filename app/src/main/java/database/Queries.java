@@ -10,12 +10,12 @@ import cgellner.mytodo.R;
 public abstract class Queries {
 
     public final static String DATATYPE_TEXT = "TEXT";
-    public final static String DATATYPE_NUMERIC = "NUMERIC";
     public final static String DATATYPE_INTEGER = "INTEGER";
     public final static String PRIMARY_KEY_AUTO = "PRIMARY KEY AUTOINCREMENT";
     public final static String NOT_NOLL = "NOT NULL";
 
     public final static String TABLE_TODOS = "todos";
+    public final static String TABLE_MAIN_SETTINGS = "main_settings";
 
     public final static String COLUMN_ID = "_id";
     public final static String COLUMN_NAME = "name";
@@ -24,7 +24,12 @@ public abstract class Queries {
     public final static String COLUMN_DEADLINE_TIME = "deadline_time";
     public final static String COLUMN_ISFAVOURITE = "is_favourite";
     public final static String COLUMN_ISDONE = "is_done";
+    public final static String COLUMN_SORTMODE = "sort_mode";
 
+    public final static String CREATE_TABLE_MAIN_SETTINGS =
+            "CREATE TABLE " +  TABLE_MAIN_SETTINGS + "(" +
+                    COLUMN_ID  + " " +  DATATYPE_INTEGER + " " + PRIMARY_KEY_AUTO + ", " +
+                    COLUMN_SORTMODE + " " +  DATATYPE_INTEGER  + " " + NOT_NOLL +  " DEFAULT 1)";
 
 
     public final static String CREATE_TABLE_TODOS =

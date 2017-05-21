@@ -92,7 +92,7 @@ public class TodoCursorAdapter extends CursorAdapter {
 
         //Werte den Elementen in der Listen-Ansicht zuweisen
         todoName.setText(todo.getName());
-        todoDeadline.setText("Fälligkeit: " + todo.getDeadlineDate() + " " + todo.getDeadlineTime());
+        todoDeadline.setText(todo.getDeadlineDate() + " " + todo.getDeadlineTime());
         todoIsDone.setChecked(false);
         if(todo.getIsDone() == 1){
 

@@ -1,5 +1,7 @@
 package database;
 
+import android.database.Cursor;
+
 import java.util.List;
 
 import model.Todo;
@@ -10,6 +12,7 @@ import model.Todo;
 public interface ITodoItemCRUD {
 
      long createTodo(Todo todoItem);
+
      List<Todo> readAllTodoItems();
      Todo readTodoItem(long todoItemId);
      boolean updateTodoItem(Todo item);
