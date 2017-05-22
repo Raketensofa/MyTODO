@@ -2,37 +2,23 @@ package cgellner.mytodo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
-import android.widget.EditText;
+import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toolbar;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
 import database.Queries;
 import model.Todo;
 
 public class ActivityTodoDetail extends Activity {
-
-    private Button buttonSave;
-    private EditText nameEdittext;
-    private EditText descriptionEdittext;
-    private TextView dateTextview;
-    private TextView timeTextview;
-    private CheckBox isFavouriteCheckbox;
 
     private MenuItem itemEdit;
     private MenuItem itemDelete;
@@ -41,6 +27,7 @@ public class ActivityTodoDetail extends Activity {
 
     private Todo CurrentTodo;
     private int ViewMode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +49,8 @@ public class ActivityTodoDetail extends Activity {
             initDetailView();
             CurrentTodo = new Todo();
             CurrentTodo.setDataFromIntentExtras(extraData);
-            setTodoDataToComponents();
-            setComponentsEditMode(false);
+            setTodoDataToList();
+            // setComponentsEditMode(false);
         }
     }
 
@@ -81,7 +68,7 @@ public class ActivityTodoDetail extends Activity {
             public boolean onMenuItemClick(MenuItem item) {
 
                 //Eingegebene Daten an die MainActivity zur Verarbeitung uebergeben
-                CurrentTodo = readTodoDataFromComponents();
+               // CurrentTodo = readTodoDataFromComponents();
 
                 Intent intent = new Intent();
                 CurrentTodo.putToIntentExtras(intent);
@@ -93,6 +80,7 @@ public class ActivityTodoDetail extends Activity {
         });
 
     }
+
 
     private void createTodoDetailStartMenu(Menu menu){
 
@@ -106,7 +94,7 @@ public class ActivityTodoDetail extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                setComponentsEditMode(true);
+                //setComponentsEditMode(true);
 
                 itemEdit.setVisible(false);
                 itemDelete.setVisible(false);
@@ -149,8 +137,8 @@ public class ActivityTodoDetail extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                setTodoDataToComponents();
-                setComponentsEditMode(false);
+                setTodoDataToList();
+                //setComponentsEditMode(false);
 
                 itemEdit.setVisible(true);
                 itemDelete.setVisible(true);
@@ -175,7 +163,7 @@ public class ActivityTodoDetail extends Activity {
 
                 Intent intent = new Intent();
                 long id = CurrentTodo.get_id();
-                CurrentTodo = readTodoDataFromComponents();
+               // CurrentTodo = readTodoDataFromComponents();
                 CurrentTodo.set_id(id);
                 CurrentTodo.putToIntentExtras(intent);
                 setResult(R.integer.UPDATE_TODO, intent);
@@ -244,6 +232,7 @@ public class ActivityTodoDetail extends Activity {
 
     private void setListener(){
 
+      /**
         //DatePickerDialog oeffnen bei Klick auf Datum-Textbox
         dateTextview = (TextView) findViewById(R.id.todo_date_textview);
         dateTextview.setOnClickListener(new View.OnClickListener() {
@@ -295,96 +284,25 @@ public class ActivityTodoDetail extends Activity {
                 new TimePickerDialog(v.getContext(), timePickerListener, myCalendar.get(Calendar.HOUR), myCalendar.get(Calendar.MINUTE), true).show();
 
             }
-        });
+        });*/
     }
 
 
-    private Todo readTodoDataFromComponents(){
+    //TODO
+    private void setTodoDataToList(View mainView, Todo todo) {
 
-        Todo todoItem = null;
+        LayoutInflater inflater = getLayoutInflater();
 
-        try {
+        ListView listView = (ListView)mainView.findViewById(R.id.listview_detail_todo);
 
-            nameEdittext = (EditText) findViewById(R.id.todo_name_edittext);
-            descriptionEdittext = (EditText) findViewById(R.id.todo_description_edittext);
-            dateTextview = (TextView) findViewById(R.id.todo_date_textview);
-            timeTextview = (TextView) findViewById(R.id.todo_time_textview);
-            isFavouriteCheckbox = (CheckBox) findViewById(R.id.todo_isfavourite_checkbox);
-
-
-            String name = nameEdittext.getText().toString();
-            String description = descriptionEdittext.getText().toString();
-            String date = dateTextview.getText().toString();
-            String time = timeTextview.getText().toString();
-
-            int fav = 0;
-            if (isFavouriteCheckbox.isChecked()) {
-                fav = 1;
-            }
-
-            todoItem = new Todo(name, description, 0, fav, date, time);
-
-        }catch (Exception ex){
+        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.listview_item_group_header, listView, false);
+        TextView headerText = (TextView)header.findViewById(R.id.textview_header_name);
+        headerText.setText("Informationen");
+        listView.addHeaderView(header, null, false);
 
 
-            return todoItem;
-        }
-
-        return todoItem;
-    }
 
 
-    private void setComponentsEditMode(boolean isEditable){
-
-        EditText nameEdit = (EditText) findViewById(R.id.todo_name_edittext);
-        nameEdit.setClickable(isEditable);
-        nameEdit.setFocusable(isEditable);
-
-        EditText decriptionEdit = (EditText) findViewById(R.id.todo_description_edittext);
-        decriptionEdit.setClickable(isEditable);
-        decriptionEdit.setFocusable(isEditable);
-
-        TextView date = (TextView)findViewById(R.id.todo_date_textview);
-        date.setClickable(isEditable);
-        date.setFocusable(isEditable);
-
-        TextView time = (TextView)findViewById(R.id.todo_time_textview);
-        time.setClickable(isEditable);
-        time.setFocusable(isEditable);
-
-        CheckBox isfav = (CheckBox)findViewById(R.id.todo_isfavourite_checkbox);
-        isfav.setClickable(isEditable);
-        isfav.setFocusable(isEditable);
-
-        CheckBox isdone = (CheckBox)findViewById(R.id.todo_isdone_checkbox);
-        isdone.setClickable(isEditable);
-        isdone.setFocusable(isEditable);
-    }
-
-
-    private void setTodoDataToComponents() {
-
-        EditText nameEdit = (EditText) findViewById(R.id.todo_name_edittext);
-        EditText decriptionEdit = (EditText) findViewById(R.id.todo_description_edittext);
-        TextView date = (TextView)findViewById(R.id.todo_date_textview);
-        TextView time = (TextView)findViewById(R.id.todo_time_textview);
-        CheckBox isfav = (CheckBox)findViewById(R.id.todo_isfavourite_checkbox);
-        CheckBox isdone = (CheckBox)findViewById(R.id.todo_isdone_checkbox);
-
-        nameEdit.setText(CurrentTodo.getName());
-        decriptionEdit.setText(CurrentTodo.getDescription());
-        date.setText(CurrentTodo.getDeadlineDate());
-        time.setText(CurrentTodo.getDeadlineTime());
-
-        if(CurrentTodo.getIsFavourite() == 1){
-
-            isfav.setChecked(true);
-        }
-
-        if(CurrentTodo.getIsDone() == 1){
-
-            isdone.setChecked(true);
-        }
     }
 
 

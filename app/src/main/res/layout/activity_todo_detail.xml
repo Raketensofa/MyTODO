@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical"
-    >
+    android:orientation="vertical">
 
     <Toolbar
         android:layout_width="match_parent"
@@ -11,155 +11,15 @@
         android:background="@color/colorAccent"
         android:titleTextColor="@android:color/white"
         android:id="@+id/todo_form_toolbar"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true"
+
         >
     </Toolbar>
 
-
-    <EditText
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/todo_name_edittext"
-        style="@android:style/Widget.Material.EditText"
-        android:autoText="false"
-        android:clickable="false"
-        android:editable="true"
-        android:enabled="true"
-        android:hint="Name des To-Do"
-        android:inputType="text"
-        android:singleLine="true"
-        android:textSize="20dp"
-        android:layout_below="@+id/todo_form_toolbar"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/todo_description_edittext"
-        android:layout_below="@+id/todo_name_edittext"
-        android:editable="true"
-        android:enabled="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp"
-        style="@android:style/Widget.Material.EditText"
-        android:layout_centerHorizontal="true"
-        android:hint="Beschreibung"
-        android:textSize="20dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp" />
+        android:layout_height="match_parent"
+        android:id="@+id/listview_todo_detail_content"
+        style="@android:style/Widget.Material.Light.ListView" />
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Fälligkeit:"
-        android:id="@+id/textView"
-        android:textSize="12dp"
-        android:layout_below="@+id/todo_description_edittext"
-        android:layout_alignParentStart="false"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp" />
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/todo_date_textview"
-        android:editable="false"
-        android:enabled="true"
-        android:hint="Datum"
-        android:clickable="true"
-        android:textStyle="normal"
-        android:textSize="20dp"
-        style="@android:style/TextAppearance.Material.Widget.TextView"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_alignParentStart="false"
-        android:layout_marginTop="20dp"
-        android:layout_alignTop="@+id/textView"
-        android:layout_alignParentEnd="false"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/todo_time_textview"
-        android:hint="Uhrzeit"
-        android:editable="false"
-        android:enabled="true"
-        android:clickable="true"
-        android:textStyle="normal"
-        android:textSize="20dp"
-        style="@android:style/TextAppearance.Material.Widget.TextView"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_below="@+id/todo_date_textview"
-        android:layout_alignParentStart="false"
-        android:layout_marginTop="5dp"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="false"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp" />
-
-    <CheckBox
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Favourit"
-        android:id="@+id/todo_isfavourite_checkbox"
-        android:layout_below="@+id/todo_time_textview"
-        android:layout_alignParentStart="false"
-        android:textSize="20sp"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:clickable="true"
-        android:enabled="true"
-        style="@android:style/Widget.Material.CompoundButton.CheckBox"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp" />
-
-    <CheckBox
-        style="@android:style/Widget.Material.CompoundButton.CheckBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Erledigt"
-        android:id="@+id/todo_isdone_checkbox"
-        android:textSize="20sp"
-        android:clickable="true"
-        android:enabled="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_below="@+id/todo_isfavourite_checkbox"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="5dp" />
-
-
-</RelativeLayout>
+</LinearLayout>

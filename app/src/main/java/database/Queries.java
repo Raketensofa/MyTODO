@@ -1,8 +1,5 @@
 package database;
 
-import android.content.res.Resources;
-
-import cgellner.mytodo.R;
 
 /**
  * Created by Carolin on 21.04.2017.
@@ -16,6 +13,8 @@ public abstract class Queries {
 
     public final static String TABLE_TODOS = "todos";
     public final static String TABLE_MAIN_SETTINGS = "main_settings";
+    public final static String TABLE_TODO_CONTACTS = "todo_contacts";
+
 
     public final static String COLUMN_ID = "_id";
     public final static String COLUMN_NAME = "name";
@@ -25,6 +24,18 @@ public abstract class Queries {
     public final static String COLUMN_ISFAVOURITE = "is_favourite";
     public final static String COLUMN_ISDONE = "is_done";
     public final static String COLUMN_SORTMODE = "sort_mode";
+    public final static String COLUMN_CONTACT_ID= "contact_id";
+    public final static String COLUMN_TODO_ID = "todo_id";
+
+
+
+    public final static String CREATE_TABLE_TODO_CONTACTS =
+            "CREATE TABLE " +  TABLE_TODO_CONTACTS + "(" +
+                    COLUMN_ID  + " " +  DATATYPE_INTEGER + " " + PRIMARY_KEY_AUTO + ", " +
+                    COLUMN_TODO_ID + " " +  DATATYPE_INTEGER  + " " + NOT_NOLL + "," +
+                    COLUMN_CONTACT_ID + " " + DATATYPE_INTEGER  + " " + NOT_NOLL + "," +
+                    " FOREIGN KEY(" + COLUMN_TODO_ID + ") REFERENCES " + TABLE_TODOS + "(" + COLUMN_ID +")" + ")";
+
 
     public final static String CREATE_TABLE_MAIN_SETTINGS =
             "CREATE TABLE " +  TABLE_MAIN_SETTINGS + "(" +
@@ -50,9 +61,21 @@ public abstract class Queries {
             COLUMN_DEADLINE_DATE ,
             COLUMN_DEADLINE_TIME,
             COLUMN_ISFAVOURITE,
-            COLUMN_ISDONE };
+            COLUMN_ISDONE
+    };
+
+    public final static String[] COLUMNS_TABLE_TODO_CONTACTS = {
+            COLUMN_ID,
+            COLUMN_TODO_ID,
+            COLUMN_CONTACT_ID
+    };
 
 
+    public final static String[] COLUMNS_TABLE_MAIN_SETTINGS = {
+            COLUMN_ID,
+            COLUMN_SORTMODE
+
+    };
 
 
 }

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 import database.Queries;
 
 /**
@@ -20,37 +22,24 @@ public class Todo{
     private int isFavourite;  //1=is favourite - 0=is not favourite
     private String deadlineDate;
     private String deadlineTime;
+    private ArrayList<Contact> contacts;
 
     //endregion
 
 
-
-
-    public Todo(String name, String description, int isDone, int isFavourite, String deadlineDate, String deadlineTime) {
-        this.name = name;
-        this.description = description;
-        this.isDone = isDone;
-        this.isFavourite = isFavourite;
-        this.deadlineDate = deadlineDate;
-        this.deadlineTime = deadlineTime;
-    }
-
-    public Todo(int id, String name, String description, int isDone, int isFavourite, String date, String time) {
-
-        this._id = id;
-        this.name = name;
-        this.description = description;
-        this.isDone = isDone;
-        this.isFavourite = isFavourite;
-        this.deadlineTime = time;
-        this.deadlineDate = date;
-    }
 
     public Todo() {
     }
 
 //region Getter und Setter
 
+    public ArrayList<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(ArrayList<Contact> contacts) {
+        this.contacts = contacts;
+    }
 
     public long get_id() {
         return _id;
@@ -177,6 +166,9 @@ public class Todo{
         todoValues.put(Queries.COLUMN_ISDONE, isDone);
         todoValues.put(Queries.COLUMN_DEADLINE_DATE, deadlineDate);
         todoValues.put(Queries.COLUMN_DEADLINE_TIME, deadlineTime);
+
+
+
 
         return todoValues;
     }

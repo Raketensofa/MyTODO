@@ -84,10 +84,10 @@ public class TodoCursorAdapter extends CursorAdapter {
 
     private void setTodoDataToComponents(View view, final Todo todo){
 
-        TextView todoName = (TextView)view.findViewById(R.id.todo_textview_name);
-        TextView todoDeadline = (TextView)view.findViewById(R.id.todo_textview_deadline);
-        CheckBox todoIsDone = (CheckBox)view.findViewById(R.id.todo_checkbox_isdone);
-        ImageView todoIsFavourite = (ImageView) view.findViewById(R.id.imageview_todo_isfavourite);
+      //  TextView todoName = (TextView)view.findViewById(R.id.todo_textview_name);
+      //  TextView todoDeadline = (TextView)view.findViewById(R.id.todo_textview_deadline);
+      //  CheckBox todoIsDone = (CheckBox)view.findViewById(R.id.todo_checkbox_isdone);
+      //  ImageView todoIsFavourite = (ImageView) view.findViewById(R.id.imageview_todo_isfavourite);
 
 
         //Werte den Elementen in der Listen-Ansicht zuweisen

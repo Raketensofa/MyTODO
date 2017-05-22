@@ -16,7 +16,6 @@ import java.util.List;
 import cgellner.mytodo.R;
 import model.Todo;
 
-
 /**
  * Created by Carolin on 21.04.2017.
  */
@@ -26,7 +25,7 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
     //region Fields
 
     private static final String DATABASE_NAME = "Mytodo_Sqlite.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
     private Context context;
     private SQLiteDatabase Database;
 
@@ -71,7 +70,7 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
             Database = sqLiteDatabase;
             Database.execSQL(Queries.CREATE_TABLE_TODOS);
             Database.execSQL(Queries.CREATE_TABLE_MAIN_SETTINGS);
-
+            Database.execSQL(Queries.CREATE_TABLE_TODO_CONTACTS);
 
         }catch (Exception ex){
 
@@ -98,6 +97,7 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
 
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Queries.TABLE_TODOS);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Queries.TABLE_MAIN_SETTINGS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Queries.TABLE_TODO_CONTACTS);
 
         this.onCreate(sqLiteDatabase);
     }
