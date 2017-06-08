@@ -2,10 +2,10 @@ package cgellner.mytodo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,16 +16,16 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import database.Queries;
-import model.Todo;
+import model.TodoItem;
 
-public class ActivityTodoDetail extends Activity {
+public class TodoDetailActivity extends AppCompatActivity {
 
     private MenuItem itemEdit;
     private MenuItem itemDelete;
     private MenuItem itemCancel;
     private MenuItem itemSave;
 
-    private Todo CurrentTodo;
+    private TodoItem CurrentTodo;
     private int ViewMode;
 
 
@@ -35,6 +35,9 @@ public class ActivityTodoDetail extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_todo_detail);
+
+
+
         Bundle extraData = getIntent().getExtras();
 
         initToolbar();
@@ -47,9 +50,9 @@ public class ActivityTodoDetail extends Activity {
 
         }else if(ViewMode == R.integer.VIEW_MODE_DETAIL){
             initDetailView();
-            CurrentTodo = new Todo();
+            CurrentTodo = new TodoItem();
             CurrentTodo.setDataFromIntentExtras(extraData);
-            setTodoDataToList();
+            //setTodoDataToList();
             // setComponentsEditMode(false);
         }
     }
@@ -137,7 +140,7 @@ public class ActivityTodoDetail extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                setTodoDataToList();
+                //setTodoDataToList();
                 //setComponentsEditMode(false);
 
                 itemEdit.setVisible(true);
@@ -162,9 +165,9 @@ public class ActivityTodoDetail extends Activity {
             public boolean onMenuItemClick(MenuItem item) {
 
                 Intent intent = new Intent();
-                long id = CurrentTodo.get_id();
+                long id = CurrentTodo.getId();
                // CurrentTodo = readTodoDataFromComponents();
-                CurrentTodo.set_id(id);
+                CurrentTodo.setId(id);
                 CurrentTodo.putToIntentExtras(intent);
                 setResult(R.integer.UPDATE_TODO, intent);
                 finish();
@@ -289,16 +292,16 @@ public class ActivityTodoDetail extends Activity {
 
 
     //TODO
-    private void setTodoDataToList(View mainView, Todo todo) {
+    private void setTodoDataToList(View mainView, TodoItem todo) {
 
-        LayoutInflater inflater = getLayoutInflater();
+       // LayoutInflater inflater = getLayoutInflater();
 
-        ListView listView = (ListView)mainView.findViewById(R.id.listview_detail_todo);
+        //ListView listView = (ListView)mainView.findViewById(R.id.listview_detail_todo);
 
-        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.listview_item_group_header, listView, false);
+       /** ViewGroup header = (ViewGroup)inflater.inflate(R.layout.listview_item_group_header, listView, false);
         TextView headerText = (TextView)header.findViewById(R.id.textview_header_name);
         headerText.setText("Informationen");
-        listView.addHeaderView(header, null, false);
+        listView.addHeaderView(header, null, false);*/
 
 
 
@@ -319,7 +322,7 @@ public class ActivityTodoDetail extends Activity {
                     public void onClick(DialogInterface dialog,int id) {
 
                         Intent intent = new Intent();
-                        intent.putExtra(Queries.COLUMN_ID, CurrentTodo.get_id());
+                        intent.putExtra(Queries.COLUMN_ID, CurrentTodo.getId());
                         setResult(R.integer.DELETE_TODO, intent);
                         finish();
                     }

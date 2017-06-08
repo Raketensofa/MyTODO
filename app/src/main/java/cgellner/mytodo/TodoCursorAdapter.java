@@ -4,26 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.provider.CalendarContract;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.Space;
 import android.widget.TextView;
 
-import java.security.spec.ECField;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import model.Todo;
+import model.TodoItem;
 
 /**
  * Created by Carolin on 07.05.2017.
@@ -31,9 +23,9 @@ import model.Todo;
 public class TodoCursorAdapter extends CursorAdapter {
 
 
-    private MainActivity MainActivity;
+    private TodoOverviewActivity MainActivity;
 
-    public void setMainActivity(MainActivity mainActivity) {
+    public void setMainActivity(TodoOverviewActivity mainActivity) {
         this.MainActivity = mainActivity;
     }
 
@@ -56,11 +48,11 @@ public class TodoCursorAdapter extends CursorAdapter {
         view.setClickable(true);
 
         //Werte aus Cursor auslesen
-        final Todo todo = new Todo();
+        final TodoItem todo = new TodoItem();
         todo.setAllDataFromCursor(cursor);
 
         //Werte den View-Componenten zuweisen
-        setTodoDataToComponents(view, todo);
+        //setTodoDataToComponents(view, todo);
 
         fillColor(view, todo.getDeadlineDate(), todo.getDeadlineTime());
 
@@ -73,7 +65,7 @@ public class TodoCursorAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(v.getContext(), ActivityTodoDetail.class);
+                Intent intent = new Intent(v.getContext(), TodoDetailActivity.class);
                 intent.putExtra(String.valueOf(R.string.view_mode), R.integer.VIEW_MODE_DETAIL);
                 todo.putToIntentExtras(intent);
                 MainActivity.startActivityForResult(intent, R.integer.DETAIL_ACTIVITY);
@@ -82,50 +74,7 @@ public class TodoCursorAdapter extends CursorAdapter {
     }
 
 
-    private void setTodoDataToComponents(View view, final Todo todo){
 
-      //  TextView todoName = (TextView)view.findViewById(R.id.todo_textview_name);
-      //  TextView todoDeadline = (TextView)view.findViewById(R.id.todo_textview_deadline);
-      //  CheckBox todoIsDone = (CheckBox)view.findViewById(R.id.todo_checkbox_isdone);
-      //  ImageView todoIsFavourite = (ImageView) view.findViewById(R.id.imageview_todo_isfavourite);
-
-
-        //Werte den Elementen in der Listen-Ansicht zuweisen
-        todoName.setText(todo.getName());
-        todoDeadline.setText(todo.getDeadlineDate() + " " + todo.getDeadlineTime());
-        todoIsDone.setChecked(false);
-        if(todo.getIsDone() == 1){
-
-            todoIsDone.setChecked(true);
-        }
-
-        setIsFavouriteStar(todoIsFavourite, todo.getIsFavourite());
-
-        todoIsDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-            }
-        });
-
-        todoIsFavourite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                int isfav = todo.getIsFavourite();
-
-                int newFav = -1;
-                if(isfav == 1){
-                    newFav = 0;
-                }else if(isfav == 0){
-                    newFav = 1;
-                }
-
-                ImageView iv = (ImageView)v.findViewById(R.id.imageview_todo_isfavourite);
-                setIsFavouriteStar(iv, newFav);
-            }
-        });
-    }
 
 
     private void setIsFavouriteStar(ImageView imageView, int isFavourite) {

@@ -1,7 +1,5 @@
 package database;
 
-import model.Todo;
-
 /**
  * Created by Carolin on 21.05.2017.
  */

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import database.Queries;
@@ -12,41 +13,41 @@ import database.Queries;
 /**
  * Created by Carolin on 21.04.2017.
  */
-public class Todo{
+public class TodoItem implements Serializable{
 
     //region Attribute
-    private long _id;
+    private long id;
     private String name;
     private String description;
     private int isDone; //1=is done - 0=is not done
     private int isFavourite;  //1=is favourite - 0=is not favourite
     private String deadlineDate;
     private String deadlineTime;
-    private ArrayList<Contact> contacts;
+    //private ArrayList<Contact> contacts;
 
     //endregion
 
 
 
-    public Todo() {
+    public TodoItem() {
     }
 
 //region Getter und Setter
 
-    public ArrayList<Contact> getContacts() {
+   /** public ArrayList<Contact> getContacts() {
         return contacts;
     }
 
     public void setContacts(ArrayList<Contact> contacts) {
         this.contacts = contacts;
+    }*/
+
+    public long getId() {
+        return id;
     }
 
-    public long get_id() {
-        return _id;
-    }
-
-    public void set_id(long _id) {
-        this._id = _id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -103,7 +104,7 @@ public class Todo{
     @Override
     public String toString() {
         return "Todo{" +
-                "_id=" + _id +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", isDone=" + isDone +
@@ -116,7 +117,7 @@ public class Todo{
 
     public void putToIntentExtras(Intent intent){
 
-        intent.putExtra(Queries.COLUMN_ID, _id);
+        intent.putExtra(Queries.COLUMN_ID, id);
         intent.putExtra(Queries.COLUMN_NAME, name);
         intent.putExtra(Queries.COLUMN_DESCRIPTION, description);
         intent.putExtra(Queries.COLUMN_ISFAVOURITE, isFavourite);
@@ -131,7 +132,7 @@ public class Todo{
 
         if(data != null) {
 
-            _id = data.getLong(Queries.COLUMN_ID);
+            id = data.getLong(Queries.COLUMN_ID);
              name = data.getString(Queries.COLUMN_NAME);
             description = data.getString(Queries.COLUMN_DESCRIPTION);
             deadlineDate = data.getString(Queries.COLUMN_DEADLINE_DATE);
@@ -146,7 +147,7 @@ public class Todo{
 
         if(cursor != null) {
 
-            _id = cursor.getLong(cursor.getColumnIndexOrThrow(Queries.COLUMN_ID));
+            id = cursor.getLong(cursor.getColumnIndexOrThrow(Queries.COLUMN_ID));
             name = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_NAME));
             description = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DESCRIPTION));
             deadlineDate = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_DATE));

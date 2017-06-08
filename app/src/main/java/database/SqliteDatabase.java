@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQueryBuilder;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -14,12 +12,12 @@ import java.util.List;
 
 
 import cgellner.mytodo.R;
-import model.Todo;
+import model.TodoItem;
 
 /**
  * Created by Carolin on 21.04.2017.
  */
-public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, IMainSettingsCRUD {
+public class SqliteDatabase extends SQLiteOpenHelper {
 
 
     //region Fields
@@ -108,8 +106,7 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
     }
 
 
-    @Override
-    public long createTodo(Todo todoItem) {
+    public long createTodo(TodoItem todoItem) {
 
         long newTodoId = 0;
 
@@ -132,10 +129,9 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
     }
 
 
-    @Override
-    public List<Todo> readAllTodoItems() {
+    public List<TodoItem> readAllTodoItems() {
 
-        List<Todo> list = null;
+        List<TodoItem> list = null;
         Cursor cursor = null;
 
         try {
@@ -152,7 +148,7 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
 
                             do {
 
-                                Todo todoItem = new Todo();
+                                TodoItem todoItem = new TodoItem();
                                 todoItem.setAllDataFromCursor(cursor);
                                 list.add(todoItem);
 
@@ -175,10 +171,9 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
     }
 
 
-    @Override
-    public Todo readTodoItem(long todoItemId) {
+    public TodoItem readTodoItem(long todoItemId) {
 
-        Todo todoItem = null;
+        TodoItem todoItem = null;
         Cursor cursor = null;
 
         try {
@@ -194,7 +189,7 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
 
                         do {
 
-                            todoItem = new Todo();
+                            todoItem = new TodoItem();
                             todoItem.setAllDataFromCursor(cursor);
 
                         } while (cursor.moveToNext());
@@ -216,8 +211,7 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
     }
 
 
-    @Override
-    public boolean updateTodoItem(Todo item) {
+    public boolean updateTodoItem(TodoItem item) {
 
         boolean isUpdated = false;
 
@@ -227,7 +221,7 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
 
                 ContentValues todoValues = item.createContentValues();
 
-                int result = Database.update(Queries.TABLE_TODOS, todoValues, "_id=" + item.get_id(), null);
+                int result = Database.update(Queries.TABLE_TODOS, todoValues, "_id=" + item.getId(), null);
 
                 if(result > 0){
                     isUpdated = true;
@@ -242,7 +236,6 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
     }
 
 
-    @Override
     public boolean deleteTodoItem(long todoItemId) {
 
         boolean isDeleted = false;
@@ -271,7 +264,6 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
     }
 
 
-    @Override
     public long createMainSettings() {
 
         long mainSettingId = -1;
@@ -296,7 +288,7 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
     }
 
 
-    @Override
+
     public int readSortMode() {
 
         int mode = -1;
@@ -333,7 +325,6 @@ public class SqliteDatabase extends SQLiteOpenHelper implements ITodoItemCRUD, I
     }
 
 
-    @Override
     public boolean updateSortMode(int mode) {
 
         boolean isUpdated = false;
