@@ -54,7 +54,7 @@ This section contains general information about the software.
     <td>Das Datenmodell für Todos soll es erlauben, die folgende Information zu repräsentieren:</td>
     <td>7</td>
     <td>...</td>
-  <tr>
+  </tr>
     <td>2</td>
     <td>...</td>
     <td>...</td>
