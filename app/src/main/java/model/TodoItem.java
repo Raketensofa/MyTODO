@@ -127,20 +127,6 @@ public class TodoItem implements Serializable{
     }
 
 
-    public void setDataFromIntentExtras(Bundle data){
-
-        if(data != null) {
-
-            id = data.getLong(Queries.COLUMN_ID);
-             name = data.getString(Queries.COLUMN_NAME);
-            description = data.getString(Queries.COLUMN_DESCRIPTION);
-            deadlineDate = data.getString(Queries.COLUMN_DEADLINE_DATE);
-            deadlineTime = data.getString(Queries.COLUMN_DEADLINE_TIME);
-            isDone = data.getInt(Queries.COLUMN_ISDONE, -1);
-            isFavourite = data.getInt(Queries.COLUMN_ISFAVOURITE, -1);
-        }
-    }
-
 
     public void setAllDataFromCursor(Cursor cursor) {
 
@@ -166,9 +152,6 @@ public class TodoItem implements Serializable{
         todoValues.put(Queries.COLUMN_ISDONE, isDone);
         todoValues.put(Queries.COLUMN_DEADLINE_DATE, deadlineDate);
         todoValues.put(Queries.COLUMN_DEADLINE_TIME, deadlineTime);
-
-
-
 
         return todoValues;
     }

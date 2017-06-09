@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
@@ -69,11 +71,10 @@ public class TodoAddNewActivity extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                //Eingegebene Daten an die MainActivity zur Verarbeitung uebergeben
-                // CurrentTodo = readTodoDataFromComponents();
+                TodoItem newItem = readInputDataFromComponents();
 
                 Intent intent = new Intent();
-                // CurrentTodo.putToIntentExtras(intent);
+                intent.putExtra("TODO_ITEM", newItem);
                 setResult(R.integer.SAVE_TODO, intent);
                 finish();
 
@@ -118,5 +119,32 @@ public class TodoAddNewActivity extends Activity {
                 timeTextview.setText(DateAndTimePicker.startTimePickerDialog(timeTextview));
             }
         });
+    }
+
+
+    private TodoItem readInputDataFromComponents(){
+
+        TodoItem item = new TodoItem();
+
+        EditText name = (EditText)findViewById(R.id.todo_detail_view_name_edittext);
+        EditText descr = (EditText)findViewById(R.id.todo_detail_view_description_edittext);
+        TextView date = (TextView)findViewById(R.id.todo_detail_view_date_textview);
+        TextView time = (TextView)findViewById(R.id.todo_detail_view_time_textview);
+        Switch isFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
+
+        item.setName(name.getText().toString());
+        item.setDescription(descr.getText().toString());
+        item.setDeadlineDate(date.getText().toString());
+        item.setDeadlineTime(time.getText().toString());
+
+        if(isFav.isChecked()){
+            item.setIsFavourite(1);
+        }else{
+            item.setIsFavourite(0);
+        }
+
+        //TODO Kontakte
+
+        return item;
     }
 }

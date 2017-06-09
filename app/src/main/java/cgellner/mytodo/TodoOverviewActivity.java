@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +39,7 @@ public class TodoOverviewActivity extends Activity{
 
     private ITodoItemCRUD crudOperations;
 
-    private static String TODO_ITEM = "todo_item";
+    private static String TODO_ITEM = "TODO_ITEM";
 
     private ProgressDialog progressDialog;
 
@@ -348,13 +347,20 @@ public class TodoOverviewActivity extends Activity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+         if(requestCode == R.integer.NEWTODO_ACTIVITY && resultCode == R.integer.SAVE_TODO){
+
+             TodoItem newTodo = (TodoItem)data.getSerializableExtra(TODO_ITEM);
+             createAndShowItem(newTodo);
+         }
+
+
+
+
           if (requestCode == R.integer.DETAIL_ACTIVITY) {
 
               if (resultCode == R.integer.SAVE_TODO) {
 
-                  //Daten auslesen die vom Benutzer eingegeben wurden
-                  TodoItem newTodo = (TodoItem)data.getSerializableExtra(TODO_ITEM);
-                  createAndShowItem(newTodo);
+
 
               }else if(resultCode == R.integer.DELETE_TODO){
 

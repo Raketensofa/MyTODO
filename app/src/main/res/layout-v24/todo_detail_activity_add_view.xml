@@ -163,17 +163,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/todo_detail_view_favourite_switch"
-            android:layout_alignTop="@+id/todo_detail_view_favourite_icon"
             android:layout_toEndOf="@+id/todo_detail_view_favourite_icon"
-            android:layout_marginLeft="10dp"
-            android:textOn="Hohe Priorität"
-            android:textOff="Normale Priorität"
+            android:layout_marginLeft="5dp"
+            android:textOn="Favourit"
             android:enabled="true"
-            android:hint="Normale Priorität"
-            android:textSize="18sp"
+            android:textSize="12dp"
             android:splitTrack="false"
-            android:showText="false"
-            style="@android:style/Widget.Material.Light.CompoundButton.Switch" />
+            android:showText="true"
+            style="@android:style/Widget.Material.Light.CompoundButton.Switch"
+            android:singleLine="true"
+            android:focusable="false"
+            android:layout_centerVertical="true" />
 
 
     </RelativeLayout>
@@ -211,7 +211,8 @@
             android:layout_alignParentLeft="false"
             android:layout_alignParentRight="false"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:clickable="true" />
 
 
 
