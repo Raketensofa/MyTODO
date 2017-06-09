@@ -109,7 +109,7 @@ This section contains general information about the software.
     <td>7</td>
     <td>Auf dem Endgerät sollen Todos in einer SQLite Datenbank gespeichert werden.</td>
     <td>4</td>
-     <td></td>
+     <td>&times;</td>
   </tr>
     <tr>
     <td></td>
@@ -264,28 +264,28 @@ This section contains general information about the software.
     <td>26</td>
     <td>den Namen</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>27</td>
     <td>das Fälligkeitsdatum</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>28</td>
     <td>das Erledigsein/Nicht-Erledigtsein</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>29</td>
     <td>die Wichtigkeit</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
