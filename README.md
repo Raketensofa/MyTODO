@@ -134,11 +134,11 @@ This section contains general information about the software.
      <td></td>
   </tr>
     <tr>
-    <td>Anmeldung</td>
-    <td>C</td>
-    <td></td>
-    <td>20</td>
-     <td></td>
+    <th>Anmeldung</th>
+    <th>C</th>
+    <th></th>
+    <th>20</th>
+     <th></th>
   </tr>
     <tr>
     <td></td>
