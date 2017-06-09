@@ -49,11 +49,11 @@ This section contains general information about the software.
     <th>Erledigt</th>
   </tr>
   <tr>
-  <td><br>Datenmodell</td>
-    <td><br>A</td>
-    <td><br>Das Datenmodell für Todos soll es erlauben, die folgende Information zu repräsentieren:</td>
-    <td><br>7</td>
-    <td><br></td>
+  <td>Datenmodell</td>
+    <td>A</td>
+    <td>Das Datenmodell für Todos soll es erlauben, die folgende Information zu repräsentieren:</td>
+    <td>7</td>
+    <td></td>
   </tr>
   <tr>
     <td></td>
@@ -98,11 +98,11 @@ This section contains general information about the software.
      <td></td>
   </tr>
     <tr>
-    <th>Speichern von Todos</th>
-    <th>B</th>
-    <th>Das Speichern von Todos soll sowohl mittels einer externen Webanwendung, als auch mittels eines lokalen Datenspeichers erfolgen.  Die Webanwendung wird Ihnen als Java EE Web Application zur Verfügung gestellt. </th>
-    <th>12</th>
-     <th></th>
+    <td>Speichern von Todos</td>
+    <td>B</td>
+    <td>Das Speichern von Todos soll sowohl mittels einer externen Webanwendung, als auch mittels eines lokalen Datenspeichers erfolgen.  Die Webanwendung wird Ihnen als Java EE Web Application zur Verfügung gestellt. </td>
+    <td>12</td>
+     <td></td>
   </tr>
     <tr>
     <td></td>
@@ -134,11 +134,11 @@ This section contains general information about the software.
      <td></td>
   </tr>
     <tr>
-    <th>Anmeldung</th>
-    <th>C</th>
-    <th></th>
-    <th>20</th>
-     <th></th>
+    <td>Anmeldung</td>
+    <td>C</td>
+    <td></td>
+    <td>20</td>
+     <td></td>
   </tr>
     <tr>
     <td></td>
@@ -239,6 +239,174 @@ This section contains general information about the software.
     <td></td>
   </tr>
     <tr>
+    <td>Todoliste</td>
+    <td>D</td>
+    <td></td>
+    <td>20</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>25</td>
+    <td>Die Anzeige der Todoliste soll eine Übersicht über alle Todos darstellen und die Erstellung neuer Todos ermöglichen</td>
+    <td>3</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td></td>
+    <td>Sie soll für jedes Todo die folgende Information darstellen:</td>
+    <td></td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>26</td>
+    <td>den Namen</td>
+    <td>1</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>27</td>
+    <td>das Fälligkeitsdatum</td>
+    <td>1</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>28</td>
+    <td>das Erledigsein/Nicht-Erledigtsein</td>
+    <td>1</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>29</td>
+    <td>die Wichtigkeit</td>
+    <td>1</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>30</td>
+    <td>Sie soll es dem Nutzer außerdem ermöglichen, sich für jedes Todo dessen Details anzeigen zu lassen.</td>
+    <td>1</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>31</td>
+    <td>Änderungen der Todoliste, die in der Detailansicht eines Todos getätigt werden können, sollen bei Rückkehr in der Übersicht angezeigt werden.</td>
+    <td>2</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>32</td>
+    <td>Die Information zum Erledigtsein/Nicht-Erledigtsein bzw. zur Wichtigkeit soll modifiziert werden können, ohne die Detailanzeige anzufordern</td>
+    <td>3</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>33</td>
+    <td>Todos sollen grundsätzlich nach Erledigt/Nichterledigt sortiert sein und dann wahlweise nach Wichtigkeit+Datum oder nach Datum+Wichtigkeit.</td>
+    <td>3</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>34</td>
+    <td>Dem Nutzer soll es möglich sein, die Anzeige nach Datum+Wichtigkeit vs. Wichtigkeit+Datum über ein Optionsmenü bzw. Action Bar Optionen auszuwählen.</td>
+    <td>2</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>35</td>
+    <td>Überfällige Todos – d.h. Todos mit abgelaufenem Fälligkeitsdatum – sollen visuell besonders hervorgehoben werden.</td>
+    <td>2</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td>Detailansicht</td>
+    <td>E</td>
+    <td></td>
+    <td>15</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>36</td>
+    <td>Die Detailansicht soll alle durch ein Todo repräsentierten Daten darstellen.</td>
+    <td>4</td>
+    <td></td>
+  </tr>
+   <tr>
+    <td></td>
+    <td></td>
+    <td>Sie soll außerdem die Änderung zumindest der folgenden Daten eines Todo ermöglichen:</td>
+    <td></td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>37</td>
+    <td>Name</td>
+    <td>1</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>38</td>
+    <td>Beschreibung</td>
+    <td>1</td>
+    <td></td>
+  </tr>
+      <tr>
+    <td></td>
+    <td>39</td>
+    <td>Fälligkeitsdatum und Uhrzeit</td>
+    <td>2</td>
+    <td></td>
+  </tr>
+      <tr>
+    <td></td>
+    <td>40</td>
+    <td>Erledigtsein</td>
+    <td>1</td>
+    <td></td>
+  </tr>
+      <tr>
+    <td></td>
+    <td>41</td>
+    <td>Für die Einstellung von Datum und Uhrzeit sollen die für diesen Zweck durch Android bereitgestellten UI Bedienelemente verwendet werden.</td>
+    <td>3</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>42</td>
+    <td>Das Löschen eines Todos soll ebenfalls über die Detailansicht ermöglicht und vor Durchführung rückbestätigt werden.</td>
+    <td>3</td>
+    <td></td>
+  </tr>
+   <tr>
+    <td>Verknüpfung mit Kontakten</td>
+    <td>F</td>
+    <td></td>
+    <td>10</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
     <td></td>
     <td></td>
     <td></td>
@@ -252,4 +420,47 @@ This section contains general information about the software.
     <td></td>
     <td></td>
   </tr>
+    <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  
 </table>
