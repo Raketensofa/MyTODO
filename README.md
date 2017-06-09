@@ -42,15 +42,17 @@ This section contains general information about the software.
 <h2><b>Requirements</b></h2></ul>
 <table>
   <tr>
+    <th>Gruppe</th>
     <th>Id</th>
     <th>Anforderung</th>
     <th>Punkte</th>
     <th>Erledigt</th>
   </tr>
   <tr>
-    <td>1</td>
-    <td>...</td>
-    <td>...</td>
+    <td>Datenmodell</td>
+    <td>A</td>
+    <td>Das Datenmodell für Todos soll es erlauben, die folgende Information zu repräsentieren:</td>
+    <td>7</td>
     <td>...</td>
   </tr>
   <tr>
