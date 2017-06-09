@@ -44,7 +44,7 @@ This section contains general information about the software.
   <tr>
     <th>Gruppe</th>
     <th>Id</th>
-    <th>Anforderung</th>
+    <th>Funktionale Anforderung</th>
     <th>Punkte</th>
     <th>Erledigt</th>
   </tr>
