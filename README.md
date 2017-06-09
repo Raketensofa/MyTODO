@@ -49,11 +49,12 @@ This section contains general information about the software.
     <th>Erledigt</th>
   </tr>
   <tr>
-    <th>Datenmodell</th>
-    <th>A</th>
-    <th>Das Datenmodell für Todos soll es erlauben, die folgende Information zu repräsentieren:</th>
-    <th>7</th>
-    <th></th>
+  <br>
+    <td>Datenmodell</td>
+    <td>A</td>
+    <td>Das Datenmodell für Todos soll es erlauben, die folgende Information zu repräsentieren:</td>
+    <td>7</td>
+    <td></td>
   </tr>
   <tr>
     <td></td>
