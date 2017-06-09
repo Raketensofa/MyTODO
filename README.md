@@ -32,16 +32,31 @@ This section contains general information about the software.
     <td>Development environment</td>
     <td>Android Studio</td>
   </tr>
-    <tr>
+   <tr>
     <td>Programming language</td>
     <td>Java</td>
   </tr>
-    <tr>
+  <tr>
     <td>Database</td>
     <td>SQLite</td>
   </tr>
 </table>
 
 
-<h2><b>Requirements</b></h2>
-</ul>
+<h2><b>Requirements</b></h2></ul>
+<table>
+  <tr>
+    <td>Id</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>...</td>
+    <td>...</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>...</td>
+    <td>...</td>
+   <tr>
+ 
+</table>
