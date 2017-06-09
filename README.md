@@ -53,7 +53,7 @@ This section contains general information about the software.
     <td>A</td>
     <td>Das Datenmodell für Todos soll es erlauben, die folgende Information zu repräsentieren:</td>
     <td>7</td>
-    <td>...</td>
+    <td></td>
   </tr>
   <tr>
     <td></td>
@@ -74,7 +74,7 @@ This section contains general information about the software.
     <td>3</td>
     <td>die Information darüber, ob das Todo erledigt wurde oder nicht</td>
     <td>1</td>
-     <td>X</td>
+     <td>&times;</td>
   </tr>
     <tr>
     <td></td>
