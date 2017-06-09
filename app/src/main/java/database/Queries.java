@@ -15,7 +15,7 @@ public abstract class Queries {
     public final static String TABLE_TODO_CONTACTS = "todo_contacts";
 
 
-    public final static String COLUMN_ID = "id";
+    public final static String COLUMN_ID = "_id";
     public final static String COLUMN_NAME = "name";
     public final static String COLUMN_DESCRIPTION = "description";
     public final static String COLUMN_DEADLINE_DATE = "deadline_date";

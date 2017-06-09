@@ -29,28 +29,33 @@ public class TodoDetailActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_todo_detail);
-
-
-
         Bundle extraData = getIntent().getExtras();
-
-        initToolbar();
-
-        //Detailansicht oder Formular fuer ein neues To-Do
         ViewMode = extraData.getInt(String.valueOf(R.string.view_mode));
+
         if(ViewMode == R.integer.VIEW_MODE_NEW){
-            initNewTodoView();
+
+            setContentView(R.layout.todo_detail_activity_add_view);
+
+
+
+
             setListener();
 
         }else if(ViewMode == R.integer.VIEW_MODE_DETAIL){
+
+            setContentView(R.layout.todo_detail_activity_show_view);
+
+
             initDetailView();
             CurrentTodo = new TodoItem();
-            CurrentTodo.setDataFromIntentExtras(extraData);
+            CurrentTodo = (TodoItem)extraData.getSerializable("TODO_ITEM");
+
             //setTodoDataToList();
             // setComponentsEditMode(false);
         }
+
+
+        initToolbar();
     }
 
 
@@ -164,7 +169,8 @@ public class TodoDetailActivity extends Activity {
                 long id = CurrentTodo.getId();
                // CurrentTodo = readTodoDataFromComponents();
                 CurrentTodo.setId(id);
-                CurrentTodo.putToIntentExtras(intent);
+
+                intent.putExtra("TODO_ITEM", CurrentTodo);
                 setResult(R.integer.UPDATE_TODO, intent);
                 finish();
 
@@ -213,9 +219,10 @@ public class TodoDetailActivity extends Activity {
     }
 
 
-    private void initNewTodoView(){
+    private void initNewTodoView(View view){
 
         getActionBar().setTitle("Neues TODO");
+
 
 
     }

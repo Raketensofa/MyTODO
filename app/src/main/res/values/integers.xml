@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="DETAIL_ACTIVITY">1</integer>
+    <integer name="NEWTODO_ACTIVITY">2</integer>
     <integer name="SAVE_TODO">10</integer>
     <integer name="DELETE_TODO">20</integer>
     <integer name="UPDATE_TODO">30</integer>

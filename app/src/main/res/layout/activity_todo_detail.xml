@@ -15,11 +15,10 @@
         >
     </Toolbar>
 
-    <ListView
+    <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listview_todo_detail_content"
-        style="@android:style/Widget.Material.Light.ListView" />
-
-
+        android:id="@+id/detail_view_placeholder"
+        >
+    </View>
 </LinearLayout>

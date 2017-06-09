@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import database.Queries;
 

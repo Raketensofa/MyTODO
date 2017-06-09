@@ -339,9 +339,8 @@ public class TodoOverviewActivity extends Activity{
 
     private void showFormForNewTodo(){
 
-        Intent intent = new Intent(getBaseContext(), TodoDetailActivity.class);
-        intent.putExtra(String.valueOf(R.string.view_mode), R.integer.VIEW_MODE_NEW);
-        startActivityForResult(intent, R.integer.DETAIL_ACTIVITY);
+        Intent intent = new Intent(getBaseContext(), TodoAddNewActivity.class);
+        startActivityForResult(intent, R.integer.NEWTODO_ACTIVITY);
     }
 
 
