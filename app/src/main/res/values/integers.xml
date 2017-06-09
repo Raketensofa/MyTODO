@@ -9,6 +9,7 @@
 
     <integer name="SORT_MODE_DEADLINE_FAVOURITE">1</integer>
     <integer name="SORT_MODE_FAVOURITE_DEADLINE">2</integer>
+    <integer name="TODO_ITEM">50</integer>
 
 
 </resources>

@@ -1,7 +1,9 @@
 package cgellner.mytodo;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -19,24 +22,27 @@ import android.widget.Toolbar;
 
 import java.util.List;
 
+import database.ITodoItemCRUD;
+import database.LocalTodoItemCRUDOperations;
 import model.TodoItem;
 
-public class TodoOverviewActivity extends AppCompatActivity implements View.OnClickListener {
+public class TodoOverviewActivity extends Activity{
 
     private static String TAG = TodoOverviewActivity.class.getSimpleName();
 
     private ListView listviewTodos;
     private ArrayAdapter<TodoItem> todoListViewAdapter;
 
-    private SQLiteDatabase SqLiteDatabase;
-
     private MenuItem itemNew;
     private MenuItem itemSort;
 
-
-    private List<TodoItem> todoItemList;
-
     private int SortMode; //1 = Faelligkeit+Wichtigkeit  - 2= Wichtigkeit+Faelligkeit
+
+    private ITodoItemCRUD crudOperations;
+
+    private static String TODO_ITEM = "todo_item";
+
+    private ProgressDialog progressDialog;
 
 
     private class ItemViewHolder{
@@ -59,6 +65,8 @@ public class TodoOverviewActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_todo_overview);
+
+        progressDialog = new ProgressDialog(this);
 
         initToolbar();
 
@@ -135,16 +143,6 @@ public class TodoOverviewActivity extends AppCompatActivity implements View.OnCl
                     }
                 });
 
-                //Bei Klick auf die View des Listenelements wird die jeweilige Detailansicht geoeffnet
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        startShowingDetailView(v, todoItem);
-                    }
-                });
-
-
                 return itemView;
             }
         };
@@ -153,32 +151,115 @@ public class TodoOverviewActivity extends AppCompatActivity implements View.OnCl
         listviewTodos.setAdapter(todoListViewAdapter);
         todoListViewAdapter.setNotifyOnChange(true);
 
+        listviewTodos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                TodoItem selectedItem = todoListViewAdapter.getItem(position);
+                startShowingDetailView(selectedItem);
+            }
+        });
+
+
+        crudOperations = new LocalTodoItemCRUDOperations(this);
+
+        readItemsAndFillListView();
     }
 
 
     /**
      * Detailansicht starten
-     * @param v
      */
-    private void startShowingDetailView(View v, TodoItem item){
+    private void startShowingDetailView(TodoItem item){
 
         Intent intent = new Intent(this, TodoDetailActivity.class);
         intent.putExtra(String.valueOf(R.string.view_mode), R.integer.VIEW_MODE_DETAIL);
+        intent.putExtra(TODO_ITEM, item);
 
-
-        //todo.putToIntentExtras(intent);
         startActivityForResult(intent, R.integer.DETAIL_ACTIVITY);
-
     }
 
 
     private void readItemsAndFillListView(){
 
-        for(TodoItem item : todoItemList){
+      /**  List<TodoItem> items = crudOperations.readAllTodoItems();
+        if(items != null && items.size() > 0) {
+            for (TodoItem item : items) {
+                todoListViewAdapter.add(item);
+            }
+        }*/
 
-            todoListViewAdapter.add(item);
-        }
+
+        new AsyncTask<Void, Void, List<TodoItem>>(){
+
+            @Override
+            protected void onPreExecute() {
+              progressDialog.show();
+            }
+
+            @Override
+            protected List<TodoItem> doInBackground(Void... params) {
+                return crudOperations.readAllTodoItems();
+            }
+
+            @Override
+            protected void onPostExecute(List<TodoItem> todoItems) {
+               progressDialog.hide();
+                if(todoItems != null){
+
+                    for(TodoItem item : todoItems){
+                        todoListViewAdapter.add(item);
+                    }
+                }
+            }
+        }.execute();
     }
+
+
+    private void createAndShowItem(final TodoItem item){
+
+        /**  progressDialog.show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                TodoItem createdItem = crudOperations.createTodoItem(item);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        todoListViewAdapter.add(item);
+                        progressDialog.hide();
+                    }
+                });
+            }
+        }).start();*/
+
+        new AsyncTask<TodoItem, Void, TodoItem>(){
+
+            @Override
+            protected TodoItem doInBackground(TodoItem... params) {
+
+                TodoItem createdItem = crudOperations.createTodoItem(params[0]);
+                return createdItem;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                progressDialog.show();
+            }
+
+            @Override
+            protected void onPostExecute(TodoItem item) {
+
+                todoListViewAdapter.add(item);
+                progressDialog.hide();
+            }
+        }.execute(item);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -256,34 +337,6 @@ public class TodoOverviewActivity extends AppCompatActivity implements View.OnCl
     }
 
 
- /**
-    private Cursor createTodoListCursor(int sortMode){
-
-        Cursor cursor = null;
-
-        if(sortMode == R.integer.SORT_MODE_DEADLINE_FAVOURITE){
-
-            cursor = database.getDatabase().rawQuery("SELECT  * FROM "
-                    + Queries.TABLE_TODOS + " ORDER BY "
-                    + Queries.COLUMN_ISDONE + " ASC,"
-                    + Queries.COLUMN_DEADLINE_DATE + " ASC,"
-                    + Queries.COLUMN_DEADLINE_TIME + " ASC,"
-                    + Queries.COLUMN_ISFAVOURITE + " DESC", null);
-
-        }else if(sortMode == R.integer.SORT_MODE_FAVOURITE_DEADLINE){
-
-            cursor = database.getDatabase().rawQuery("SELECT  * FROM "
-                    + Queries.TABLE_TODOS + " ORDER BY "
-                    + Queries.COLUMN_ISDONE + " ASC,"
-                    + Queries.COLUMN_ISFAVOURITE + " DESC,"
-                    + Queries.COLUMN_DEADLINE_DATE + " ASC,"
-                    + Queries.COLUMN_DEADLINE_TIME + " ASC", null);
-        }
-
-        return cursor;
-    }*/
-
-
     private void showFormForNewTodo(){
 
         Intent intent = new Intent(getBaseContext(), TodoDetailActivity.class);
@@ -301,29 +354,14 @@ public class TodoOverviewActivity extends AppCompatActivity implements View.OnCl
               if (resultCode == R.integer.SAVE_TODO) {
 
                   //Daten auslesen die vom Benutzer eingegeben wurden
-                  TodoItem newTodo = new TodoItem();
-                  newTodo.setDataFromIntentExtras(data.getExtras());
-
-                  //Daten speichern in der DB
-                 /**  database.open();
-                  long id = database.createTodo(newTodo);
-
-                  if(id > 0){
-
-                      Toast.makeText(getApplicationContext(), "TODO gespeichert!", Toast.LENGTH_SHORT).show();
-
-                      //initTodoListView();
-
-                  }else{
-
-                      Toast.makeText(getApplicationContext(), "TODO konnte nicht gespeichert werden.", Toast.LENGTH_SHORT).show();
-                  }*/
+                  TodoItem newTodo = (TodoItem)data.getSerializableExtra(TODO_ITEM);
+                  createAndShowItem(newTodo);
 
               }else if(resultCode == R.integer.DELETE_TODO){
 
-                   /** long todoId = data.getLongExtra(Queries.COLUMN_ID, 0);
-                    database.open();
-                    boolean deleted = database.deleteTodoItem(todoId);
+
+
+                  /**
 
                   if(deleted == true){
 
@@ -336,11 +374,11 @@ public class TodoOverviewActivity extends AppCompatActivity implements View.OnCl
                   }*/
               }else if(requestCode == R.integer.UPDATE_TODO){
 
+                  /**
                   TodoItem newTodoData = new TodoItem();
                   newTodoData.setDataFromIntentExtras(data.getExtras());
-                  /**
-                  database.open();
-                  boolean updated = database.updateTodoItem(newTodoData);
+
+
 
                   if(updated == true){
 
@@ -363,14 +401,10 @@ public class TodoOverviewActivity extends AppCompatActivity implements View.OnCl
         setActionBar(toolbar);
     }
 
-
     @Override
-    public void onClick(View v) {
-
-
-
-
-
-
+    protected void onDestroy() {
+        super.onDestroy();
+        progressDialog.dismiss();
     }
+
 }

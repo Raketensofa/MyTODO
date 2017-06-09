@@ -5,20 +5,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
+
 import android.widget.Toolbar;
 
 import database.Queries;
 import model.TodoItem;
 
-public class TodoDetailActivity extends AppCompatActivity {
+public class TodoDetailActivity extends Activity {
 
     private MenuItem itemEdit;
     private MenuItem itemDelete;
@@ -242,23 +238,7 @@ public class TodoDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final Calendar myCalendar = Calendar.getInstance();
-                final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-                        myCalendar.set(Calendar.YEAR, year);
-                        myCalendar.set(Calendar.MONTH, monthOfYear);
-                        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        String myFormat = "dd.MM.yyyy";
-                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
-
-                        dateTextview.setText(sdf.format(myCalendar.getTime()));
-                    }
-
-                };
-                new DatePickerDialog(v.getContext(), date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-
+                dateTextView.set(DateAndTimePicker.startDatePickerDialog(dateTextview));
             }
         });
 
@@ -268,24 +248,7 @@ public class TodoDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final Calendar myCalendar = Calendar.getInstance();
-                final TimePickerDialog.OnTimeSetListener timePickerListener =
-                        new TimePickerDialog.OnTimeSetListener() {
-
-                            public void onTimeSet(TimePicker view, int selectedHour,
-                                                  int selectedMinute) {
-
-                                myCalendar.set(Calendar.HOUR, selectedHour);
-                                myCalendar.set(Calendar.MINUTE, selectedMinute);
-
-                                String myFormat = "HH:mm";
-                                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
-                                timeTextview.setText(sdf.format(myCalendar.getTime()));
-                            }
-                        };
-
-                new TimePickerDialog(v.getContext(), timePickerListener, myCalendar.get(Calendar.HOUR), myCalendar.get(Calendar.MINUTE), true).show();
-
+                timeTextView.set(DateAndTimePicker.startTimePickerDialog(timeTextview));
             }
         });*/
     }
