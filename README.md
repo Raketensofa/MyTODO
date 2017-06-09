@@ -58,44 +58,44 @@ This section contains general information about the software.
   <tr>
     <td></td>
     <td>1</td>
-    <td>...</td>
-    <td>...</td>
-     <td>...</td>
+    <td>den Namen des Todo</td>
+    <td>1</td>
+     <td>X</td>
   </tr>
    <tr>
     <td></td>
     <td>2</td>
-    <td>...</td>
-    <td>...</td>
-     <td>...</td>
+    <td>eine Beschreibung des Todo</td>
+    <td>1</td>
+     <td>X</td>
   </tr>
    <tr>
     <td></td>
     <td>3</td>
-    <td>...</td>
-    <td>...</td>
-     <td>...</td>
+    <td>die Information darüber, ob das Todo erledigt wurde oder nicht</td>
+    <td>1</td>
+     <td>X</td>
   </tr>
     <tr>
     <td></td>
     <td>4</td>
-    <td>...</td>
-    <td>...</td>
-     <td>...</td>
+    <td>die Information darüber, ob es sich um ein besonders wichtiges/ ‘favourite’ Todo handelt oder nicht</td>
+    <td>1</td>
+     <td>X</td>
   </tr>
     <tr>
     <td></td>
     <td>5</td>
-    <td>...</td>
-    <td>...</td>
-     <td>...</td>
+    <td>das Fälligkeitsdatum des Todo und eine Uhrzeit</td>
+    <td>1</td>
+     <td>X</td>
   </tr>
     <tr>
     <td></td>
     <td>6</td>
-    <td>...</td>
-    <td>...</td>
-     <td>...</td>
+    <td>Alle Informationsbestandteile, inklusive des Namens, sollen nach Erstellung eines Todo änderbar sein.</td>
+    <td>2</td>
+     <td></td>
   </tr>
     <tr>
     <td></td>
