@@ -49,11 +49,11 @@ This section contains general information about the software.
     <th>Erledigt</th>
   </tr>
   <tr>
-    <td>Datenmodell</td>
-    <td>A</td>
-    <td>Das Datenmodell für Todos soll es erlauben, die folgende Information zu repräsentieren:</td>
-    <td>7</td>
-    <td></td>
+    <th>Datenmodell</th>
+    <th>A</th>
+    <th>Das Datenmodell für Todos soll es erlauben, die folgende Information zu repräsentieren:</th>
+    <th>7</th>
+    <th></th>
   </tr>
   <tr>
     <td></td>
@@ -98,11 +98,11 @@ This section contains general information about the software.
      <td></td>
   </tr>
     <tr>
-    <td>Speichern von Todos</td>
-    <td>B</td>
-    <td>Das Speichern von Todos soll sowohl mittels einer externen Webanwendung, als auch mittels eines lokalen Datenspeichers erfolgen.  Die Webanwendung wird Ihnen als Java EE Web Application zur Verfügung gestellt. </td>
-    <td>12</td>
-     <td></td>
+    <th>Speichern von Todos</th>
+    <th>B</th>
+    <th>Das Speichern von Todos soll sowohl mittels einer externen Webanwendung, als auch mittels eines lokalen Datenspeichers erfolgen.  Die Webanwendung wird Ihnen als Java EE Web Application zur Verfügung gestellt. </th>
+    <th>12</th>
+     <th></th>
   </tr>
     <tr>
     <td></td>
@@ -163,79 +163,79 @@ This section contains general information about the software.
   </tr>
   <tr>
     <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-    <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>14</td>
+    <td>Wird die Eingabe des Email Feldes geändert, verschwindet die Fehlermeldung unmittelbar bei Eingabe/Löschen eines Zeichens..</td>
+    <td>1</td>
     <td></td>
   </tr>
     <tr>
     <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-    <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>15</td>
+    <td>Passwörter sollen numerisch und genau 6 Ziffern lang sein</td>
+    <td>1</td>
     <td></td>
   </tr>
     <tr>
     <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-    <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>16</td>
+    <td>Die Eingabe soll verschleiert (‘ausgepunktet’) werden.</td>
+    <td>1</td>
     <td></td>
   </tr>
     <tr>
     <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-    <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>17</td>
+    <td>Die Betätigung des Login Buttons soll nur möglich sein, wenn Werte für Email und Passwort eingegeben wurden.</td>
+    <td>2</td>
     <td></td>
   </tr>
     <tr>
     <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-    <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>18</td>
+    <td>Nach Betätigung des Login Buttons sollen die eingegebenen Werte an einen Server übermittelt und dort überprüft werden</td>
+    <td>2</td>
     <td></td>
   </tr>
     <tr>
     <td></td>
+    <td>19</td>
+    <td>Die Überprüfung soll asynchron erfolgen</td>
+    <td>1</td>
     <td></td>
+  </tr>
+    <tr>
     <td></td>
+    <td>20</td>
+    <td>Solange die Überprüfung läuft, soll ein ProgressDialog eingeblendet werden.</td>
+    <td>2</td>
     <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>21</td>
+    <td>Schlägt die Überprüfung fehl, wird eine dauerhaft sichtbare Fehlermeldung ausgegeben.</td>
+    <td>1</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>22</td>
+    <td>Wird eines der beiden Felder geändert, verschwindet die Fehlermeldung unmittelbar bei Eingabe/Löschen eines Zeichens</td>
+    <td>1</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>23</td>
+    <td>Bei erfolgreicher Überprüfung der eingegebenen Werte soll die Anzeige der Todos erfolgen.</td>
+    <td>1</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>24</td>
+    <td>Besteht beim Start der Android-Anwendung keine Verbindung zur Webanwendung, wird sofort die Todoliste angezeigt. Eine lokale Anmeldung ist nicht erforderlich. (Anm.: die Vergabe von Punkten für diese Anforderung erfolgt nur, wenn die Anmeldung unter Verwendung der Webanwendung grundsätzlich umgesetzt ist.)</td>
+    <td>2</td>
     <td></td>
   </tr>
     <tr>
