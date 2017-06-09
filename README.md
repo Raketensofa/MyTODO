@@ -46,15 +46,20 @@ This section contains general information about the software.
 <h2><b>Requirements</b></h2></ul>
 <table>
   <tr>
-    <td>Id</td>
+    <th>Id</th>
+    <th>Anforderung</th>
+    <th>Punkte</th>
+    <th>Erledigt</th>
   </tr>
   <tr>
     <td>1</td>
     <td>...</td>
     <td>...</td>
+    <td>...</td>
   </tr>
   <tr>
     <td>2</td>
+    <td>...</td>
     <td>...</td>
     <td>...</td>
    <tr>
