@@ -401,65 +401,65 @@ This section contains general information about the software.
   </tr>
     <tr>
     <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>43</td>
+    <td>Erlauben Sie auf Ebene des Datenmodells die Assoziation eines Todo mit einer Menge von Kontakten.</td>
+    <td>1</td>
     <td></td>
   </tr>
   <tr>
     <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-    <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>44</td>
+    <td>Erlauben Sie dem Nutzer, auf Ebene der Detailansicht Todos optional mit einer Liste von Kontakten zu verknüpfen.</td>
+    <td>1</td>
     <td></td>
   </tr>
     <tr>
     <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-    <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>45</td>
+    <td>Die Auswahl der Kontakte soll auf Grundlage einer Darstellung aller verfügbaren Kontakte erfolgen.</td>
+    <td>2</td>
     <td></td>
   </tr>
     <tr>
     <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-    <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>46</td>
+    <td>Zeigen Sie die verknüpften Kontakte in der Detailansicht für Todos an.</td>
+    <td>2</td>
     <td></td>
   </tr>
     <tr>
     <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>47</td>
+    <td>Ermöglichen Sie das Entfernen von Kontakten zur Liste der verknüpften Kontakte eines Todo</td>
+    <td>1</td>
     <td></td>
   </tr>
     <tr>
     <td></td>
+    <td>48</td>
+    <td>Ermöglichen Sie außerdem, dass dem Nutzer für jeden Kontakt die Möglichkeit der Kontaktaufnahme per Mail oder SMS gegeben wird, falls eine Mailadresse oder Mobilfunknummer vorhanden sind.</td>
+    <td>2</td>
     <td></td>
+  </tr>
+    <tr>
     <td></td>
+    <td>49</td>
+    <td>Bei Kontaktaufnahme sollen die Mailadresse/Mobilfunknummer, der Titel und die Beschreibung des Todos der jeweils verwendeten Android App übermittelt werden.</td>
+    <td>1</td>
     <td></td>
+  </tr>
+    <tr>
+    <td>Dokumentation</td>
+    <td>G</td>
+    <td>Erstellen Sie eine Dokumentation Ihrer Anwendung als UML Klassendiagramm</td>
+    <td>6</td>
+    <td></td>
+  </tr>
+    <tr>
+    <td></td>
+    <td>50</td>
+    <td>Die architektonisch relevanten Klassen der Anwendung sollen hinsichtlich ihrer relevanten Attribute und Methoden dokumentiert und zueinander in Beziehung gesetzt werden.</td>
+    <td>6</td>
     <td></td>
   </tr>
   
