@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toolbar;
 
 import database.Queries;
@@ -21,72 +26,35 @@ public class TodoDetailActivity extends Activity {
     private MenuItem itemCancel;
     private MenuItem itemSave;
 
-    private TodoItem CurrentTodo;
-    private int ViewMode;
+    private TodoItem todoItem;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        Bundle extraData = getIntent().getExtras();
-        ViewMode = extraData.getInt(String.valueOf(R.string.view_mode));
 
-        if(ViewMode == R.integer.VIEW_MODE_NEW){
+        setContentView(R.layout.todo_detail_activity_add_view);
 
-            setContentView(R.layout.todo_detail_activity_add_view);
-
-
-
-
-            setListener();
-
-        }else if(ViewMode == R.integer.VIEW_MODE_DETAIL){
-
-            setContentView(R.layout.todo_detail_activity_show_view);
-
-
-            initDetailView();
-            CurrentTodo = new TodoItem();
-            CurrentTodo = (TodoItem)extraData.getSerializable("TODO_ITEM");
-
-            //setTodoDataToList();
-            // setComponentsEditMode(false);
-        }
-
+        todoItem = new TodoItem();
+        todoItem = (TodoItem) getIntent().getExtras().getSerializable("TODO_ITEM");
 
         initToolbar();
-    }
+
+        setListener();
+
+        setTodoDataToComponents();
 
 
-    private void createNewTodoMenu(Menu menu){
 
-        itemSave = menu.add(Menu.NONE,
-                R.id.action_delete_todo,
-                1, "Speichern");
-        itemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        itemSave.setIcon(R.drawable.ic_done_white_24dp);
+        // setComponentsEditMode(false);
 
-        itemSave.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                //Eingegebene Daten an die MainActivity zur Verarbeitung uebergeben
-               // CurrentTodo = readTodoDataFromComponents();
-
-                Intent intent = new Intent();
-                CurrentTodo.putToIntentExtras(intent);
-                setResult(R.integer.SAVE_TODO, intent);
-                finish();
-
-                return false;
-            }
-        });
 
     }
 
 
     private void createTodoDetailStartMenu(Menu menu){
+
 
         itemEdit = menu.add(Menu.NONE,
                 R.id.action_edit_todo,
@@ -98,7 +66,7 @@ public class TodoDetailActivity extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                //setComponentsEditMode(true);
+                setEditMode(true);
 
                 itemEdit.setVisible(false);
                 itemDelete.setVisible(false);
@@ -141,8 +109,7 @@ public class TodoDetailActivity extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                //setTodoDataToList();
-                //setComponentsEditMode(false);
+                setTodoDataToComponents();
 
                 itemEdit.setVisible(true);
                 itemDelete.setVisible(true);
@@ -155,22 +122,22 @@ public class TodoDetailActivity extends Activity {
 
 
         itemSave = menu.add(Menu.NONE,
-                R.id.action_delete_todo,
+                R.id.action_todo_save,
                 3, "Speichern");
         itemSave.setVisible(false);
         itemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        itemSave.setIcon(R.drawable.ic_done_white_24dp);
+        itemSave.setIcon(R.drawable.save_icon_345);
 
         itemSave.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
                 Intent intent = new Intent();
-                long id = CurrentTodo.getId();
-               // CurrentTodo = readTodoDataFromComponents();
-                CurrentTodo.setId(id);
+                long id = todoItem.getId();
+               // todoItem = readTodoDataFromComponents();
+                todoItem.setId(id);
 
-                intent.putExtra("TODO_ITEM", CurrentTodo);
+                intent.putExtra("TODO_ITEM", todoItem);
                 setResult(R.integer.UPDATE_TODO, intent);
                 finish();
 
@@ -183,14 +150,12 @@ public class TodoDetailActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        if(ViewMode == R.integer.VIEW_MODE_NEW){
+        createTodoDetailStartMenu(menu);
 
-            createNewTodoMenu(menu);
-
-        }else if(ViewMode == R.integer.VIEW_MODE_DETAIL){
-
-            createTodoDetailStartMenu(menu);
-        }
+        itemEdit.setVisible(true);
+        itemDelete.setVisible(true);
+        itemSave.setVisible(false);
+        itemCancel.setVisible(false);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -214,26 +179,73 @@ public class TodoDetailActivity extends Activity {
         //Initialisierung der Toolbar
         Toolbar toolbar = (android.widget.Toolbar)findViewById(R.id.todo_form_toolbar);
         setActionBar(toolbar);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true); //TODO Farbe weiß eintellen?
 
     }
 
-
-    private void initNewTodoView(View view){
-
-        getActionBar().setTitle("Neues TODO");
-
-
-
-    }
-
-
-    private void initDetailView(){
+    private void setTodoDataToComponents(){
 
         getActionBar().setTitle("TODO Details");
 
+        EditText itemName = (EditText)findViewById(R.id.todo_detail_view_name_edittext);
+        EditText itemDesc = (EditText)findViewById(R.id.todo_detail_view_description_edittext);
+        TextView itemDate = (TextView)findViewById(R.id.todo_detail_view_date_textview);
+        TextView itemTime = (TextView)findViewById(R.id.todo_detail_view_time_textview);
+        Switch itemFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
+        ImageView addContac = (ImageView)findViewById(R.id.todo_detail_view_contact_add_icon);
+        //TODO isDone element
 
+        itemName.setText(todoItem.getName());
+        itemDesc.setText(todoItem.getDescription());
+        itemDate.setText(todoItem.getDeadlineDate());
+        itemTime.setText(todoItem.getDeadlineTime());
+
+        if(todoItem.getIsFavourite() == 1 ){
+            itemFav.setChecked(true);
+        }else{
+            itemFav.setChecked(false);
+        }
+
+        addContac.setClickable(true);
+        addContac.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //TODO
+            }
+        });
+
+        setEditMode(false);
     }
+
+    private void setEditMode(boolean isEditMode){
+
+        EditText itemName = (EditText)findViewById(R.id.todo_detail_view_name_edittext);
+        EditText itemDesc = (EditText)findViewById(R.id.todo_detail_view_description_edittext);
+        TextView itemDate = (TextView)findViewById(R.id.todo_detail_view_date_textview);
+        TextView itemTime = (TextView)findViewById(R.id.todo_detail_view_time_textview);
+        Switch itemFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
+        //TODO: isdone
+        ImageView addContac = (ImageView)findViewById(R.id.todo_detail_view_contact_add_icon);
+
+        itemName.setEnabled(isEditMode);
+        itemName.setTextColor(Color.BLACK);
+        itemDesc.setEnabled(isEditMode);
+        itemDesc.setTextColor(Color.BLACK);
+        itemDate.setEnabled(isEditMode);
+        itemDate.setTextColor(Color.BLACK);
+        itemTime.setEnabled(isEditMode);
+        itemTime.setTextColor(Color.BLACK);
+        itemFav.setClickable(isEditMode);
+        //TODO: isdone
+
+        if(isEditMode == true){
+            addContac.setVisibility(View.VISIBLE);
+        }else{
+            addContac.setVisibility(View.INVISIBLE);
+        }
+    }
+
 
 
     private void setListener(){
@@ -261,24 +273,6 @@ public class TodoDetailActivity extends Activity {
     }
 
 
-    //TODO
-    private void setTodoDataToList(View mainView, TodoItem todo) {
-
-       // LayoutInflater inflater = getLayoutInflater();
-
-        //ListView listView = (ListView)mainView.findViewById(R.id.listview_detail_todo);
-
-       /** ViewGroup header = (ViewGroup)inflater.inflate(R.layout.listview_item_group_header, listView, false);
-        TextView headerText = (TextView)header.findViewById(R.id.textview_header_name);
-        headerText.setText("Informationen");
-        listView.addHeaderView(header, null, false);*/
-
-
-
-
-    }
-
-
     private void showDeleteAcceptDialog(){
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -292,7 +286,7 @@ public class TodoDetailActivity extends Activity {
                     public void onClick(DialogInterface dialog,int id) {
 
                         Intent intent = new Intent();
-                        intent.putExtra(Queries.COLUMN_ID, CurrentTodo.getId());
+                        intent.putExtra(Queries.COLUMN_ID, todoItem.getId());
                         setResult(R.integer.DELETE_TODO, intent);
                         finish();
                     }

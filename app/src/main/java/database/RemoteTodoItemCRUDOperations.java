@@ -67,7 +67,7 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
     }
 
     @Override
-    public List<TodoItem> readAllTodoItems() {
+    public List<TodoItem> readAllTodoItems(int sortMode) {
 
 
 

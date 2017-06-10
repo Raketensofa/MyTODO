@@ -10,7 +10,7 @@ import model.TodoItem;
 public interface ITodoItemCRUD {
 
      public TodoItem createTodoItem(TodoItem todoItem);
-     public List<TodoItem> readAllTodoItems();
+     public List<TodoItem> readAllTodoItems(int sortMode);
      public TodoItem readTodoItem(long todoItemId);
      public TodoItem updateTodoItem(long id, TodoItem item);
      public boolean deleteTodoItem(long todoItemId);

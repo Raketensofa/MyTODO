@@ -11,11 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import java.util.List;
@@ -71,14 +71,7 @@ public class TodoOverviewActivity extends Activity{
 
         initToolbar();
 
-
-        /**SortMode = database.readSortMode();
-        if (SortMode < 1) {
-            database.createMainSettings();
-            SortMode = database.readSortMode();
-
-        Log.e("SortMode", String.valueOf(SortMode));
-         }*/
+        SortMode = R.integer.SORT_MODE_DEADLINE_FAVOURITE;  //default
 
         listviewTodos = (ListView) findViewById(R.id.listview_todolist);
         todoListViewAdapter = new ArrayAdapter<TodoItem>(this, R.layout.todo_list_item){
@@ -141,7 +134,7 @@ public class TodoOverviewActivity extends Activity{
                     @Override
                     public void onClick(View v) {
 
-                        Log.i(TAG, "Klick Item" + todoItem.getId());
+                        Log.i(TAG, "Klick Item " + todoItem.getId());
 
                         startShowingDetailView(todoItem);
                     }
@@ -170,7 +163,8 @@ public class TodoOverviewActivity extends Activity{
 
                         todoItem.setIsDone(checkState);
                         updateTodoItem(todoItem);
-
+                        todoListViewAdapter.clear();
+                        readItemsAndFillListView();
                     }
                 });
 
@@ -259,7 +253,8 @@ public class TodoOverviewActivity extends Activity{
 
             @Override
             protected List<TodoItem> doInBackground(Void... params) {
-                return crudOperations.readAllTodoItems();
+
+                return crudOperations.readAllTodoItems(SortMode);
             }
 
             @Override
@@ -277,25 +272,6 @@ public class TodoOverviewActivity extends Activity{
 
 
     private void createAndShowItem(final TodoItem item){
-
-        /**  progressDialog.show();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                TodoItem createdItem = crudOperations.createTodoItem(item);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        todoListViewAdapter.add(item);
-                        progressDialog.hide();
-                    }
-                });
-            }
-        }).start();*/
 
         new AsyncTask<TodoItem, Void, TodoItem>(){
 
@@ -346,7 +322,6 @@ public class TodoOverviewActivity extends Activity{
         });
 
 
-
         itemSort = menu.add(Menu.NONE,
                 R.id.action_sort_todolist,
                 2, "Sortiermodus");
@@ -368,28 +343,20 @@ public class TodoOverviewActivity extends Activity{
 
                 if(SortMode == R.integer.SORT_MODE_DEADLINE_FAVOURITE){   //Datum + Wichtigkeit
 
-                   /** boolean updated = database.updateSortMode(R.integer.SORT_MODE_FAVOURITE_DEADLINE);
-                    Log.e("Sortmode updated", String.valueOf(updated));
-
-                    if(updated == true) {
                         SortMode = R.integer.SORT_MODE_FAVOURITE_DEADLINE;
                         item.setIcon(R.drawable.ic_swap_vertical_circle_white_24dp);
-                        initTodoListView();
+
                         Toast.makeText(getApplicationContext(), "Sortierung nach Wichtigkeit + Fälligkeit", Toast.LENGTH_SHORT).show();
-                }*/
 
                 }else if(SortMode == R.integer.SORT_MODE_FAVOURITE_DEADLINE) { //Wichtigkeit + Datum
 
-                   /** boolean updated = database.updateSortMode(R.integer.SORT_MODE_DEADLINE_FAVOURITE);
-
-                    if (updated == true) {
-
                         SortMode = R.integer.SORT_MODE_DEADLINE_FAVOURITE;
                         item.setIcon(R.drawable.ic_swap_vert_white_24dp);
-                        initTodoListView();
                         Toast.makeText(getApplicationContext(), "Sortierung nach Fälligkeit + Wichtigkeit", Toast.LENGTH_SHORT).show();
-                    }*/
                 }
+
+                todoListViewAdapter.clear();
+                readItemsAndFillListView();
 
                 return false;
             }

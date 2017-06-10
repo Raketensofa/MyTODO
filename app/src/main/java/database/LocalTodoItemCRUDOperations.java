@@ -9,6 +9,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import cgellner.mytodo.R;
 import model.TodoItem;
 
 /**
@@ -49,11 +50,29 @@ public class LocalTodoItemCRUDOperations implements ITodoItemCRUD {
     }
 
     @Override
-    public List<TodoItem> readAllTodoItems() {
+    public List<TodoItem> readAllTodoItems(int sortMode) {
 
         List<TodoItem> itemList = new ArrayList<TodoItem>();
+        Cursor cursor = null;
 
-        Cursor cursor = database.query(Queries.TABLE_TODOS, Queries.COLUMNS_TABLE_TODOS, null, null, null, null, Queries.COLUMN_ID + " ASC");
+        if(sortMode == R.integer.SORT_MODE_DEADLINE_FAVOURITE) {
+
+            cursor = database.query(Queries.TABLE_TODOS, Queries.COLUMNS_TABLE_TODOS, null, null, null, null,
+                    Queries.COLUMN_ISDONE +
+                            "," + Queries.COLUMN_DEADLINE_DATE +
+                            "," + Queries.COLUMN_DEADLINE_TIME +
+                            "," + Queries.COLUMN_ISFAVOURITE + " ASC");
+
+        }else if(sortMode == R.integer.SORT_MODE_FAVOURITE_DEADLINE){
+
+            cursor = database.query(Queries.TABLE_TODOS, Queries.COLUMNS_TABLE_TODOS, null, null, null, null,
+                    Queries.COLUMN_ISDONE +
+                            "," + Queries.COLUMN_ISFAVOURITE +
+                            "," + Queries.COLUMN_DEADLINE_DATE +
+                            "," + Queries.COLUMN_DEADLINE_TIME +
+                             " ASC");
+        }
+
 
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
