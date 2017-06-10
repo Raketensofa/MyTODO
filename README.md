@@ -250,7 +250,7 @@ This section contains general information about the software.
     <td>25</td>
     <td>Die Anzeige der Todoliste soll eine Übersicht über alle Todos darstellen und die Erstellung neuer Todos ermöglichen</td>
     <td>3</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
@@ -306,7 +306,7 @@ This section contains general information about the software.
     <td>32</td>
     <td>Die Information zum Erledigtsein/Nicht-Erledigtsein bzw. zur Wichtigkeit soll modifiziert werden können, ohne die Detailanzeige anzufordern</td>
     <td>3</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
@@ -383,7 +383,7 @@ This section contains general information about the software.
     <td>41</td>
     <td>Für die Einstellung von Datum und Uhrzeit sollen die für diesen Zweck durch Android bereitgestellten UI Bedienelemente verwendet werden.</td>
     <td>3</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
