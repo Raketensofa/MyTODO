@@ -17,16 +17,14 @@
         android:layout_alignBottom="@+id/labels_layout" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="220dp"
         android:layout_height="match_parent"
         android:id="@+id/labels_layout"
         android:orientation="vertical"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/textview_highlight"
-        android:layout_alignParentLeft="false"
-        android:layout_alignParentRight="false">
+        android:layout_alignParentLeft="false">
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,7 +47,7 @@
             android:layout_marginLeft="10dp"
             android:layout_above="@+id/todo_textview_deadline"
             android:layout_gravity="left|center_vertical"
-            />
+            android:clickable="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -71,7 +69,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:layout_gravity="left|center_vertical"
-             />
+            android:clickable="true" />
 
     </LinearLayout>
 
@@ -80,37 +78,22 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/imageview_todo_isfavourite"
-        android:scaleType="fitXY"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/ic_star_border_black_24dp"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/todo_checkbox_isdone"
-        android:layout_marginLeft="20dp"
-        android:layout_toLeftOf="@+id/todo_checkbox_isdone" />
-
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/todo_checkbox_isdone"
-        android:scaleX="1.90"
-        android:scaleY="1.90"
+        android:layout_toEndOf="@id/labels_layout"
         android:clickable="true"
-        android:enabled="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="top|center_vertical|bottom|right"
-        android:layout_marginTop="12dp"
-        android:checked="false"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_alignParentStart="false"
-        android:layout_marginRight="20dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="false"
-        />
+        android:baselineAlignBottom="false"
+        android:layout_toLeftOf="@+id/labels_layout"
+        android:layout_marginRight="10dp" />
 
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/imageview_todo_isdone_2"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/imageview_todo_isfavourite"
+        android:clickable="true"
+        android:layout_toLeftOf="@+id/imageview_todo_isfavourite"
+        android:layout_marginLeft="10dp" />
 
 </RelativeLayout>

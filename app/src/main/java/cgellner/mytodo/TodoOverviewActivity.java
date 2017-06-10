@@ -6,14 +6,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,7 +50,10 @@ public class TodoOverviewActivity extends Activity{
         public TextView itemName;
         public TextView itemDescription;
         public TextView itemDeadline;
-        public CheckBox itemIsDone;
+
+        public View basicDataView;
+
+        public ImageView itemIsDone;
         public ImageView itemIsFavourite;
 
     }
@@ -92,8 +94,10 @@ public class TodoOverviewActivity extends Activity{
                     TextView itemNameView = (TextView)itemView.findViewById(R.id.todo_textview_name);
                     TextView itemDescriptionView = (TextView)itemView.findViewById(R.id.todo_textview_deadline);
                     TextView itemDeadlineView = (TextView)itemView.findViewById(R.id.todo_textview_deadline);
-                    CheckBox itemIsDoneView = (CheckBox)itemView.findViewById(R.id.todo_checkbox_isdone);
+                    ImageView itemIsDoneView = (ImageView) itemView.findViewById(R.id.imageview_todo_isdone_2);
                     ImageView itemIsFavouriteView = (ImageView) itemView.findViewById(R.id.imageview_todo_isfavourite);
+
+                    View basicDataView = itemView.findViewById(R.id.labels_layout);
 
                     ItemViewHolder itemViewHolder = new ItemViewHolder();
                     itemViewHolder.itemName = itemNameView;
@@ -102,33 +106,70 @@ public class TodoOverviewActivity extends Activity{
                     itemViewHolder.itemIsDone = itemIsDoneView;
                     itemViewHolder.itemIsFavourite = itemIsFavouriteView;
 
+                    itemViewHolder.basicDataView = basicDataView;
+
                     itemView.setTag(itemViewHolder);
                 }
 
 
                 //Zuweisung der View-Element-Inhalte
                 final TodoItem todoItem = getItem(position);
-                ItemViewHolder viewHolder = (ItemViewHolder)itemView.getTag();
+                final ItemViewHolder viewHolder = (ItemViewHolder)itemView.getTag();
 
                 viewHolder.itemId = todoItem.getId();
                 viewHolder.itemName.setText(todoItem.getName());
                 viewHolder.itemDeadline.setText(todoItem.getDeadlineDate() + " " + todoItem.getDeadlineTime());
-                viewHolder.itemIsDone.setChecked(false);
-                if(todoItem.getIsDone() == 1){
-                    viewHolder.itemIsDone.setChecked(true);
-                }
-                viewHolder.itemIsFavourite.setClickable(true);
+
                 if(todoItem.getIsFavourite() == 1){
-                  viewHolder.itemIsFavourite.setImageResource(R.drawable.ic_star_black_24dp);
-                }else{
-                    viewHolder.itemIsFavourite.setImageResource(R.drawable.ic_star_border_black_24dp);
+                    viewHolder.itemIsFavourite.setTag("IS_FAV");
+                    viewHolder.itemIsFavourite.setImageResource(R.drawable.yellow_star_1);
+                }else if(todoItem.getIsFavourite() == 0){
+                    viewHolder.itemIsFavourite.setTag("IS_NOT_FAV");
+                    viewHolder.itemIsFavourite.setImageResource(R.drawable.icons8sternfilled50);
                 }
 
-                viewHolder.itemIsDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                if(todoItem.getIsDone() == 1){
+                    viewHolder.itemIsDone.setTag("IS_DONE");
+                    viewHolder.itemIsDone.setImageResource(R.drawable.filled_checkbox_23);
+                }else if(todoItem.getIsDone() == 0){
+                    viewHolder.itemIsDone.setTag("IS_NOT_DONE");
+                    viewHolder.itemIsDone.setImageResource(R.drawable.unfilled_checkbox34);
+                }
+
+                viewHolder.basicDataView.setClickable(true);
+                viewHolder.basicDataView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    public void onClick(View v) {
+
+                        Log.i(TAG, "Klick Item" + todoItem.getId());
+
+                        startShowingDetailView(todoItem);
+                    }
+                });
 
 
+
+                viewHolder.itemIsDone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        int checkState = todoItem.getIsDone();
+
+                        if(viewHolder.itemIsDone.getTag().equals("IS_DONE")){
+
+                            viewHolder.itemIsDone.setImageResource(R.drawable.unfilled_checkbox34);
+                            checkState = 0;
+                            viewHolder.itemIsDone.setTag("IS_NOT_DONE");
+
+                        }else if(viewHolder.itemIsDone.getTag().equals("IS_NOT_DONE")){
+
+                            viewHolder.itemIsDone.setImageResource(R.drawable.filled_checkbox_23);
+                            checkState = 1;
+                            viewHolder.itemIsDone.setTag("IS_DONE");
+                        }
+
+                        todoItem.setIsDone(checkState);
+                        updateTodoItem(todoItem);
 
                     }
                 });
@@ -137,8 +178,23 @@ public class TodoOverviewActivity extends Activity{
                     @Override
                     public void onClick(View v) {
 
+                        int checkState = todoItem.getIsFavourite();
 
+                        if(viewHolder.itemIsFavourite.getTag().equals("IS_FAV")){
 
+                            viewHolder.itemIsFavourite.setImageResource(R.drawable.icons8sternfilled50);
+                            viewHolder.itemIsFavourite.setTag("IS_NOT_FAV");
+                            checkState = 0;
+
+                        }else if(viewHolder.itemIsFavourite.getTag().equals("IS_NOT_FAV")){
+
+                            viewHolder.itemIsFavourite.setImageResource(R.drawable.yellow_star_1);
+                            viewHolder.itemIsFavourite.setTag("IS_FAV");
+                            checkState = 1;
+                        }
+
+                        todoItem.setIsFavourite(checkState);
+                        updateTodoItem(todoItem);
                     }
                 });
 
@@ -146,23 +202,37 @@ public class TodoOverviewActivity extends Activity{
             }
         };
 
-
         listviewTodos.setAdapter(todoListViewAdapter);
         todoListViewAdapter.setNotifyOnChange(true);
-
-        listviewTodos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                TodoItem selectedItem = todoListViewAdapter.getItem(position);
-                startShowingDetailView(selectedItem);
-            }
-        });
-
 
         crudOperations = new LocalTodoItemCRUDOperations(this);
 
         readItemsAndFillListView();
+    }
+
+
+    private void updateTodoItem(final TodoItem item){
+
+        new AsyncTask<TodoItem, Void, TodoItem>(){
+
+            @Override
+            protected void onPreExecute() {
+                progressDialog.show();
+            }
+
+            @Override
+            protected TodoItem doInBackground(TodoItem... params) {
+
+                TodoItem updatedItem = crudOperations.updateTodoItem(params[0].getId(), params[0]);
+                return updatedItem;
+            }
+
+            @Override
+            protected void onPostExecute(TodoItem item) {
+
+                progressDialog.hide();
+            }
+        }.execute(item);
     }
 
 
@@ -172,7 +242,6 @@ public class TodoOverviewActivity extends Activity{
     private void startShowingDetailView(TodoItem item){
 
         Intent intent = new Intent(this, TodoDetailActivity.class);
-        intent.putExtra(String.valueOf(R.string.view_mode), R.integer.VIEW_MODE_DETAIL);
         intent.putExtra(TODO_ITEM, item);
 
         startActivityForResult(intent, R.integer.DETAIL_ACTIVITY);
@@ -180,14 +249,6 @@ public class TodoOverviewActivity extends Activity{
 
 
     private void readItemsAndFillListView(){
-
-      /**  List<TodoItem> items = crudOperations.readAllTodoItems();
-        if(items != null && items.size() > 0) {
-            for (TodoItem item : items) {
-                todoListViewAdapter.add(item);
-            }
-        }*/
-
 
         new AsyncTask<Void, Void, List<TodoItem>>(){
 

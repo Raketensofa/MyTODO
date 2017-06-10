@@ -101,7 +101,7 @@ public class LocalTodoItemCRUDOperations implements ITodoItemCRUD {
 
         ContentValues todoValues = item.createContentValues();
 
-        int result = database.update(Queries.TABLE_TODOS, todoValues, Queries.COLUMN_ID + id, null);
+        int result = database.update(Queries.TABLE_TODOS, todoValues, Queries.COLUMN_ID + "=" + id, null);
 
         if(result > 0) {
             Log.i(TAG, "Updated Todo-Item:" + item.toString());
