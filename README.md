@@ -292,7 +292,7 @@ This section contains general information about the software.
     <td>30</td>
     <td>Sie soll es dem Nutzer außerdem ermöglichen, sich für jedes Todo dessen Details anzeigen zu lassen.</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
@@ -355,21 +355,21 @@ This section contains general information about the software.
     <td>37</td>
     <td>Name</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>38</td>
     <td>Beschreibung</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
       <tr>
     <td></td>
     <td>39</td>
     <td>Fälligkeitsdatum und Uhrzeit</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
       <tr>
     <td></td>
@@ -390,7 +390,7 @@ This section contains general information about the software.
     <td>42</td>
     <td>Das Löschen eines Todos soll ebenfalls über die Detailansicht ermöglicht und vor Durchführung rückbestätigt werden.</td>
     <td>3</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
    <tr>
     <td>Verknüpfung mit Kontakten</td>
