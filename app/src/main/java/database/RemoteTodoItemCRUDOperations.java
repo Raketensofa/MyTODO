@@ -24,7 +24,7 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
 
     private static String TAG = RemoteTodoItemCRUDOperations.class.getSimpleName();
 
-    public interface ITodoItemCRUDWebApi{
+    public interface ITodoItemCRUDWebApi {
 
         @POST("/api/todos")
         public Call<TodoItem> createTodoItem(@Body TodoItem todoItem);
@@ -43,6 +43,7 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
 
         @PUT("/api/users/auth")
         public Call<Boolean> authorizeUser(@Body User user);
+
     }
 
     private ITodoItemCRUDWebApi webApi;
@@ -151,5 +152,27 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
         }
     }
 
+    public boolean isConnectedToWeb() {
+
+        boolean connected = false;
+
+        try{
+
+            int state = this.webApi.readAllTodoItems().execute().code();
+            Log.i(TAG, "Connection State WebApi: " + String.valueOf(state));
+
+            if(state == 200){
+
+                connected = true;
+            }
+
+            return connected;
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
 }

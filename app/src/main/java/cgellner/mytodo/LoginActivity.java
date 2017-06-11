@@ -50,10 +50,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
   //   private static final int REQUEST_READ_CONTACTS = 0;
 
 
-    private static final String[] CREDENTIALS = new String[]{
-            "s@bht.de:000000"
-    };
-
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -65,10 +61,15 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mProgressView;
     private View mLoginFormView;
 
+    private RemoteTodoItemCRUDOperations remoteOperations;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         //populateAutoComplete();
@@ -95,6 +96,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
     }
 
     /**
