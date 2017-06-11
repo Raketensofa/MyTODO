@@ -313,21 +313,21 @@ This section contains general information about the software.
     <td>33</td>
     <td>Todos sollen grundsätzlich nach Erledigt/Nichterledigt sortiert sein und dann wahlweise nach Wichtigkeit+Datum oder nach Datum+Wichtigkeit.</td>
     <td>3</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>34</td>
     <td>Dem Nutzer soll es möglich sein, die Anzeige nach Datum+Wichtigkeit vs. Wichtigkeit+Datum über ein Optionsmenü bzw. Action Bar Optionen auszuwählen.</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>35</td>
     <td>Überfällige Todos – d.h. Todos mit abgelaufenem Fälligkeitsdatum – sollen visuell besonders hervorgehoben werden.</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td>Detailansicht</td>
@@ -341,7 +341,7 @@ This section contains general information about the software.
     <td>36</td>
     <td>Die Detailansicht soll alle durch ein Todo repräsentierten Daten darstellen.</td>
     <td>4</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
    <tr>
     <td></td>
