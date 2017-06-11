@@ -299,7 +299,7 @@ This section contains general information about the software.
     <td>31</td>
     <td>Änderungen der Todoliste, die in der Detailansicht eines Todos getätigt werden können, sollen bei Rückkehr in der Übersicht angezeigt werden.</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
