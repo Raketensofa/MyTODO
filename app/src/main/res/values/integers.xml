@@ -12,5 +12,11 @@
     <integer name="SORT_MODE_FAVOURITE_DEADLINE">2</integer>
     <integer name="TODO_ITEM">50</integer>
 
+    <integer name="WEBAPI_CONNECTION_TRUE">10</integer>
+    <integer name="WEBAPI_CONNECTION_FALSE">20</integer>
+
+    <integer name="WEBAPI_USER_TRUE">50</integer>
+    <integer name="WEBAPI_USER_FALSE">60</integer>
+
 
 </resources>

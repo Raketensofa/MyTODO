@@ -1,9 +1,12 @@
 package database;
 
 
+import android.util.Log;
+
 import java.util.List;
 
 import model.TodoItem;
+import model.User;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -19,6 +22,7 @@ import retrofit2.http.Path;
  */
 public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
 
+    private static String TAG = RemoteTodoItemCRUDOperations.class.getSimpleName();
 
     public interface ITodoItemCRUDWebApi{
 
@@ -37,13 +41,17 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
         @DELETE("/api/todos/{id}")
         public Call<Boolean> deleteTodoItem(@Path("id") long todoItemId);
 
+        @PUT("/api/users/auth")
+        public Call<Boolean> authorizeUser(@Body User user);
     }
 
     private ITodoItemCRUDWebApi webApi;
 
     public RemoteTodoItemCRUDOperations(){
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:8080/")
+
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://10.0.3.2:8080/")
                 .addConverterFactory(GsonConverterFactory.create()).build();
 
         this.webApi = retrofit.create(ITodoItemCRUDWebApi.class);
@@ -55,7 +63,6 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
     public TodoItem createTodoItem(TodoItem todoItem) {
 
         try{
-
             TodoItem created = this.webApi.createTodoItem(todoItem).execute().body();
             return created;
 
@@ -69,31 +76,80 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
     @Override
     public List<TodoItem> readAllTodoItems(int sortMode) {
 
+        try{
 
+            List<TodoItem> todoItemList = this.webApi.readAllTodoItems().execute().body();
 
-        return null;
+            Log.i(TAG, "readAllTodoItems");
+
+            return todoItemList;
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public TodoItem readTodoItem(long todoItemId) {
 
+        try{
 
-        return null;
+            TodoItem todoItem = this.webApi.readTodoItem(todoItemId).execute().body();
+            return todoItem;
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public TodoItem updateTodoItem(long id, TodoItem item) {
 
+        try{
 
+            TodoItem updatedItem = this.webApi.updateTodoItem(id, item).execute().body();
+            return updatedItem;
 
-        return null;
-    }
+        }catch (Exception e) {
+
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+      }
 
     @Override
     public boolean deleteTodoItem(long todoItemId) {
 
+        try{
 
+            boolean deleted = this.webApi.deleteTodoItem(todoItemId).execute().body();
+            return deleted;
 
-        return false;
+        }catch (Exception e){
+
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
+
+
+    public boolean authorizeUser(User user) {
+
+        try{
+
+            boolean isAuthorize = this.webApi.authorizeUser(user).execute().body();
+            return isAuthorize;
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

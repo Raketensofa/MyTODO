@@ -27,6 +27,7 @@ import java.util.List;
 import database.ITodoItemCRUD;
 import database.LocalTodoItemCRUDOperations;
 import database.Queries;
+import database.RemoteTodoItemCRUDOperations;
 import model.TodoItem;
 
 public class TodoOverviewActivity extends Activity {
@@ -41,7 +42,8 @@ public class TodoOverviewActivity extends Activity {
 
     private int SortMode; //1 = Faelligkeit+Wichtigkeit  - 2= Wichtigkeit+Faelligkeit
 
-    private ITodoItemCRUD crudOperations;
+    private ITodoItemCRUD localCrudOperations;
+    private ITodoItemCRUD remoteCrudOperations;
 
     private static String TODO_ITEM = "TODO_ITEM";
 
@@ -200,7 +202,8 @@ public class TodoOverviewActivity extends Activity {
         listviewTodos.setAdapter(todoListViewAdapter);
         todoListViewAdapter.setNotifyOnChange(true);
 
-        crudOperations = new LocalTodoItemCRUDOperations(this);
+        localCrudOperations = new LocalTodoItemCRUDOperations(this);
+        //remoteCrudOperations = new RemoteTodoItemCRUDOperations();
 
         readItemsAndFillListView();
     }
@@ -221,7 +224,7 @@ public class TodoOverviewActivity extends Activity {
               if (resultCode == R.integer.DELETE_TODO) {
 
                   long todoId = data.getLongExtra(Queries.COLUMN_ID, -1);
-                  boolean deleted = crudOperations.deleteTodoItem(todoId);
+                  boolean deleted = localCrudOperations.deleteTodoItem(todoId);
 
                   if(deleted == true) {
                       Toast.makeText(getApplicationContext(), "TODO wurde gelöscht.", Toast.LENGTH_SHORT).show();
@@ -233,7 +236,7 @@ public class TodoOverviewActivity extends Activity {
 
                   TodoItem updatedItem = (TodoItem) data.getSerializableExtra(TODO_ITEM);
 
-                  crudOperations.updateTodoItem(updatedItem.getId(), updatedItem);
+                  localCrudOperations.updateTodoItem(updatedItem.getId(), updatedItem);
                   Toast.makeText(getApplicationContext(), "Änderungen gespeichert", Toast.LENGTH_SHORT).show();
             }
         }
@@ -269,7 +272,7 @@ public class TodoOverviewActivity extends Activity {
             @Override
             protected TodoItem doInBackground(TodoItem... params) {
 
-                TodoItem updatedItem = crudOperations.updateTodoItem(params[0].getId(), params[0]);
+                TodoItem updatedItem = localCrudOperations.updateTodoItem(params[0].getId(), params[0]);
                 return updatedItem;
             }
 
@@ -305,7 +308,7 @@ public class TodoOverviewActivity extends Activity {
             @Override
             protected List<TodoItem> doInBackground(Void... params) {
 
-                return crudOperations.readAllTodoItems(SortMode);
+                return localCrudOperations.readAllTodoItems(SortMode);
             }
 
             @Override
@@ -329,7 +332,7 @@ public class TodoOverviewActivity extends Activity {
             @Override
             protected TodoItem doInBackground(TodoItem... params) {
 
-                TodoItem createdItem = crudOperations.createTodoItem(params[0]);
+                TodoItem createdItem = localCrudOperations.createTodoItem(params[0]);
                 return createdItem;
             }
 

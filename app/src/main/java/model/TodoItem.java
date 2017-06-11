@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 import database.Queries;
@@ -20,9 +22,14 @@ public class TodoItem implements Serializable{
     private String description;
     private int isDone; //1=is done - 0=is not done
     private int isFavourite;  //1=is favourite - 0=is not favourite
+
     private String deadlineDate;
     private String deadlineTime;
     //private ArrayList<Contact> contacts;
+
+
+    @SerializedName("expiry")
+    private String deadline = deadlineDate + " " + deadlineTime;
 
     //endregion
 
@@ -40,6 +47,14 @@ public class TodoItem implements Serializable{
     public void setContacts(ArrayList<Contact> contacts) {
         this.contacts = contacts;
     }*/
+
+   public String getDeadline() {
+       return deadline;
+   }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
 
     public long getId() {
         return id;
