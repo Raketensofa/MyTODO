@@ -123,7 +123,7 @@ This section contains general information about the software.
     <td>9</td>
     <td>Ist beim Start der Anwendung kein Zugriff auf die Webanwendung möglich, soll eine Warnmeldung ausgegeben werden. In diesem Fall wird bis zum Ende der Anwendungsnutzung nur die lokale Datenbank verwendet.Die Fälle, dass eine initiale Verbindung während der App-Nutzung abbricht bzw.dass eine anfänglich nicht verfügbare Webanwendung während der Nutzung verfügbar wird, brauchen nicht berücksichtigt zu werden.</td>
     <td>1</td>
-     <td></td>
+     <td>&times;</td>
   </tr>
     <tr>
     <td></td>
@@ -145,42 +145,42 @@ This section contains general information about the software.
     <td>11</td>
     <td>Die Anmeldung soll durch Eingabe einer Email und eines Passworts erfolgen und durch Betätigung eines Login Buttonsausgelöst     werden</td>
     <td>3</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>12</td>
     <td>In das Eingabefeld für Email sollen nur Emailadressen eingegeben werden.</td>
     <td>1</td>
-     <td></td>
+     <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>13</td>
     <td>Wird keine Email-Adresse eingegeben,wird eine dauerhaft sichtbare Fehlermeldung ausgegeben.</td>
     <td>1</td>
-     <td></td>
+     <td>&times;</td>
   </tr>
   <tr>
     <td></td>
     <td>14</td>
     <td>Wird die Eingabe des Email Feldes geändert, verschwindet die Fehlermeldung unmittelbar bei Eingabe/Löschen eines Zeichens..</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>15</td>
     <td>Passwörter sollen numerisch und genau 6 Ziffern lang sein</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>16</td>
     <td>Die Eingabe soll verschleiert (‘ausgepunktet’) werden.</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
@@ -194,7 +194,7 @@ This section contains general information about the software.
     <td>18</td>
     <td>Nach Betätigung des Login Buttons sollen die eingegebenen Werte an einen Server übermittelt und dort überprüft werden</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
@@ -222,21 +222,21 @@ This section contains general information about the software.
     <td>22</td>
     <td>Wird eines der beiden Felder geändert, verschwindet die Fehlermeldung unmittelbar bei Eingabe/Löschen eines Zeichens</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>23</td>
     <td>Bei erfolgreicher Überprüfung der eingegebenen Werte soll die Anzeige der Todos erfolgen.</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>24</td>
     <td>Besteht beim Start der Android-Anwendung keine Verbindung zur Webanwendung, wird sofort die Todoliste angezeigt. Eine lokale Anmeldung ist nicht erforderlich. (Anm.: die Vergabe von Punkten für diese Anforderung erfolgt nur, wenn die Anmeldung unter Verwendung der Webanwendung grundsätzlich umgesetzt ist.)</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td>Todoliste</td>
