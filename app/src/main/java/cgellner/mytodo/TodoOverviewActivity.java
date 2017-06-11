@@ -3,6 +3,7 @@ package cgellner.mytodo;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,13 +19,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import database.ITodoItemCRUD;
 import database.LocalTodoItemCRUDOperations;
+import database.Queries;
 import model.TodoItem;
 
-public class TodoOverviewActivity extends Activity{
+public class TodoOverviewActivity extends Activity {
 
     private static String TAG = TodoOverviewActivity.class.getSimpleName();
 
@@ -42,22 +47,18 @@ public class TodoOverviewActivity extends Activity{
 
     private ProgressDialog progressDialog;
 
-
-    private class ItemViewHolder{
+    private class ItemViewHolder {
 
         public long itemId;
 
         public TextView itemName;
         public TextView itemDescription;
         public TextView itemDeadline;
-
-        public View basicDataView;
-
         public ImageView itemIsDone;
         public ImageView itemIsFavourite;
 
+        public View basicDataView;
     }
-
 
 
     @Override
@@ -74,19 +75,19 @@ public class TodoOverviewActivity extends Activity{
         SortMode = R.integer.SORT_MODE_DEADLINE_FAVOURITE;  //default
 
         listviewTodos = (ListView) findViewById(R.id.listview_todolist);
-        todoListViewAdapter = new ArrayAdapter<TodoItem>(this, R.layout.todo_list_item){
+        todoListViewAdapter = new ArrayAdapter<TodoItem>(this, R.layout.todo_list_item) {
 
             @NonNull
             @Override
             public View getView(int position, View itemView, ViewGroup parent) {
 
                 //Initialsierung der View-Elemente
-                if(itemView == null) {
+                if (itemView == null) {
 
                     itemView = getLayoutInflater().inflate(R.layout.todo_list_item, null);
-                    TextView itemNameView = (TextView)itemView.findViewById(R.id.todo_textview_name);
-                    TextView itemDescriptionView = (TextView)itemView.findViewById(R.id.todo_textview_deadline);
-                    TextView itemDeadlineView = (TextView)itemView.findViewById(R.id.todo_textview_deadline);
+                    TextView itemNameView = (TextView) itemView.findViewById(R.id.todo_textview_name);
+                    TextView itemDescriptionView = (TextView) itemView.findViewById(R.id.todo_textview_deadline);
+                    TextView itemDeadlineView = (TextView) itemView.findViewById(R.id.todo_textview_deadline);
                     ImageView itemIsDoneView = (ImageView) itemView.findViewById(R.id.imageview_todo_isdone_2);
                     ImageView itemIsFavouriteView = (ImageView) itemView.findViewById(R.id.imageview_todo_isfavourite);
 
@@ -94,7 +95,7 @@ public class TodoOverviewActivity extends Activity{
 
                     ItemViewHolder itemViewHolder = new ItemViewHolder();
                     itemViewHolder.itemName = itemNameView;
-                    itemViewHolder.itemDescription =  itemDescriptionView;
+                    itemViewHolder.itemDescription = itemDescriptionView;
                     itemViewHolder.itemDeadline = itemDeadlineView;
                     itemViewHolder.itemIsDone = itemIsDoneView;
                     itemViewHolder.itemIsFavourite = itemIsFavouriteView;
@@ -107,24 +108,25 @@ public class TodoOverviewActivity extends Activity{
 
                 //Zuweisung der View-Element-Inhalte
                 final TodoItem todoItem = getItem(position);
-                final ItemViewHolder viewHolder = (ItemViewHolder)itemView.getTag();
+                final ItemViewHolder viewHolder = (ItemViewHolder) itemView.getTag();
 
                 viewHolder.itemId = todoItem.getId();
                 viewHolder.itemName.setText(todoItem.getName());
                 viewHolder.itemDeadline.setText(todoItem.getDeadlineDate() + " " + todoItem.getDeadlineTime());
+                markExpiredTodoItems(viewHolder.itemDeadline, todoItem.getDeadlineDate(), todoItem.getDeadlineTime());
 
-                if(todoItem.getIsFavourite() == 1){
+                if (todoItem.getIsFavourite() == 1) {
                     viewHolder.itemIsFavourite.setTag("IS_FAV");
                     viewHolder.itemIsFavourite.setImageResource(R.drawable.yellow_star_1);
-                }else if(todoItem.getIsFavourite() == 0){
+                } else if (todoItem.getIsFavourite() == 0) {
                     viewHolder.itemIsFavourite.setTag("IS_NOT_FAV");
                     viewHolder.itemIsFavourite.setImageResource(R.drawable.icons8sternfilled50);
                 }
 
-                if(todoItem.getIsDone() == 1){
+                if (todoItem.getIsDone() == 1) {
                     viewHolder.itemIsDone.setTag("IS_DONE");
                     viewHolder.itemIsDone.setImageResource(R.drawable.filled_checkbox_23);
-                }else if(todoItem.getIsDone() == 0){
+                } else if (todoItem.getIsDone() == 0) {
                     viewHolder.itemIsDone.setTag("IS_NOT_DONE");
                     viewHolder.itemIsDone.setImageResource(R.drawable.unfilled_checkbox34);
                 }
@@ -141,20 +143,19 @@ public class TodoOverviewActivity extends Activity{
                 });
 
 
-
                 viewHolder.itemIsDone.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         int checkState = todoItem.getIsDone();
 
-                        if(viewHolder.itemIsDone.getTag().equals("IS_DONE")){
+                        if (viewHolder.itemIsDone.getTag().equals("IS_DONE")) {
 
                             viewHolder.itemIsDone.setImageResource(R.drawable.unfilled_checkbox34);
                             checkState = 0;
                             viewHolder.itemIsDone.setTag("IS_NOT_DONE");
 
-                        }else if(viewHolder.itemIsDone.getTag().equals("IS_NOT_DONE")){
+                        } else if (viewHolder.itemIsDone.getTag().equals("IS_NOT_DONE")) {
 
                             viewHolder.itemIsDone.setImageResource(R.drawable.filled_checkbox_23);
                             checkState = 1;
@@ -174,13 +175,13 @@ public class TodoOverviewActivity extends Activity{
 
                         int checkState = todoItem.getIsFavourite();
 
-                        if(viewHolder.itemIsFavourite.getTag().equals("IS_FAV")){
+                        if (viewHolder.itemIsFavourite.getTag().equals("IS_FAV")) {
 
                             viewHolder.itemIsFavourite.setImageResource(R.drawable.icons8sternfilled50);
                             viewHolder.itemIsFavourite.setTag("IS_NOT_FAV");
                             checkState = 0;
 
-                        }else if(viewHolder.itemIsFavourite.getTag().equals("IS_NOT_FAV")){
+                        } else if (viewHolder.itemIsFavourite.getTag().equals("IS_NOT_FAV")) {
 
                             viewHolder.itemIsFavourite.setImageResource(R.drawable.yellow_star_1);
                             viewHolder.itemIsFavourite.setTag("IS_FAV");
@@ -205,9 +206,60 @@ public class TodoOverviewActivity extends Activity{
     }
 
 
-    private void updateTodoItem(final TodoItem item){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        new AsyncTask<TodoItem, Void, TodoItem>(){
+        if (requestCode == R.integer.NEWTODO_ACTIVITY && resultCode == R.integer.SAVE_TODO) {
+
+            TodoItem newTodo = (TodoItem) data.getSerializableExtra(TODO_ITEM);
+            createAndShowItem(newTodo);
+
+        }else
+        if (requestCode == R.integer.DETAIL_ACTIVITY) {
+
+              if (resultCode == R.integer.DELETE_TODO) {
+
+                  long todoId = data.getLongExtra(Queries.COLUMN_ID, -1);
+                  boolean deleted = crudOperations.deleteTodoItem(todoId);
+
+                  if(deleted == true) {
+                      Toast.makeText(getApplicationContext(), "TODO wurde gelöscht.", Toast.LENGTH_SHORT).show();
+                  }else{
+                      Toast.makeText(getApplicationContext(), "Error: Fehler beim Löschen des Todos aufgetreten.", Toast.LENGTH_SHORT).show();
+                  }
+
+            } else if (resultCode == R.integer.UPDATE_TODO) {
+
+                  TodoItem updatedItem = (TodoItem) data.getSerializableExtra(TODO_ITEM);
+
+                  crudOperations.updateTodoItem(updatedItem.getId(), updatedItem);
+                  Toast.makeText(getApplicationContext(), "Änderungen gespeichert", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        todoListViewAdapter.clear();
+        readItemsAndFillListView();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        progressDialog.dismiss();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        createToolbarButtons(menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    private void updateTodoItem(final TodoItem item) {
+
+        new AsyncTask<TodoItem, Void, TodoItem>() {
 
             @Override
             protected void onPreExecute() {
@@ -233,22 +285,21 @@ public class TodoOverviewActivity extends Activity{
     /**
      * Detailansicht starten
      */
-    private void startShowingDetailView(TodoItem item){
+    private void startShowingDetailView(TodoItem item) {
 
         Intent intent = new Intent(this, TodoDetailActivity.class);
         intent.putExtra(TODO_ITEM, item);
-
         startActivityForResult(intent, R.integer.DETAIL_ACTIVITY);
     }
 
 
-    private void readItemsAndFillListView(){
+    private void readItemsAndFillListView() {
 
-        new AsyncTask<Void, Void, List<TodoItem>>(){
+        new AsyncTask<Void, Void, List<TodoItem>>() {
 
             @Override
             protected void onPreExecute() {
-              progressDialog.show();
+                progressDialog.show();
             }
 
             @Override
@@ -259,10 +310,10 @@ public class TodoOverviewActivity extends Activity{
 
             @Override
             protected void onPostExecute(List<TodoItem> todoItems) {
-               progressDialog.hide();
-                if(todoItems != null){
+                progressDialog.hide();
+                if (todoItems != null) {
 
-                    for(TodoItem item : todoItems){
+                    for (TodoItem item : todoItems) {
                         todoListViewAdapter.add(item);
                     }
                 }
@@ -271,9 +322,9 @@ public class TodoOverviewActivity extends Activity{
     }
 
 
-    private void createAndShowItem(final TodoItem item){
+    private void createAndShowItem(final TodoItem item) {
 
-        new AsyncTask<TodoItem, Void, TodoItem>(){
+        new AsyncTask<TodoItem, Void, TodoItem>() {
 
             @Override
             protected TodoItem doInBackground(TodoItem... params) {
@@ -297,14 +348,7 @@ public class TodoOverviewActivity extends Activity{
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        createToolbarButtons(menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-    private void createToolbarButtons(Menu menu){
+    private void createToolbarButtons(Menu menu) {
 
         itemNew = menu.add(Menu.NONE,
                 R.id.action_new_todo,
@@ -326,11 +370,11 @@ public class TodoOverviewActivity extends Activity{
                 R.id.action_sort_todolist,
                 2, "Sortiermodus");
 
-        if(SortMode == R.integer.SORT_MODE_DEADLINE_FAVOURITE){
+        if (SortMode == R.integer.SORT_MODE_DEADLINE_FAVOURITE) {
 
             itemSort.setIcon(R.drawable.ic_swap_vert_white_24dp);
 
-        }else if(SortMode == R.integer.SORT_MODE_FAVOURITE_DEADLINE){
+        } else if (SortMode == R.integer.SORT_MODE_FAVOURITE_DEADLINE) {
 
             itemSort.setIcon(R.drawable.ic_swap_vertical_circle_white_24dp);
         }
@@ -341,18 +385,18 @@ public class TodoOverviewActivity extends Activity{
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                if(SortMode == R.integer.SORT_MODE_DEADLINE_FAVOURITE){   //Datum + Wichtigkeit
+                if (SortMode == R.integer.SORT_MODE_DEADLINE_FAVOURITE) {   //Datum + Wichtigkeit
 
-                        SortMode = R.integer.SORT_MODE_FAVOURITE_DEADLINE;
-                        item.setIcon(R.drawable.ic_swap_vertical_circle_white_24dp);
+                    SortMode = R.integer.SORT_MODE_FAVOURITE_DEADLINE;
+                    item.setIcon(R.drawable.ic_swap_vertical_circle_white_24dp);
 
-                        Toast.makeText(getApplicationContext(), "Sortierung nach Wichtigkeit + Fälligkeit", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Sortierung nach Wichtigkeit + Fälligkeit", Toast.LENGTH_SHORT).show();
 
-                }else if(SortMode == R.integer.SORT_MODE_FAVOURITE_DEADLINE) { //Wichtigkeit + Datum
+                } else if (SortMode == R.integer.SORT_MODE_FAVOURITE_DEADLINE) { //Wichtigkeit + Datum
 
-                        SortMode = R.integer.SORT_MODE_DEADLINE_FAVOURITE;
-                        item.setIcon(R.drawable.ic_swap_vert_white_24dp);
-                        Toast.makeText(getApplicationContext(), "Sortierung nach Fälligkeit + Wichtigkeit", Toast.LENGTH_SHORT).show();
+                    SortMode = R.integer.SORT_MODE_DEADLINE_FAVOURITE;
+                    item.setIcon(R.drawable.ic_swap_vert_white_24dp);
+                    Toast.makeText(getApplicationContext(), "Sortierung nach Fälligkeit + Wichtigkeit", Toast.LENGTH_SHORT).show();
                 }
 
                 todoListViewAdapter.clear();
@@ -364,80 +408,46 @@ public class TodoOverviewActivity extends Activity{
     }
 
 
-    private void showFormForNewTodo(){
+    private void showFormForNewTodo() {
 
         Intent intent = new Intent(getBaseContext(), TodoAddNewActivity.class);
         startActivityForResult(intent, R.integer.NEWTODO_ACTIVITY);
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void initToolbar() {
 
-         if(requestCode == R.integer.NEWTODO_ACTIVITY && resultCode == R.integer.SAVE_TODO){
-
-             TodoItem newTodo = (TodoItem)data.getSerializableExtra(TODO_ITEM);
-             createAndShowItem(newTodo);
-         }
-
-
-
-
-          if (requestCode == R.integer.DETAIL_ACTIVITY) {
-
-              if (resultCode == R.integer.SAVE_TODO) {
-
-
-
-              }else if(resultCode == R.integer.DELETE_TODO){
-
-
-
-                  /**
-
-                  if(deleted == true){
-
-                      Toast.makeText(getApplicationContext(), "TODO wurde gelöscht.", Toast.LENGTH_SHORT).show();
-                      initTodoListView();
-
-                  }else{
-
-                      Toast.makeText(getApplicationContext(), "Fehler beim Löschen aufgetreten.", Toast.LENGTH_SHORT).show();
-                  }*/
-              }else if(requestCode == R.integer.UPDATE_TODO){
-
-                  /**
-                  TodoItem newTodoData = new TodoItem();
-                  newTodoData.setDataFromIntentExtras(data.getExtras());
-
-
-
-                  if(updated == true){
-
-                      Toast.makeText(getApplicationContext(), "Daten geändert", Toast.LENGTH_SHORT).show();
-                      initTodoListView();
-
-                  }else{
-
-                      Toast.makeText(getApplicationContext(), "Daten nicht geändert", Toast.LENGTH_SHORT).show();
-                  }*/
-              }
-          }
-    }
-
-
-    private void initToolbar(){
-
-        Toolbar toolbar = (android.widget.Toolbar)findViewById(R.id.todo_main_toolbar);
+        Toolbar toolbar = (android.widget.Toolbar) findViewById(R.id.todo_main_toolbar);
         toolbar.setTitle("MyTODO");
         setActionBar(toolbar);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        progressDialog.dismiss();
-    }
 
+    private void markExpiredTodoItems(TextView view, String date, String time) {
+
+        SimpleDateFormat sdfToDate = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+            try {
+
+                Calendar cal = Calendar.getInstance();
+                Date todoDateTime = sdfToDate.parse(date + " " + time);
+
+                if (todoDateTime.getTime() < cal.getTime().getTime()) {
+
+                    view.setTextColor(Color.WHITE);
+                    view.setBackgroundColor(Color.RED);
+                    //view.setBackgroundColor(Color.DKGRAY);
+
+                }else{
+
+                    view.setBackgroundColor(Color.WHITE);
+                    view.setTextColor(Color.DKGRAY);
+                }
+
+            } catch (Exception ex) {
+
+
+            }
+
+    }
 }

@@ -136,8 +136,11 @@ public class LocalTodoItemCRUDOperations implements ITodoItemCRUD {
 
         int result = database.delete(Queries.TABLE_TODOS, Queries.COLUMN_ID + " = ?", new String[]{String.valueOf(todoItemId)});
 
-        if(result > 0) {
+        Log.i(TAG, "Delete Result: " + result);
+
+        if(result == 1) {
             Log.i(TAG, "Delete Todo-Item:" + todoItemId + " - true");
+            deleted = true;
         }else{
             Log.i(TAG, "Error Delete Todo-Item:" + todoItemId);
         }

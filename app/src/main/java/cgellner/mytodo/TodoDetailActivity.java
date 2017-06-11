@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,6 +21,8 @@ import database.Queries;
 import model.TodoItem;
 
 public class TodoDetailActivity extends Activity {
+
+    private static String TAG = TodoDetailActivity.class.getSimpleName();
 
     private MenuItem itemEdit;
     private MenuItem itemDelete;
@@ -46,14 +49,13 @@ public class TodoDetailActivity extends Activity {
         setTodoDataToComponents();
 
 
-
         // setComponentsEditMode(false);
 
 
     }
 
 
-    private void createTodoDetailStartMenu(Menu menu){
+    private void createTodoDetailStartMenu(Menu menu) {
 
 
         itemEdit = menu.add(Menu.NONE,
@@ -78,7 +80,6 @@ public class TodoDetailActivity extends Activity {
         });
 
 
-
         itemDelete = menu.add(Menu.NONE,
                 R.id.action_delete_todo,
                 2, "Löschen");
@@ -91,12 +92,11 @@ public class TodoDetailActivity extends Activity {
                 //Zeigt einen AlertDialog an und prueft, ob tatsaechlich geloescht werden soll
                 //Wenn geloescht werden soll, wird die ID des to-dos an die MainActitivy ueber einen Intent zureckgegeben
                 //Das Loeschen in der DB wird in der MainActivity dann ausgefuehrt
-                showDeleteAcceptDialog();
+                startDeleteTodoProcess();
 
                 return false;
             }
         });
-
 
 
         itemCancel = menu.add(Menu.NONE,
@@ -132,18 +132,45 @@ public class TodoDetailActivity extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
+                TodoItem uptatedItem = readDataFromComponents(todoItem);
                 Intent intent = new Intent();
-                long id = todoItem.getId();
-               // todoItem = readTodoDataFromComponents();
-                todoItem.setId(id);
-
-                intent.putExtra("TODO_ITEM", todoItem);
+                intent.putExtra("TODO_ITEM", uptatedItem);
                 setResult(R.integer.UPDATE_TODO, intent);
                 finish();
 
                 return false;
             }
         });
+    }
+
+
+    private void startDeleteTodoProcess() {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder.setTitle("TODO löschen");
+
+        alertDialogBuilder
+                .setMessage("TODO tatsächlich löschen?")
+                .setCancelable(false)
+                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        Intent intent = new Intent();
+                        intent.putExtra(Queries.COLUMN_ID, todoItem.getId());
+                        setResult(R.integer.DELETE_TODO, intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
 
@@ -165,7 +192,7 @@ public class TodoDetailActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-                case android.R.id.home:
+            case android.R.id.home:
                 finish();
                 return true;
         }
@@ -174,25 +201,25 @@ public class TodoDetailActivity extends Activity {
     }
 
 
-    private void initToolbar(){
+    private void initToolbar() {
 
         //Initialisierung der Toolbar
-        Toolbar toolbar = (android.widget.Toolbar)findViewById(R.id.todo_form_toolbar);
+        Toolbar toolbar = (android.widget.Toolbar) findViewById(R.id.todo_form_toolbar);
         setActionBar(toolbar);
         getActionBar().setDisplayHomeAsUpEnabled(true); //TODO Farbe weiß eintellen?
 
     }
 
-    private void setTodoDataToComponents(){
+    private void setTodoDataToComponents() {
 
         getActionBar().setTitle("TODO Details");
 
-        EditText itemName = (EditText)findViewById(R.id.todo_detail_view_name_edittext);
-        EditText itemDesc = (EditText)findViewById(R.id.todo_detail_view_description_edittext);
-        TextView itemDate = (TextView)findViewById(R.id.todo_detail_view_date_textview);
-        TextView itemTime = (TextView)findViewById(R.id.todo_detail_view_time_textview);
-        Switch itemFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
-        ImageView addContac = (ImageView)findViewById(R.id.todo_detail_view_contact_add_icon);
+        EditText itemName = (EditText) findViewById(R.id.todo_detail_view_name_edittext);
+        EditText itemDesc = (EditText) findViewById(R.id.todo_detail_view_description_edittext);
+        TextView itemDate = (TextView) findViewById(R.id.todo_detail_view_date_textview);
+        TextView itemTime = (TextView) findViewById(R.id.todo_detail_view_time_textview);
+        Switch itemFav = (Switch) findViewById(R.id.todo_detail_view_favourite_switch);
+        ImageView addContac = (ImageView) findViewById(R.id.todo_detail_view_contact_add_icon);
         //TODO isDone element
 
         itemName.setText(todoItem.getName());
@@ -200,9 +227,9 @@ public class TodoDetailActivity extends Activity {
         itemDate.setText(todoItem.getDeadlineDate());
         itemTime.setText(todoItem.getDeadlineTime());
 
-        if(todoItem.getIsFavourite() == 1 ){
+        if (todoItem.getIsFavourite() == 1) {
             itemFav.setChecked(true);
-        }else{
+        } else {
             itemFav.setChecked(false);
         }
 
@@ -218,15 +245,15 @@ public class TodoDetailActivity extends Activity {
         setEditMode(false);
     }
 
-    private void setEditMode(boolean isEditMode){
+    private void setEditMode(boolean isEditMode) {
 
-        EditText itemName = (EditText)findViewById(R.id.todo_detail_view_name_edittext);
-        EditText itemDesc = (EditText)findViewById(R.id.todo_detail_view_description_edittext);
-        TextView itemDate = (TextView)findViewById(R.id.todo_detail_view_date_textview);
-        TextView itemTime = (TextView)findViewById(R.id.todo_detail_view_time_textview);
-        Switch itemFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
+        EditText itemName = (EditText) findViewById(R.id.todo_detail_view_name_edittext);
+        EditText itemDesc = (EditText) findViewById(R.id.todo_detail_view_description_edittext);
+        TextView itemDate = (TextView) findViewById(R.id.todo_detail_view_date_textview);
+        TextView itemTime = (TextView) findViewById(R.id.todo_detail_view_time_textview);
+        Switch itemFav = (Switch) findViewById(R.id.todo_detail_view_favourite_switch);
         //TODO: isdone
-        ImageView addContac = (ImageView)findViewById(R.id.todo_detail_view_contact_add_icon);
+        ImageView addContac = (ImageView) findViewById(R.id.todo_detail_view_contact_add_icon);
 
         itemName.setEnabled(isEditMode);
         itemName.setTextColor(Color.BLACK);
@@ -239,66 +266,59 @@ public class TodoDetailActivity extends Activity {
         itemFav.setClickable(isEditMode);
         //TODO: isdone
 
-        if(isEditMode == true){
+        if (isEditMode == true) {
             addContac.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             addContac.setVisibility(View.INVISIBLE);
         }
     }
 
 
+    private void setListener() {
 
-    private void setListener(){
+        /**
+         //DatePickerDialog oeffnen bei Klick auf Datum-Textbox
+         dateTextview = (TextView) findViewById(R.id.todo_date_textview);
+         dateTextview.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
 
-      /**
-        //DatePickerDialog oeffnen bei Klick auf Datum-Textbox
-        dateTextview = (TextView) findViewById(R.id.todo_date_textview);
-        dateTextview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dateTextView.set(DateAndTimePicker.startDatePickerDialog(dateTextview));
-            }
+        dateTextView.set(DateAndTimePicker.startDatePickerDialog(dateTextview));
+        }
         });
 
-        //TimePickerDialog oeffnen bei Klick auf Uhrzeit-Textbox
-        timeTextview = (TextView) findViewById(R.id.todo_time_textview);
-        timeTextview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+         //TimePickerDialog oeffnen bei Klick auf Uhrzeit-Textbox
+         timeTextview = (TextView) findViewById(R.id.todo_time_textview);
+         timeTextview.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
 
-                timeTextView.set(DateAndTimePicker.startTimePickerDialog(timeTextview));
-            }
+        timeTextView.set(DateAndTimePicker.startTimePickerDialog(timeTextview));
+        }
         });*/
     }
 
 
-    private void showDeleteAcceptDialog(){
+    private TodoItem readDataFromComponents(TodoItem item){
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        EditText name = (EditText)findViewById(R.id.todo_detail_view_name_edittext);
+        EditText descr = (EditText)findViewById(R.id.todo_detail_view_description_edittext);
+        TextView date = (TextView)findViewById(R.id.todo_detail_view_date_textview);
+        TextView time = (TextView)findViewById(R.id.todo_detail_view_time_textview);
+        Switch isFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
 
-        alertDialogBuilder.setTitle("TODO löschen");
+        item.setName(name.getText().toString());
+        item.setDescription(descr.getText().toString());
+        item.setDeadlineDate(date.getText().toString());
+        item.setDeadlineTime(time.getText().toString());
 
-        alertDialogBuilder
-                .setMessage("TODO tatsächlich löschen?")
-                .setCancelable(false)
-                .setPositiveButton("Ja",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+        if(isFav.isChecked()){
+            item.setIsFavourite(1);
+        }else{
+            item.setIsFavourite(0);
+        }
 
-                        Intent intent = new Intent();
-                        intent.putExtra(Queries.COLUMN_ID, todoItem.getId());
-                        setResult(R.integer.DELETE_TODO, intent);
-                        finish();
-                    }
-                })
-                .setNegativeButton("Nein",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+        //TODO Kontakte
 
-                        dialog.cancel();
-                    }
-                });
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        return item;
     }
 }
+
