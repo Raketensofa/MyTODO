@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
+
 import database.RemoteTodoItemCRUDOperations;
 
 public class StartActivity extends Activity{
@@ -52,6 +54,8 @@ public class StartActivity extends Activity{
 
                     intent = new Intent(getBaseContext(), TodoOverviewActivity.class);
                     intent.putExtra(String.valueOf(R.string.WEPAPI_CONN), R.integer.WEBAPI_CONNECTION_FALSE);
+
+                    Toast.makeText(getApplicationContext(), "WEB API NICHT VERFÜGBAR - NUTZUNG DER LOKALEN DATENBANK", Toast.LENGTH_SHORT).show();
 
                     Log.d(TAG, "Starting Activity: " + TodoOverviewActivity.class.getSimpleName());
                 }
