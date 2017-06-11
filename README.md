@@ -201,14 +201,14 @@ This section contains general information about the software.
     <td>19</td>
     <td>Die Überprüfung soll asynchron erfolgen</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>20</td>
     <td>Solange die Überprüfung läuft, soll ein ProgressDialog eingeblendet werden.</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
