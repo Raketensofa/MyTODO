@@ -292,7 +292,7 @@ This section contains general information about the software.
     <td>30</td>
     <td>Sie soll es dem Nutzer außerdem ermöglichen, sich für jedes Todo dessen Details anzeigen zu lassen.</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
@@ -313,21 +313,21 @@ This section contains general information about the software.
     <td>33</td>
     <td>Todos sollen grundsätzlich nach Erledigt/Nichterledigt sortiert sein und dann wahlweise nach Wichtigkeit+Datum oder nach Datum+Wichtigkeit.</td>
     <td>3</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>34</td>
     <td>Dem Nutzer soll es möglich sein, die Anzeige nach Datum+Wichtigkeit vs. Wichtigkeit+Datum über ein Optionsmenü bzw. Action Bar Optionen auszuwählen.</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>35</td>
     <td>Überfällige Todos – d.h. Todos mit abgelaufenem Fälligkeitsdatum – sollen visuell besonders hervorgehoben werden.</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td>Detailansicht</td>
@@ -341,7 +341,7 @@ This section contains general information about the software.
     <td>36</td>
     <td>Die Detailansicht soll alle durch ein Todo repräsentierten Daten darstellen.</td>
     <td>4</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
    <tr>
     <td></td>
@@ -355,21 +355,21 @@ This section contains general information about the software.
     <td>37</td>
     <td>Name</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>38</td>
     <td>Beschreibung</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
       <tr>
     <td></td>
     <td>39</td>
     <td>Fälligkeitsdatum und Uhrzeit</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
       <tr>
     <td></td>
@@ -390,7 +390,7 @@ This section contains general information about the software.
     <td>42</td>
     <td>Das Löschen eines Todos soll ebenfalls über die Detailansicht ermöglicht und vor Durchführung rückbestätigt werden.</td>
     <td>3</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
    <tr>
     <td>Verknüpfung mit Kontakten</td>
