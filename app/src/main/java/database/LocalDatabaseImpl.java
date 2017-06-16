@@ -9,19 +9,18 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import cgellner.mytodo.R;
 import model.TodoItem;
 
 /**
  * Created by Carolin on 08.06.2017.
  */
-public class LocalTodoItemCRUDOperations implements ITodoItemCRUD {
+public class LocalDatabaseImpl implements ITodoItemCRUD{
 
-    protected static String TAG = LocalTodoItemCRUDOperations.class.getSimpleName();
+    protected static String TAG = LocalDatabaseImpl.class.getSimpleName();
 
     private SQLiteDatabase database;
 
-    public LocalTodoItemCRUDOperations(Context context){
+    public LocalDatabaseImpl(Context context){
 
         database = context.openOrCreateDatabase("tododb.sqlite", Context.MODE_PRIVATE, null);
         if(database.getVersion() == 0){
@@ -36,6 +35,7 @@ public class LocalTodoItemCRUDOperations implements ITodoItemCRUD {
         }
     }
 
+
     @Override
     public TodoItem createTodoItem(TodoItem todoItem) {
 
@@ -49,30 +49,17 @@ public class LocalTodoItemCRUDOperations implements ITodoItemCRUD {
         return todoItem;
     }
 
-    @Override
-    public List<TodoItem> readAllTodoItems(int sortMode) {
 
+    @Override
+    public List<TodoItem> readAllTodoItems(){
         List<TodoItem> itemList = new ArrayList<TodoItem>();
         Cursor cursor = null;
 
-        if(sortMode == R.integer.SORT_MODE_DEADLINE_FAVOURITE) {
-
-            cursor = database.query(Queries.TABLE_TODOS, Queries.COLUMNS_TABLE_TODOS, null, null, null, null,
+        cursor = database.query(Queries.TABLE_TODOS, Queries.COLUMNS_TABLE_TODOS, null, null, null, null,
                     Queries.COLUMN_ISDONE +
                             "," + Queries.COLUMN_DEADLINE_DATE +
                             "," + Queries.COLUMN_DEADLINE_TIME +
                             "," + Queries.COLUMN_ISFAVOURITE + " ASC");
-
-        }else if(sortMode == R.integer.SORT_MODE_FAVOURITE_DEADLINE){
-
-            cursor = database.query(Queries.TABLE_TODOS, Queries.COLUMNS_TABLE_TODOS, null, null, null, null,
-                    Queries.COLUMN_ISDONE +
-                            "," + Queries.COLUMN_ISFAVOURITE +
-                            "," + Queries.COLUMN_DEADLINE_DATE +
-                            "," + Queries.COLUMN_DEADLINE_TIME +
-                             " ASC");
-        }
-
 
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
@@ -92,6 +79,7 @@ public class LocalTodoItemCRUDOperations implements ITodoItemCRUD {
 
         return itemList;
     }
+
 
     @Override
     public TodoItem readTodoItem(long todoItemId) {
@@ -115,12 +103,13 @@ public class LocalTodoItemCRUDOperations implements ITodoItemCRUD {
         return todoItem ;
     }
 
+
     @Override
-    public TodoItem updateTodoItem(long id, TodoItem item) {
+    public TodoItem updateTodoItem(TodoItem item) {
 
         ContentValues todoValues = item.createContentValues();
 
-        int result = database.update(Queries.TABLE_TODOS, todoValues, Queries.COLUMN_ID + "=" + id, null);
+        int result = database.update(Queries.TABLE_TODOS, todoValues, Queries.COLUMN_ID + "=" + item.getId(), null);
 
         if(result > 0) {
             Log.i(TAG, "Updated Todo-Item:" + item.toString());
@@ -128,6 +117,7 @@ public class LocalTodoItemCRUDOperations implements ITodoItemCRUD {
 
         return item;
     }
+
 
     @Override
     public boolean deleteTodoItem(long todoItemId) {

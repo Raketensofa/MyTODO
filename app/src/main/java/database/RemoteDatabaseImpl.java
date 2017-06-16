@@ -20,11 +20,11 @@ import retrofit2.http.Path;
 /**
  * Created by Carolin on 08.06.2017.
  */
-public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
+public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
 
-    private static String TAG = RemoteTodoItemCRUDOperations.class.getSimpleName();
+    private static String TAG = RemoteDatabaseImpl.class.getSimpleName();
 
-    public interface ITodoItemCRUDWebApi {
+    public interface IWebApi {
 
         @POST("/api/todos")
         public Call<TodoItem> createTodoItem(@Body TodoItem todoItem);
@@ -43,19 +43,17 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
 
         @PUT("/api/users/auth")
         public Call<Boolean> authorizeUser(@Body User user);
-
     }
 
-    private ITodoItemCRUDWebApi webApi;
 
-    public RemoteTodoItemCRUDOperations(){
+    private IWebApi webApi;
 
-
+    public RemoteDatabaseImpl(){
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://10.0.3.2:8080/")
                 .addConverterFactory(GsonConverterFactory.create()).build();
 
-        this.webApi = retrofit.create(ITodoItemCRUDWebApi.class);
+        this.webApi = retrofit.create(IWebApi.class);
     }
 
 
@@ -74,8 +72,9 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
         }
     }
 
+
     @Override
-    public List<TodoItem> readAllTodoItems(int sortMode) {
+    public List<TodoItem> readAllTodoItems() {
 
         try{
 
@@ -92,6 +91,7 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
         }
     }
 
+
     @Override
     public TodoItem readTodoItem(long todoItemId) {
 
@@ -107,12 +107,13 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
         }
     }
 
+
     @Override
-    public TodoItem updateTodoItem(long id, TodoItem item) {
+    public TodoItem updateTodoItem(TodoItem item) {
 
         try{
 
-            TodoItem updatedItem = this.webApi.updateTodoItem(id, item).execute().body();
+            TodoItem updatedItem = this.webApi.updateTodoItem(item.getId(), item).execute().body();
             return updatedItem;
 
         }catch (Exception e) {
@@ -121,6 +122,7 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
             throw new RuntimeException(e);
         }
       }
+
 
     @Override
     public boolean deleteTodoItem(long todoItemId) {
@@ -138,6 +140,7 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
     }
 
 
+    @Override
     public boolean authorizeUser(User user) {
 
         try{
@@ -152,20 +155,18 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
         }
     }
 
-    public boolean isConnectedToWeb() {
+
+    @Override
+    public boolean isConnected() {
 
         boolean connected = false;
 
         try{
-
             int state = this.webApi.readAllTodoItems().execute().code();
-            Log.i(TAG, "Connection State WebApi: " + String.valueOf(state));
 
             if(state == 200){
-
                 connected = true;
             }
-
             return connected;
 
         }catch (Exception e){
@@ -174,5 +175,4 @@ public class RemoteTodoItemCRUDOperations implements ITodoItemCRUD{
             throw new RuntimeException(e);
         }
     }
-
 }

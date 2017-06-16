@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -24,10 +23,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import database.ITodoItemCRUD;
-import database.LocalTodoItemCRUDOperations;
+import database.ITodoItemCRUDAsync;
 import database.Queries;
-import database.RemoteTodoItemCRUDOperations;
 import model.TodoItem;
 
 public class TodoOverviewActivity extends Activity {
@@ -42,8 +39,8 @@ public class TodoOverviewActivity extends Activity {
 
     private int SortMode; //1 = Faelligkeit+Wichtigkeit  - 2= Wichtigkeit+Faelligkeit
 
-    private ITodoItemCRUD localCrudOperations;
-    private ITodoItemCRUD remoteCrudOperations;
+
+    private ITodoItemCRUDAsync crudOperations;
 
     private static String TODO_ITEM = "TODO_ITEM";
 
@@ -202,8 +199,7 @@ public class TodoOverviewActivity extends Activity {
         listviewTodos.setAdapter(todoListViewAdapter);
         todoListViewAdapter.setNotifyOnChange(true);
 
-        localCrudOperations = new LocalTodoItemCRUDOperations(this);
-        //remoteCrudOperations = new RemoteTodoItemCRUDOperations();
+        crudOperations = ((MyTodoApplication)getApplication()).getCRUDOperationsImpl();
 
         readItemsAndFillListView();
     }
@@ -220,29 +216,44 @@ public class TodoOverviewActivity extends Activity {
 
         }else
         if (requestCode == R.integer.DETAIL_ACTIVITY) {
-
               if (resultCode == R.integer.DELETE_TODO) {
 
                   long todoId = data.getLongExtra(Queries.COLUMN_ID, -1);
-                  boolean deleted = localCrudOperations.deleteTodoItem(todoId);
-
-                  if(deleted == true) {
-                      Toast.makeText(getApplicationContext(), "TODO wurde gelöscht.", Toast.LENGTH_SHORT).show();
-                  }else{
-                      Toast.makeText(getApplicationContext(), "Error: Fehler beim Löschen des Todos aufgetreten.", Toast.LENGTH_SHORT).show();
-                  }
+                  deleteAndRemoveTodoItem(todoId);
 
             } else if (resultCode == R.integer.UPDATE_TODO) {
 
                   TodoItem updatedItem = (TodoItem) data.getSerializableExtra(TODO_ITEM);
-
-                  localCrudOperations.updateTodoItem(updatedItem.getId(), updatedItem);
+                  updateTodoItem(updatedItem);
                   Toast.makeText(getApplicationContext(), "Änderungen gespeichert", Toast.LENGTH_SHORT).show();
             }
         }
+    }
 
-        todoListViewAdapter.clear();
-        readItemsAndFillListView();
+
+    private TodoItem findTodoItemInList(long id){
+
+        for(int i = 0;  i<todoListViewAdapter.getCount(); i++){
+
+            if(todoListViewAdapter.getItem(i).getId() == id){
+
+                return todoListViewAdapter.getItem(i);
+            }
+        }
+
+        return null;
+    }
+
+
+    private void updateTodoItemInList(TodoItem item){
+
+        for(int i = 0;  i < todoListViewAdapter.getCount(); i++){
+
+            if(todoListViewAdapter.getItem(i).getId() == item.getId()){
+
+                 todoListViewAdapter.insert(item,i);
+            }
+        }
     }
 
 
@@ -260,31 +271,6 @@ public class TodoOverviewActivity extends Activity {
     }
 
 
-    private void updateTodoItem(final TodoItem item) {
-
-        new AsyncTask<TodoItem, Void, TodoItem>() {
-
-            @Override
-            protected void onPreExecute() {
-                progressDialog.show();
-            }
-
-            @Override
-            protected TodoItem doInBackground(TodoItem... params) {
-
-                TodoItem updatedItem = localCrudOperations.updateTodoItem(params[0].getId(), params[0]);
-                return updatedItem;
-            }
-
-            @Override
-            protected void onPostExecute(TodoItem item) {
-
-                progressDialog.hide();
-            }
-        }.execute(item);
-    }
-
-
     /**
      * Detailansicht starten
      */
@@ -296,58 +282,72 @@ public class TodoOverviewActivity extends Activity {
     }
 
 
+    private void createAndShowItem(TodoItem item) {
+
+        progressDialog.show();
+
+       crudOperations.createTodoItem(item, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>(){
+
+           @Override
+           public void process(TodoItem result) {
+
+               todoListViewAdapter.add(result);
+               progressDialog.hide();
+           }
+       });
+    }
+
+
+    private void updateTodoItem(final TodoItem item) {
+
+        progressDialog.show();
+
+        crudOperations.updateTodoItem(item, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
+            @Override
+            public void process(TodoItem result) {
+
+                updateTodoItemInList(result);
+                progressDialog.hide();
+            }
+        });
+    }
+
+
     private void readItemsAndFillListView() {
 
-        new AsyncTask<Void, Void, List<TodoItem>>() {
-
+        progressDialog.show();
+        crudOperations.readAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<List<TodoItem>>() {
             @Override
-            protected void onPreExecute() {
-                progressDialog.show();
-            }
+            public void process(List<TodoItem> result) {
 
-            @Override
-            protected List<TodoItem> doInBackground(Void... params) {
-
-                return localCrudOperations.readAllTodoItems(SortMode);
-            }
-
-            @Override
-            protected void onPostExecute(List<TodoItem> todoItems) {
                 progressDialog.hide();
-                if (todoItems != null) {
 
-                    for (TodoItem item : todoItems) {
+                if (result != null) {
+                    for (TodoItem item : result) {
                         todoListViewAdapter.add(item);
                     }
                 }
             }
-        }.execute();
+        });
     }
 
 
-    private void createAndShowItem(final TodoItem item) {
+    private void deleteAndRemoveTodoItem(final long todoId){
 
-        new AsyncTask<TodoItem, Void, TodoItem>() {
-
-            @Override
-            protected TodoItem doInBackground(TodoItem... params) {
-
-                TodoItem createdItem = localCrudOperations.createTodoItem(params[0]);
-                return createdItem;
-            }
+        crudOperations.deleteTodoItem(todoId, new ITodoItemCRUDAsync.CallbackFunction<Boolean>(){
 
             @Override
-            protected void onPreExecute() {
-                progressDialog.show();
-            }
+            public void process(Boolean deleted) {
 
-            @Override
-            protected void onPostExecute(TodoItem item) {
-
-                todoListViewAdapter.add(item);
-                progressDialog.hide();
+                if(deleted){
+                    todoListViewAdapter.remove(findTodoItemInList(todoId));
+                    Toast.makeText(getApplicationContext(), "TODO gelöscht.", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Error: Fehler beim Löschen des Todos aufgetreten.", Toast.LENGTH_SHORT).show();
+                }
             }
-        }.execute(item);
+        });
+
     }
 
 

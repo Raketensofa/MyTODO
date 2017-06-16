@@ -3,17 +3,16 @@ package cgellner.mytodo;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import database.RemoteTodoItemCRUDOperations;
+import database.IRemoteInitAsync;
+
 
 public class StartActivity extends Activity{
 
     private static String TAG = StartActivity.class.getSimpleName();
-    private RemoteTodoItemCRUDOperations remoteOperations;
     private ProgressDialog progressDialog;
 
     @Override
@@ -21,49 +20,34 @@ public class StartActivity extends Activity{
         super.onCreate(savedInstanceState);
 
         progressDialog = new ProgressDialog(this);
-        remoteOperations = new RemoteTodoItemCRUDOperations();
+        progressDialog.show();
 
-        new AsyncTask<Void, Void, Boolean>() {
-
-            @Override
-            protected void onPreExecute() {
-                progressDialog.show();
-            }
+        ((MyTodoApplication) getApplication()).getRemoteInitImpl().isConnected(new IRemoteInitAsync.CallbackFunction<Boolean>() {
 
             @Override
-            protected Boolean doInBackground(Void... params) {
-
-                boolean state = remoteOperations.isConnectedToWeb();
-                Log.d(TAG, "Connected to WebApi: " + String.valueOf(state));
-                return state;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean isConnected) {
+            public void process(Boolean result) {
 
                 Intent intent = null;
 
-                if(isConnected == true){
+                Log.d(TAG, "Connected to WebApi Result: " + String.valueOf(result));
+
+                if (result) {
 
                     intent = new Intent(getBaseContext(), LoginActivity.class);
-                    intent.putExtra(String.valueOf(R.string.WEPAPI_CONN), R.integer.WEBAPI_CONNECTION_TRUE);
-
                     Log.d(TAG, "Starting Activity: " + LoginActivity.class.getSimpleName());
 
-                }else{
+                } else {
 
                     intent = new Intent(getBaseContext(), TodoOverviewActivity.class);
-                    intent.putExtra(String.valueOf(R.string.WEPAPI_CONN), R.integer.WEBAPI_CONNECTION_FALSE);
-
                     Toast.makeText(getApplicationContext(), "WEB API NICHT VERFÜGBAR - NUTZUNG DER LOKALEN DATENBANK", Toast.LENGTH_SHORT).show();
 
                     Log.d(TAG, "Starting Activity: " + TodoOverviewActivity.class.getSimpleName());
                 }
+
                 progressDialog.hide();
                 startActivity(intent);
                 finish();
             }
-
-        }.execute();
+        });
     }
 }

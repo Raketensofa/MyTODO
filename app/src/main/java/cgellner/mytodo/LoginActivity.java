@@ -19,7 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
-import database.RemoteTodoItemCRUDOperations;
+import database.IRemoteInitAsync;
 import model.User;
 
 
@@ -28,11 +28,6 @@ import model.User;
  */
 public class LoginActivity extends Activity {
 
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -78,9 +73,6 @@ public class LoginActivity extends Activity {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -116,12 +108,32 @@ public class LoginActivity extends Activity {
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
 
-            //showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            progressDialog.show();
+
+            User user = new User();
+            user.setEmail(email);
+            user.setPwd(password);
+
+            ((MyTodoApplication) getApplication()).getRemoteInitImpl().authorizeUser(user, new IRemoteInitAsync.CallbackFunction<Boolean>() {
+                @Override
+                public void process(Boolean result) {
+
+                    progressDialog.hide();
+
+                    if (result) {
+
+                        Intent intent = new Intent(getBaseContext(), TodoOverviewActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+                        mEmailView.setError("Falsche E-Mail-Adresse");
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                        mPasswordView.requestFocus();
+                    }
+                }
+            });
         }
     }
 
@@ -135,82 +147,5 @@ public class LoginActivity extends Activity {
         return password.length() == 6;
     }
 
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-
-            boolean userIsAuthorize = false;
-
-            try {
-
-                User user = new User();
-                user.setEmail(mEmail);
-                user.setPwd(mPassword);
-                RemoteTodoItemCRUDOperations op = new RemoteTodoItemCRUDOperations();
-                userIsAuthorize = op.authorizeUser(user);
-
-            } catch (Exception e) {
-                return false;
-            }
-
-            /**for (String credential : CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }*/
-
-            return userIsAuthorize;
-        }
-
-        @Override
-        protected void onPreExecute() {
-
-            progressDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-
-            mAuthTask = null;
-
-            progressDialog.hide();
-
-            if (success) {
-
-                Intent intent = new Intent(getBaseContext(), TodoOverviewActivity.class);
-                intent.putExtra(String.valueOf(R.string.WEPAPI_CONN), R.integer.WEBAPI_CONNECTION_TRUE);
-                intent.putExtra(String.valueOf(R.string.USER_AUTH), R.integer.WEBAPI_USER_TRUE);
-                startActivity(intent);
-                finish();
-
-            } else {
-
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            progressDialog.hide();
-        }
-    }
 }
 
