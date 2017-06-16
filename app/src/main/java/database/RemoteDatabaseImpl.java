@@ -41,6 +41,9 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
         @DELETE("/api/todos/{id}")
         public Call<Boolean> deleteTodoItem(@Path("id") long todoItemId);
 
+        @DELETE("/api/todos/")
+        public Call<Boolean> deleteAllTodoItems();
+
         @PUT("/api/users/auth")
         public Call<Boolean> authorizeUser(@Body User user);
     }
@@ -141,6 +144,21 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
 
 
     @Override
+    public void deleteAllTodoItems() {
+
+        try{
+
+          this.webApi.deleteAllTodoItems().execute().body();
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Override
     public boolean authorizeUser(User user) {
 
         try{
@@ -170,9 +188,8 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
             return connected;
 
         }catch (Exception e){
-
             e.printStackTrace();
-            throw new RuntimeException(e);
+            return connected;
         }
     }
 }

@@ -129,20 +129,6 @@ public class TodoItem implements Serializable{
     }
 
 
-    public void putToIntentExtras(Intent intent){
-
-        intent.putExtra(Queries.COLUMN_ID, id);
-        intent.putExtra(Queries.COLUMN_NAME, name);
-        intent.putExtra(Queries.COLUMN_DESCRIPTION, description);
-        intent.putExtra(Queries.COLUMN_ISFAVOURITE, isFavourite);
-        intent.putExtra(Queries.COLUMN_ISDONE, isDone);
-        intent.putExtra(Queries.COLUMN_DEADLINE_DATE, deadlineDate);
-        intent.putExtra(Queries.COLUMN_DEADLINE_TIME, deadlineTime);
-
-    }
-
-
-
     public void setAllDataFromCursor(Cursor cursor) {
 
         if(cursor != null) {
@@ -161,6 +147,10 @@ public class TodoItem implements Serializable{
     public ContentValues createContentValues(){
 
         ContentValues todoValues = new ContentValues();
+
+        if(id > 0){
+            todoValues.put(Queries.COLUMN_ID, id);
+        }
         todoValues.put(Queries.COLUMN_NAME, name);
         todoValues.put(Queries.COLUMN_DESCRIPTION, description);
         todoValues.put(Queries.COLUMN_ISFAVOURITE, isFavourite);

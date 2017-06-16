@@ -23,8 +23,15 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
     private static String TAG = MyTodoApplication.class.getSimpleName();
 
     private boolean ConnWebApi;
-
     private boolean CorrectUserLogin;
+
+    public ITodoItemCRUD getLocalCrud() {
+        return localCrud;
+    }
+
+    public ITodoItemCRUD getRemoteSyncCrud() {
+        return remoteSyncCrud;
+    }
 
     private ITodoItemCRUD localCrud;
     private ITodoItemCRUD remoteSyncCrud;
@@ -188,6 +195,27 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
             }
 
         }.execute(id);
+    }
+
+    @Override
+    public void deleteAllTodoItems(final ITodoItemCRUDAsync.CallbackFunction<Boolean> callback) {
+
+        new AsyncTask<Void, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+
+                remoteSyncCrud.deleteAllTodoItems();
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                callback.process(aBoolean);
+            }
+
+        }.execute();
+
     }
 
 

@@ -137,4 +137,10 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
         return deleted;
     }
+
+    @Override
+    public void deleteAllTodoItems() {
+
+    }
+
 }

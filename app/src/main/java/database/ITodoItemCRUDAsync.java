@@ -20,6 +20,5 @@ public interface ITodoItemCRUDAsync {
     public void readTodoItem(long id, CallbackFunction<TodoItem> callback );
     public void updateTodoItem(TodoItem item, CallbackFunction<TodoItem> callback);
     public void deleteTodoItem(long id, CallbackFunction<Boolean> callback);
-
-
+    public void deleteAllTodoItems(CallbackFunction<Boolean> callback);
 }

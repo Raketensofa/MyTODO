@@ -14,5 +14,5 @@ public interface ITodoItemCRUD {
      public TodoItem readTodoItem(long todoItemId);
      public TodoItem updateTodoItem(TodoItem item);
      public boolean deleteTodoItem(long todoItemId);
-    
+     public void deleteAllTodoItems();
 }
