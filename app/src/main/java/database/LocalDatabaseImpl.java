@@ -22,8 +22,9 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
     public LocalDatabaseImpl(Context context){
 
-        database = context.openOrCreateDatabase("tododb.sqlite", Context.MODE_PRIVATE, null);
+        database = context.openOrCreateDatabase("mytodoData.sqlite", Context.MODE_PRIVATE, null);
         if(database.getVersion() == 0){
+
             database.setVersion(1);
             database.execSQL(Queries.CREATE_TABLE_TODOS);
             database.execSQL(Queries.CREATE_TABLE_TODO_CONTACTS);
@@ -39,9 +40,12 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
     @Override
     public TodoItem createTodoItem(TodoItem todoItem) {
 
+        Log.i(TAG, "start creating Item: " + todoItem.toString());
+
         ContentValues values = todoItem.createContentValues();
 
         long id = database.insert(Queries.TABLE_TODOS, null, values);
+
         todoItem.setId(id);
 
         Log.i(TAG, "Todo-Item local gespeichert: " + todoItem.toString());
@@ -57,9 +61,8 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
         cursor = database.query(Queries.TABLE_TODOS, Queries.COLUMNS_TABLE_TODOS, null, null, null, null,
                     Queries.COLUMN_ISDONE +
-                            "," + Queries.COLUMN_DEADLINE_DATE +
-                            "," + Queries.COLUMN_DEADLINE_TIME +
-                            "," + Queries.COLUMN_ISFAVOURITE + " ASC");
+                            "," + Queries.COLUMN_ISDONE +
+                            "," + Queries.COLUMN_EXPIRY + " ASC");
 
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
@@ -137,10 +140,4 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
         return deleted;
     }
-
-    @Override
-    public void deleteAllTodoItems() {
-
-    }
-
 }

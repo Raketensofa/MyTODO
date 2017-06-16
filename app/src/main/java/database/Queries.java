@@ -15,11 +15,10 @@ public abstract class Queries {
     public final static String TABLE_TODO_CONTACTS = "todo_contacts";
 
 
-    public final static String COLUMN_ID = "_id";
+    public final static String COLUMN_ID = "id";
     public final static String COLUMN_NAME = "name";
     public final static String COLUMN_DESCRIPTION = "description";
-    public final static String COLUMN_DEADLINE_DATE = "deadline_date";
-    public final static String COLUMN_DEADLINE_TIME = "deadline_time";
+    public final static String COLUMN_EXPIRY = "expiry";
     public final static String COLUMN_ISFAVOURITE = "is_favourite";
     public final static String COLUMN_ISDONE = "is_done";
     public final static String COLUMN_CONTACT_ID= "contact_id";
@@ -40,8 +39,7 @@ public abstract class Queries {
                                     COLUMN_ID  + " " +  DATATYPE_INTEGER + " " + PRIMARY_KEY_AUTO + ", " +
                                     COLUMN_NAME + " " +  DATATYPE_TEXT + " " + NOT_NOLL + ", " +
                                     COLUMN_DESCRIPTION  + " " +  DATATYPE_TEXT  +  ", " +
-                                    COLUMN_DEADLINE_DATE + " " +  DATATYPE_TEXT + ", " +
-                                    COLUMN_DEADLINE_TIME + " " +  DATATYPE_TEXT + ", " +
+                                    COLUMN_EXPIRY + " " +  DATATYPE_INTEGER + ", " +
                                     COLUMN_ISFAVOURITE + " " +  DATATYPE_INTEGER  + " " + NOT_NOLL + ", " +
                                     COLUMN_ISDONE + " " +  DATATYPE_INTEGER  + " " + NOT_NOLL + ")";
 
@@ -50,8 +48,7 @@ public abstract class Queries {
             COLUMN_ID,
             COLUMN_NAME,
             COLUMN_DESCRIPTION ,
-            COLUMN_DEADLINE_DATE ,
-            COLUMN_DEADLINE_TIME,
+            COLUMN_EXPIRY ,
             COLUMN_ISFAVOURITE,
             COLUMN_ISDONE
     };

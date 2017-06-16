@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,10 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toolbar;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import database.Queries;
 import model.TodoItem;
@@ -224,14 +229,12 @@ public class TodoDetailActivity extends Activity {
 
         itemName.setText(todoItem.getName());
         itemDesc.setText(todoItem.getDescription());
-        itemDate.setText(todoItem.getDeadlineDate());
-        itemTime.setText(todoItem.getDeadlineTime());
 
-        if (todoItem.getIsFavourite() == 1) {
-            itemFav.setChecked(true);
-        } else {
-            itemFav.setChecked(false);
-        }
+
+        itemDate.setText(DateFormat.format("dd.MM.yyyy", new Date(todoItem.getExpiry())).toString());
+        itemTime.setText(DateFormat.format("HH:mm", new Date(todoItem.getExpiry())).toString());
+
+        itemFav.setChecked(todoItem.getIsFavourite());
 
         addContac.setClickable(true);
         addContac.setOnClickListener(new View.OnClickListener() {
@@ -307,14 +310,21 @@ public class TodoDetailActivity extends Activity {
 
         item.setName(name.getText().toString());
         item.setDescription(descr.getText().toString());
-        item.setDeadlineDate(date.getText().toString());
-        item.setDeadlineTime(time.getText().toString());
+        item.setIsFavourite(isFav.isChecked());
 
-        if(isFav.isChecked()){
-            item.setIsFavourite(1);
-        }else{
-            item.setIsFavourite(0);
+        long expiry = 0;
+
+        try {
+
+            String dateTime = date.getText().toString() + " " + time.getText().toString();
+            Date expiryDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse(dateTime);
+            expiry = expiryDate.getTime();
+
+        }catch (ParseException ex){
+            expiry = 0;
         }
+        item.setExpiry(expiry);
+
 
         //TODO Kontakte
 

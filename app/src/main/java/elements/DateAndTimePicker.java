@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
@@ -18,7 +19,7 @@ public abstract class DateAndTimePicker {
     private static String date;
     private static String time;
 
-    public static String startDatePickerDailog(View v){
+    public static void startDatePickerDailog(final TextView v){
 
 
             final Calendar myCalendar = Calendar.getInstance();
@@ -33,16 +34,15 @@ public abstract class DateAndTimePicker {
                     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
 
                     date = sdf.format(myCalendar.getTime());
+                    v.setText(date);
                 }
             };
             new DatePickerDialog(v.getContext(), datePicker, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-
-        return date;
     }
 
 
 
-    public static String startTimePickerDialog(View v){
+    public static void startTimePickerDialog(final TextView v){
 
         final Calendar myCalendar = Calendar.getInstance();
         final TimePickerDialog.OnTimeSetListener timePickerListener =
@@ -56,13 +56,13 @@ public abstract class DateAndTimePicker {
                         String myFormat = "HH:mm";
                         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
 
+
                         time = sdf.format(myCalendar.getTime());
+                        v.setText(time);
                     }
                 };
 
         new TimePickerDialog(v.getContext(), timePickerListener, myCalendar.get(Calendar.HOUR), myCalendar.get(Calendar.MINUTE), true).show();
-
-        return time;
     }
 
 }

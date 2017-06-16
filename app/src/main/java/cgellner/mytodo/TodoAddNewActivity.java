@@ -13,6 +13,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import database.Queries;
 import elements.DateAndTimePicker;
 import model.TodoItem;
@@ -107,7 +112,7 @@ public class TodoAddNewActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                dateTextview.setText(DateAndTimePicker.startDatePickerDailog(v));
+               DateAndTimePicker.startDatePickerDailog(dateTextview);
             }
         });
 
@@ -116,7 +121,7 @@ public class TodoAddNewActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                timeTextview.setText(DateAndTimePicker.startTimePickerDialog(timeTextview));
+               DateAndTimePicker.startTimePickerDialog(timeTextview);
             }
         });
     }
@@ -132,15 +137,28 @@ public class TodoAddNewActivity extends Activity {
         TextView time = (TextView)findViewById(R.id.todo_detail_view_time_textview);
         Switch isFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
 
+        item.setId(-1); //default
         item.setName(name.getText().toString());
         item.setDescription(descr.getText().toString());
-        item.setDeadlineDate(date.getText().toString());
-        item.setDeadlineTime(time.getText().toString());
+
+
+        long expiry = 0;
+
+        try {
+
+            String dateTime = date.getText().toString() + " " + time.getText().toString();
+            Date expiryDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse(dateTime);
+            expiry = expiryDate.getTime();
+
+        }catch (ParseException ex){
+            expiry = 0;
+        }
+        item.setExpiry(expiry);
 
         if(isFav.isChecked()){
-            item.setIsFavourite(1);
+            item.setIsFavourite(true);
         }else{
-            item.setIsFavourite(0);
+            item.setIsFavourite(false);
         }
 
         //TODO Kontakte

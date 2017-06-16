@@ -26,10 +26,10 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
 
     public interface IWebApi {
 
-        @POST("/api/todos")
+        @POST("/api/todos/")
         public Call<TodoItem> createTodoItem(@Body TodoItem todoItem);
 
-        @GET("/api/todos")
+        @GET("/api/todos/")
         public Call<List<TodoItem>> readAllTodoItems();
 
         @POST("/api/todos/{id}")
@@ -41,8 +41,6 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
         @DELETE("/api/todos/{id}")
         public Call<Boolean> deleteTodoItem(@Path("id") long todoItemId);
 
-        @DELETE("/api/todos/")
-        public Call<Boolean> deleteAllTodoItems();
 
         @PUT("/api/users/auth")
         public Call<Boolean> authorizeUser(@Body User user);
@@ -70,8 +68,8 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
 
         }catch (Exception e){
 
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            Log.e(TAG, "createTodoItem: " + e.getMessage());
+            return null;
         }
     }
 
@@ -83,14 +81,12 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
 
             List<TodoItem> todoItemList = this.webApi.readAllTodoItems().execute().body();
 
-            Log.i(TAG, "readAllTodoItems");
-
             return todoItemList;
 
         }catch (Exception e){
 
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            Log.e(TAG, "readAllodoItems: " + e.getMessage());
+            return null;
         }
     }
 
@@ -121,7 +117,7 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
 
         }catch (Exception e) {
 
-            e.printStackTrace();
+            Log.e(TAG, "updateTodoItem: " + e.getMessage());
             throw new RuntimeException(e);
         }
       }
@@ -137,22 +133,7 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
 
         }catch (Exception e){
 
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    @Override
-    public void deleteAllTodoItems() {
-
-        try{
-
-          this.webApi.deleteAllTodoItems().execute().body();
-
-        }catch (Exception e){
-
-            e.printStackTrace();
+            Log.e(TAG, "deleteTodoItem(" + todoItemId + "): " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -168,7 +149,7 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
 
         }catch (Exception e){
 
-            e.printStackTrace();
+            Log.e(TAG, "authorizeUser: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -188,8 +169,9 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
             return connected;
 
         }catch (Exception e){
-            e.printStackTrace();
-            return connected;
+
+            Log.e(TAG, "isConnected: " + e.getMessage());
+            return false;
         }
     }
 }

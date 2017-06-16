@@ -22,30 +22,28 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
 
     private static String TAG = MyTodoApplication.class.getSimpleName();
 
-    private boolean ConnWebApi;
     private boolean CorrectUserLogin;
 
-    public ITodoItemCRUD getLocalCrud() {
-        return localCrud;
-    }
 
-    public ITodoItemCRUD getRemoteSyncCrud() {
-        return remoteSyncCrud;
-    }
+
+    private boolean isConnToRemote;
 
     private ITodoItemCRUD localCrud;
     private ITodoItemCRUD remoteSyncCrud;
     private IRemoteInit remoteSyncInit;
 
 
-    public boolean isConnWebApi() {
-        return ConnWebApi;
-    }
-
     public boolean isCorrectUserLogin() {
         return CorrectUserLogin;
     }
 
+    public boolean isConnToRemote() {
+        return isConnToRemote;
+    }
+
+    public void setConnToRemote(boolean connToRemote) {
+        isConnToRemote = connToRemote;
+    }
 
     @Override
     public void onCreate() {
@@ -56,6 +54,11 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
         remoteSyncInit = new RemoteDatabaseImpl();
 
         Log.i(TAG, "onCreate");
+    }
+
+
+    public ITodoItemCRUD getLocalCrud() {
+        return localCrud;
     }
 
     public ITodoItemCRUDAsync getCRUDOperationsImpl(){
@@ -74,13 +77,8 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
             @Override
             protected TodoItem doInBackground(TodoItem... params) {
 
-                TodoItem item = localCrud.createTodoItem(params[0]);
-
-                if(ConnWebApi && item.getId() != 0){
-                    item = remoteSyncCrud.createTodoItem(item);
-                }
-
-                return item;
+                Log.i(TAG, "Create Remote Item");
+                return  remoteSyncCrud.createTodoItem(params[0]);
             }
 
             @Override
@@ -100,14 +98,7 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
             @Override
             protected List<TodoItem> doInBackground(Void... params) {
 
-                if(ConnWebApi){
-
-                   return remoteSyncCrud.readAllTodoItems();
-
-                }else{
-
-                    return localCrud.readAllTodoItems();
-                }
+                return remoteSyncCrud.readAllTodoItems();
             }
 
             @Override
@@ -127,14 +118,7 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
             @Override
             protected TodoItem doInBackground(Long... params) {
 
-                if(ConnWebApi){
-
-                    return remoteSyncCrud.readTodoItem(params[0]);
-
-                }else{
-
-                    return localCrud.readTodoItem(params[0]);
-                }
+                return remoteSyncCrud.readTodoItem(params[0]);
             }
 
             @Override
@@ -154,13 +138,7 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
             @Override
             protected TodoItem doInBackground(TodoItem... params) {
 
-                TodoItem updatedItem =  localCrud.updateTodoItem(params[0]);
-
-                if(ConnWebApi && updatedItem != null){
-                  updatedItem =  remoteSyncCrud.updateTodoItem(updatedItem);
-                }
-
-                return updatedItem;
+                return remoteSyncCrud.updateTodoItem(params[0]);
             }
 
             @Override
@@ -179,14 +157,7 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
             @Override
             protected Boolean doInBackground(Long... params) {
 
-                boolean delete = localCrud.deleteTodoItem(params[0]);
-
-                if(ConnWebApi && delete){
-
-                   delete = remoteSyncCrud.deleteTodoItem(params[0]);
-                }
-
-                return delete;
+                return remoteSyncCrud.deleteTodoItem(params[0]);
             }
 
             @Override
@@ -196,28 +167,6 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
 
         }.execute(id);
     }
-
-    @Override
-    public void deleteAllTodoItems(final ITodoItemCRUDAsync.CallbackFunction<Boolean> callback) {
-
-        new AsyncTask<Void, Void, Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-
-                remoteSyncCrud.deleteAllTodoItems();
-                return true;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean aBoolean) {
-                callback.process(aBoolean);
-            }
-
-        }.execute();
-
-    }
-
 
     @Override
     public void authorizeUser(User user, final IRemoteInitAsync.CallbackFunction<Boolean> callback) {
@@ -246,12 +195,20 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
 
             @Override
             protected Boolean doInBackground(Void... params) {
-                return remoteSyncInit.isConnected();
+
+                try{
+                    return remoteSyncInit.isConnected();
+
+                }catch (Exception ex){
+
+                    Log.i(TAG, ex.getMessage());
+                    return false;
+                }
             }
 
             @Override
             protected void onPostExecute(Boolean result) {
-                ConnWebApi = result;
+                setConnToRemote(result);
                 callback.process(result);
             }
 

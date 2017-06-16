@@ -59,56 +59,93 @@ public class StartActivity extends Activity{
     }
 
 
-    private void compareDatabases(){
-
+    private void compareDatabases() {
 
         Log.i(TAG, "starting compare Databases...");
 
-        final ITodoItemCRUD localDatabase = ((MyTodoApplication)getApplication()).getLocalCrud();
+        final ITodoItemCRUD localDatabase = ((MyTodoApplication) getApplication()).getLocalCrud();
 
         final List<TodoItem> itemList = localDatabase.readAllTodoItems();
         Log.i(TAG, "Local Database Size: " + itemList.size());
-        if(itemList.size() > 0){
+        if (itemList.size() > 0) {
 
-            Log.i(TAG, "Delete all Items from WebApi...");
-            ((MyTodoApplication)getApplication()).getCRUDOperationsImpl().deleteAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<Boolean>() {
-                @Override
-                public void process(Boolean result) {
+            deleteAllRemoteTodoItems();
 
-                    Log.i(TAG, "Add local Items to Web....");
+            addAllLocalItemsToRemote(itemList);
 
-                    for(TodoItem item : itemList) {
+        } else if (itemList.size() == 0) {
 
-                        Log.i(TAG, "Item: " + item.toString());
+            addAllRemoteItemsToLocal();
+        }
+    }
 
-                        ((MyTodoApplication) getApplication()).getCRUDOperationsImpl().createTodoItem(item, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
+
+    private void deleteAllRemoteTodoItems(){
+
+        ((MyTodoApplication) getApplication()).getCRUDOperationsImpl().readAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<List<TodoItem>>() {
+            @Override
+            public void process(List<TodoItem> result) {
+
+                if(result != null && result.size() > 0){
+
+                    Log.i(TAG, "Starting delete" + result.size() + "Items from WebApi...");
+
+                    for (final TodoItem todoItem : result){
+
+                        ((MyTodoApplication) getApplication()).getCRUDOperationsImpl().deleteTodoItem(todoItem.getId(), new ITodoItemCRUDAsync.CallbackFunction<Boolean>() {
                             @Override
-                            public void process(TodoItem result) {
-                                Log.i(TAG, result.toString());
+                            public void process(Boolean result) {
+
+                                Log.i(TAG, "Remote TodoItem Id: " + todoItem.getId() + " deleted");
                             }
                         });
+
                     }
                 }
-            });
+            }
+        });
+    }
 
-        }else if(itemList.size() == 0){
 
-           ((MyTodoApplication)getApplication()).getCRUDOperationsImpl().readAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<List<TodoItem>>() {
-               @Override
-               public void process(List<TodoItem> result) {
+    private void addAllLocalItemsToRemote(List<TodoItem> localTodoItems){
 
-                   Log.i(TAG, "Add Web Items to local Database ....");
+        if(localTodoItems != null && localTodoItems.size() > 0){
 
-                   if(result != null && result.size() > 0){
+            Log.i(TAG, "Add" + localTodoItems.size() + "local TodoItems to Remote ....");
 
-                       for (TodoItem item : result){
+            for (TodoItem item : localTodoItems) {
 
-                           Log.i(TAG, "Item: " + item.toString());
-                           localDatabase.createTodoItem(item);
-                       }
+                Log.i(TAG, "Item: " + item.toString());
+
+                ((MyTodoApplication) getApplication()).getCRUDOperationsImpl().createTodoItem(item, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
+                    @Override
+                    public void process(TodoItem result) {
+
+                        Log.i(TAG, "Added Item to Remote: " + result.toString());
+                    }
+                });
+            }
+        }
+    }
+
+
+    private void addAllRemoteItemsToLocal(){
+
+       ((MyTodoApplication) getApplication()).getCRUDOperationsImpl().readAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<List<TodoItem>>() {
+           @Override
+           public void process(List<TodoItem> result) {
+
+               if (result != null) {
+
+                   Log.i(TAG, "Add " + result.size() + " Web Items to local Database ....");
+
+                   for (TodoItem item : result) {
+
+                       Log.i(TAG, "Item: " + item.toString());
+                       ((MyTodoApplication) getApplication()).getLocalCrud().createTodoItem(item);
                    }
                }
-           });
-        }
+           }
+       });
     }
 }

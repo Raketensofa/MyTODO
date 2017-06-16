@@ -1,13 +1,12 @@
 package model;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
-import android.os.Bundle;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import database.Queries;
 
@@ -17,19 +16,27 @@ import database.Queries;
 public class TodoItem implements Serializable{
 
     //region Attribute
+
+    @SerializedName("id")
     private long id;
+
+    @SerializedName("name")
     private String name;
+
+    @SerializedName("description")
     private String description;
-    private int isDone; //1=is done - 0=is not done
-    private int isFavourite;  //1=is favourite - 0=is not favourite
 
-    private String deadlineDate;
-    private String deadlineTime;
-    //private ArrayList<Contact> contacts;
+    @SerializedName("done")
+    private boolean done; //1=is done - 0=is not done
 
+    @SerializedName("favourite")
+    private boolean favourite;  //1=is favourite - 0=is not favourite
 
     @SerializedName("expiry")
-    private String deadline = deadlineDate + " " + deadlineTime;
+    private long expiry;
+
+    @SerializedName("contacts")
+    private Contact[] contacts;
 
     //endregion
 
@@ -48,12 +55,20 @@ public class TodoItem implements Serializable{
         this.contacts = contacts;
     }*/
 
-   public String getDeadline() {
-       return deadline;
+   public long getExpiry() {
+       return expiry;
    }
 
-    public void setDeadline(String deadline) {
-        this.deadline = deadline;
+    public void setExpiry(long expiry) {
+        this.expiry = expiry;
+    }
+
+    public Contact[] getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Contact[] contacts) {
+        this.contacts = contacts;
     }
 
     public long getId() {
@@ -80,36 +95,20 @@ public class TodoItem implements Serializable{
         this.description = description;
     }
 
-    public int getIsDone() {
-        return isDone;
+    public boolean getIsDone() {
+        return done;
     }
 
-    public void setIsDone(int isDone) {
-        this.isDone = isDone;
+    public void setIsDone(boolean isDone) {
+        this.done = isDone;
     }
 
-    public int getIsFavourite() {
-        return isFavourite;
+    public boolean getIsFavourite() {
+        return favourite;
     }
 
-    public void setIsFavourite(int isFavourite) {
-        this.isFavourite = isFavourite;
-    }
-
-    public String getDeadlineDate() {
-        return deadlineDate;
-    }
-
-    public void setDeadlineDate(String deadlineDate) {
-        this.deadlineDate = deadlineDate;
-    }
-
-    public String getDeadlineTime() {
-        return deadlineTime;
-    }
-
-    public void setDeadlineTime(String deadlineTime) {
-        this.deadlineTime = deadlineTime;
+    public void setIsFavourite(boolean isFavourite) {
+        this.favourite = isFavourite;
     }
 
     //endregion
@@ -121,10 +120,9 @@ public class TodoItem implements Serializable{
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", isDone=" + isDone +
-                ", isFavourite=" + isFavourite +
-                ", deadlineDate='" + deadlineDate + '\'' +
-                ", deadlineTime='" + deadlineTime + '\'' +
+                ", done=" + done +
+                ", favourite=" + favourite +
+                ", expiry='" + expiry + '\'' +
                 '}';
     }
 
@@ -136,10 +134,20 @@ public class TodoItem implements Serializable{
             id = cursor.getLong(cursor.getColumnIndexOrThrow(Queries.COLUMN_ID));
             name = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_NAME));
             description = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DESCRIPTION));
-            deadlineDate = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_DATE));
-            deadlineTime = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DEADLINE_TIME));
-            isDone = cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISDONE));
-            isFavourite = cursor.getInt(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISFAVOURITE));
+            expiry = cursor.getLong(cursor.getColumnIndexOrThrow(Queries.COLUMN_EXPIRY));
+            String done = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISDONE));
+            if(done.equals(Boolean.TRUE)){
+                this.done = true;
+            }else{
+                this.done = false;
+            }
+
+            String favourite = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISFAVOURITE));
+            if(favourite.equals(Boolean.FALSE)){
+                this.favourite = true;
+            }else{
+                this.favourite = false;
+            }
         }
     }
 
@@ -148,15 +156,14 @@ public class TodoItem implements Serializable{
 
         ContentValues todoValues = new ContentValues();
 
-        if(id > 0){
+        if(id > -1){
             todoValues.put(Queries.COLUMN_ID, id);
         }
         todoValues.put(Queries.COLUMN_NAME, name);
         todoValues.put(Queries.COLUMN_DESCRIPTION, description);
-        todoValues.put(Queries.COLUMN_ISFAVOURITE, isFavourite);
-        todoValues.put(Queries.COLUMN_ISDONE, isDone);
-        todoValues.put(Queries.COLUMN_DEADLINE_DATE, deadlineDate);
-        todoValues.put(Queries.COLUMN_DEADLINE_TIME, deadlineTime);
+        todoValues.put(Queries.COLUMN_ISFAVOURITE, String.valueOf(favourite));
+        todoValues.put(Queries.COLUMN_ISDONE, String.valueOf(done));
+        todoValues.put(Queries.COLUMN_EXPIRY, expiry);
 
         return todoValues;
     }
