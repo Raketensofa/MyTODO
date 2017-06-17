@@ -116,7 +116,7 @@ This section contains general information about the software.
     <td>8</td>
     <td>Wurde eine Schreiboperation auf der lokalen SQLite Datenbank erfolgreich ausgeführt, soll die betreffende Operation auf der Webanwendung aufgerufen werden. Die durch die SQLite Datenbank zugewiesenen IDs können durch die Webanwendung übernommen werden</td>
     <td>3</td>
-     <td></td>
+     <td>&times;</td>
   </tr>
     <tr>
     <td></td>
@@ -131,7 +131,7 @@ This section contains general information about the software.
     <td>Ist die Webanwendung beim Start der Android Anwendung verfügbar, soll der folgende "Abgleich" implementiert werden:
 - liegen lokale Todos vor, dann werden alle Todos auf Seiten der Web Applikation gelöscht und die lokalen Todos an die Web Applikation übertragen. - liegen keine lokalen Todos vor, dann werden alle Todos von der Web Applikation auf die lokale Datenbank übertragen.</td>
     <td>4</td>
-     <td></td>
+     <td>&times; (fast)</td>
   </tr>
     <tr>
     <td>Anmeldung</td>
@@ -215,7 +215,7 @@ This section contains general information about the software.
     <td>21</td>
     <td>Schlägt die Überprüfung fehl, wird eine dauerhaft sichtbare Fehlermeldung ausgegeben.</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
