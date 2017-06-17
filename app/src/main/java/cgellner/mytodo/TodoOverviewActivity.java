@@ -1,21 +1,18 @@
 package cgellner.mytodo;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -121,7 +118,6 @@ public class TodoOverviewActivity extends Activity {
             }
         };
 
-
         listviewTodos.setAdapter(todoListViewAdapter);
         todoListViewAdapter.setNotifyOnChange(true);
 
@@ -130,6 +126,9 @@ public class TodoOverviewActivity extends Activity {
         remoteCrudOperations = myTodoApplication.getCRUDOperationsImpl();
 
         readItemsAndFillListView();
+
+        sortTodoList();
+
     }
 
 
@@ -154,10 +153,14 @@ public class TodoOverviewActivity extends Activity {
 
                   TodoItem updatedItem = (TodoItem) data.getSerializableExtra(TODO_ITEM);
                   updateTodoItem(updatedItem);
-                  listviewTodos.setAdapter(todoListViewAdapter);
                   Toast.makeText(getApplicationContext(), "Änderungen gespeichert", Toast.LENGTH_SHORT).show();
             }
         }
+
+
+        sortTodoList();
+
+
     }
 
 
@@ -183,9 +186,10 @@ public class TodoOverviewActivity extends Activity {
 
                 todoListViewAdapter.getItem(i).setExpiry(item.getExpiry());
                 todoListViewAdapter.getItem(i).setIsFavourite(item.getIsFavourite());
+                todoListViewAdapter.getItem(i).setIsDone(item.getIsDone());
                 todoListViewAdapter.getItem(i).setName(item.getName());
                 todoListViewAdapter.getItem(i).setDescription(item.getDescription());
-                todoListViewAdapter.getItem(i).setContacts(item.getContacts());
+                //todoListViewAdapter.getItem(i).setContacts(item.getContacts());
             }
         }
     }
@@ -220,35 +224,26 @@ public class TodoOverviewActivity extends Activity {
 
         progressDialog.show();
 
-        new AsyncTask<TodoItem, Void, TodoItem>(){
+        TodoItem createdLocalItem = localCrudOperations.createTodoItem(item);
 
-            @Override
-            protected TodoItem doInBackground(TodoItem... params) {
-                return  localCrudOperations.createTodoItem(params[0]);
+        if (createdLocalItem.getId() > -1) {
+
+            if (myTodoApplication.isConnToRemote()) {
+
+                remoteCrudOperations.createTodoItem(createdLocalItem, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
+
+                    @Override
+                    public void process(TodoItem result) {
+
+                       Log.i(TAG, "Remote Item erstellt");
+                    }
+                });
             }
 
-            @Override
-            protected void onPostExecute(TodoItem result) {
+            todoListViewAdapter.add(item);
+        }
 
-                if (myTodoApplication.isConnToRemote()) {
-
-                    remoteCrudOperations.createTodoItem(result, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
-
-                        @Override
-                        public void process(TodoItem result) {
-
-                            todoListViewAdapter.add(result);
-                            progressDialog.hide();
-                        }
-                    });
-
-                }else{
-
-                    todoListViewAdapter.add(result);
-                    progressDialog.hide();
-                }
-            }
-        }.execute(item);
+        progressDialog.hide();
     }
 
 
@@ -271,36 +266,6 @@ public class TodoOverviewActivity extends Activity {
 
         updateTodoItemInList(updatedLocalItem);
         progressDialog.hide();
-
-        /**
-        new AsyncTask<TodoItem, Void, TodoItem>() {
-
-            @Override
-            protected TodoItem doInBackground(TodoItem... params) {
-                return localCrudOperations.updateTodoItem(params[0]);
-            }
-
-            @Override
-            protected void onPostExecute(TodoItem item) {
-
-                if (((MyTodoApplication) getApplication()).isConnToRemote()) {
-
-                    remoteCrudOperations.updateTodoItem(item, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
-                        @Override
-                        public void process(TodoItem result) {
-
-                            updateTodoItemInList(result);
-                            progressDialog.hide();
-                        }
-                    });
-
-                } else {
-                    updateTodoItemInList(item);
-                    progressDialog.hide();
-                }
-            }
-
-        }.execute(item);*/
     }
 
 
@@ -339,13 +304,13 @@ public class TodoOverviewActivity extends Activity {
     }
 
 
-    private void deleteAndRemoveTodoItem(final long todoId){
+    private void deleteAndRemoveTodoItem(final long todoId) {
 
         progressDialog.show();
 
         boolean deletedLocalItem = localCrudOperations.deleteTodoItem(todoId);
 
-        if(deletedLocalItem && myTodoApplication.isConnToRemote()){
+        if (deletedLocalItem && myTodoApplication.isConnToRemote()) {
 
             remoteCrudOperations.deleteTodoItem(todoId, new ITodoItemCRUDAsync.CallbackFunction<Boolean>() {
 
@@ -358,7 +323,7 @@ public class TodoOverviewActivity extends Activity {
         }
 
         progressDialog.hide();
-        if(deletedLocalItem){
+        if (deletedLocalItem) {
 
             todoListViewAdapter.remove(findTodoItemInList(todoId));
             Toast.makeText(getApplicationContext(), "TODO gelöscht.", Toast.LENGTH_SHORT).show();
@@ -367,49 +332,6 @@ public class TodoOverviewActivity extends Activity {
 
             Toast.makeText(getApplicationContext(), "Error: Fehler beim Löschen des Todos aufgetreten.", Toast.LENGTH_SHORT).show();
         }
-
-
-
-
-
-        /**
-        new AsyncTask<Long, Void, Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(Long... params) {
-                return localCrudOperations.deleteTodoItem(todoId);
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-
-                if(((MyTodoApplication) getApplication()).isConnToRemote()) {
-
-                    remoteCrudOperations.deleteTodoItem(todoId, new ITodoItemCRUDAsync.CallbackFunction<Boolean>() {
-
-                        @Override
-                        public void process(Boolean deleted) {
-
-                            if (deleted) {
-                                todoListViewAdapter.remove(findTodoItemInList(todoId));
-                                Toast.makeText(getApplicationContext(), "TODO gelöscht.", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Error: Fehler beim Löschen des Todos aufgetreten.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
-                }else{
-
-                    if (result) {
-                        todoListViewAdapter.remove(findTodoItemInList(todoId));
-                        Toast.makeText(getApplicationContext(), "TODO gelöscht.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Error: Fehler beim Löschen des Todos aufgetreten.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        }.execute(todoId);*/
     }
 
 
@@ -464,8 +386,8 @@ public class TodoOverviewActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "Sortierung nach Fälligkeit + Wichtigkeit", Toast.LENGTH_SHORT).show();
                 }
 
-                todoListViewAdapter.clear();
-                readItemsAndFillListView();
+
+                sortTodoList();
 
                 return false;
             }
@@ -512,7 +434,6 @@ public class TodoOverviewActivity extends Activity {
             }
 
     }
-
 
 
     private void setViewHolderData(final ItemViewHolder viewHolder, final TodoItem todoItem){
@@ -565,6 +486,9 @@ public class TodoOverviewActivity extends Activity {
 
                 todoItem.setIsDone(isChecked);
                 updateTodoItem(todoItem);
+
+                sortTodoList();
+
             }
         });
 
@@ -589,6 +513,8 @@ public class TodoOverviewActivity extends Activity {
 
                 todoItem.setIsFavourite(isChecked);
                 updateTodoItem(todoItem);
+
+               sortTodoList();
             }
         });
 
@@ -602,4 +528,13 @@ public class TodoOverviewActivity extends Activity {
             }
         });
     }
+
+    private void sortTodoList(){
+
+        todoListViewAdapter.sort(new TodoListSort(SortMode, 0));
+        todoListViewAdapter.sort(new TodoListSort(SortMode, 1));
+        todoListViewAdapter.sort(new TodoListSort(SortMode, 2));
+        todoListViewAdapter.notifyDataSetChanged();
+    }
+
 }

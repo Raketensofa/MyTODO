@@ -136,14 +136,14 @@ public class TodoItem implements Serializable{
             description = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DESCRIPTION));
             expiry = cursor.getLong(cursor.getColumnIndexOrThrow(Queries.COLUMN_EXPIRY));
             String done = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISDONE));
-            if(done.equals(Boolean.TRUE)){
+            if(done.equals(Boolean.TRUE.toString())){
                 this.done = true;
             }else{
                 this.done = false;
             }
 
             String favourite = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISFAVOURITE));
-            if(favourite.equals(Boolean.FALSE)){
+            if(favourite.equals(Boolean.TRUE.toString())){
                 this.favourite = true;
             }else{
                 this.favourite = false;

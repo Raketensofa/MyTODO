@@ -40,8 +40,8 @@ public abstract class Queries {
                                     COLUMN_NAME + " " +  DATATYPE_TEXT + " " + NOT_NOLL + ", " +
                                     COLUMN_DESCRIPTION  + " " +  DATATYPE_TEXT  +  ", " +
                                     COLUMN_EXPIRY + " " +  DATATYPE_INTEGER + ", " +
-                                    COLUMN_ISFAVOURITE + " " +  DATATYPE_INTEGER  + " " + NOT_NOLL + ", " +
-                                    COLUMN_ISDONE + " " +  DATATYPE_INTEGER  + " " + NOT_NOLL + ")";
+                                    COLUMN_ISFAVOURITE + " " +  DATATYPE_TEXT  + " " + NOT_NOLL + ", " +
+                                    COLUMN_ISDONE + " " +  DATATYPE_TEXT  + " " + NOT_NOLL + ")";
 
 
     public final static String[] COLUMNS_TABLE_TODOS = {

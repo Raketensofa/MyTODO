@@ -22,7 +22,7 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
     public LocalDatabaseImpl(Context context){
 
-        database = context.openOrCreateDatabase("mytodoData.sqlite", Context.MODE_PRIVATE, null);
+        database = context.openOrCreateDatabase("mytodoDatabase.sqlite", Context.MODE_PRIVATE, null);
         if(database.getVersion() == 0){
 
             database.setVersion(1);
