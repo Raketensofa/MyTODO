@@ -1,18 +1,21 @@
 package cgellner.mytodo;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -41,7 +44,7 @@ public class TodoOverviewActivity extends Activity {
 
     private int SortMode; //1 = Faelligkeit+Wichtigkeit  - 2= Wichtigkeit+Faelligkeit
 
-
+    private MyTodoApplication myTodoApplication;
     private ITodoItemCRUDAsync remoteCrudOperations;
     private ITodoItemCRUD localCrudOperations;
 
@@ -49,7 +52,7 @@ public class TodoOverviewActivity extends Activity {
 
     private ProgressDialog progressDialog;
 
-    private class ItemViewHolder {
+    public class ItemViewHolder {
 
         public long itemId;
 
@@ -79,6 +82,7 @@ public class TodoOverviewActivity extends Activity {
         listviewTodos = (ListView) findViewById(R.id.listview_todolist);
         todoListViewAdapter = new ArrayAdapter<TodoItem>(this, R.layout.todo_list_item) {
 
+
             @NonNull
             @Override
             public View getView(int position, View itemView, ViewGroup parent) {
@@ -107,107 +111,23 @@ public class TodoOverviewActivity extends Activity {
                     itemView.setTag(itemViewHolder);
                 }
 
-
                 //Zuweisung der View-Element-Inhalte
                 final TodoItem todoItem = getItem(position);
                 final ItemViewHolder viewHolder = (ItemViewHolder) itemView.getTag();
 
-                viewHolder.itemId = todoItem.getId();
-                viewHolder.itemName.setText(todoItem.getName());
-
-                String dateText = DateFormat.format("dd.MM.yyyy", new Date(todoItem.getExpiry())).toString();
-                String timeText = DateFormat.format("HH:mm", new Date(todoItem.getExpiry())).toString();
-
-                viewHolder.itemDeadline.setText(dateText + " " + timeText);
-                markExpiredTodoItems(viewHolder.itemDeadline, todoItem.getExpiry());
-
-                if (todoItem.getIsFavourite() == true) {
-                    viewHolder.itemIsFavourite.setTag("IS_FAV");
-                    viewHolder.itemIsFavourite.setImageResource(R.drawable.yellow_star_1);
-                } else if (todoItem.getIsFavourite() == false) {
-                    viewHolder.itemIsFavourite.setTag("IS_NOT_FAV");
-                    viewHolder.itemIsFavourite.setImageResource(R.drawable.icons8sternfilled50);
-                }
-
-                if (todoItem.getIsDone() == true) {
-                    viewHolder.itemIsDone.setTag("IS_DONE");
-                    viewHolder.itemIsDone.setImageResource(R.drawable.filled_checkbox_23);
-                } else if (todoItem.getIsDone() == false) {
-                    viewHolder.itemIsDone.setTag("IS_NOT_DONE");
-                    viewHolder.itemIsDone.setImageResource(R.drawable.unfilled_checkbox34);
-                }
-
-                viewHolder.basicDataView.setClickable(true);
-                viewHolder.basicDataView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Log.i(TAG, "Klick Item " + todoItem.getId());
-
-                        startShowingDetailView(todoItem);
-                    }
-                });
-
-
-                viewHolder.itemIsDone.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        boolean isChecked = todoItem.getIsDone();
-
-                        if (viewHolder.itemIsDone.getTag().equals("IS_DONE")) {
-
-                            viewHolder.itemIsDone.setImageResource(R.drawable.unfilled_checkbox34);
-                            isChecked = false;
-                            viewHolder.itemIsDone.setTag("IS_NOT_DONE");
-
-                        } else if (viewHolder.itemIsDone.getTag().equals("IS_NOT_DONE")) {
-
-                            viewHolder.itemIsDone.setImageResource(R.drawable.filled_checkbox_23);
-                            isChecked = true;
-                            viewHolder.itemIsDone.setTag("IS_DONE");
-                        }
-
-                        todoItem.setIsDone(isChecked);
-                        updateTodoItem(todoItem);
-                        todoListViewAdapter.clear();
-                        readItemsAndFillListView();
-                    }
-                });
-
-                viewHolder.itemIsFavourite.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        boolean isChecked = todoItem.getIsFavourite();
-
-                        if (viewHolder.itemIsFavourite.getTag().equals("IS_FAV")) {
-
-                            viewHolder.itemIsFavourite.setImageResource(R.drawable.icons8sternfilled50);
-                            viewHolder.itemIsFavourite.setTag("IS_NOT_FAV");
-                            isChecked = false;
-
-                        } else if (viewHolder.itemIsFavourite.getTag().equals("IS_NOT_FAV")) {
-
-                            viewHolder.itemIsFavourite.setImageResource(R.drawable.yellow_star_1);
-                            viewHolder.itemIsFavourite.setTag("IS_FAV");
-                            isChecked = true;
-                        }
-
-                        todoItem.setIsFavourite(isChecked);
-                        updateTodoItem(todoItem);
-                    }
-                });
+                setViewHolderData(viewHolder, todoItem);
 
                 return itemView;
             }
         };
 
+
         listviewTodos.setAdapter(todoListViewAdapter);
         todoListViewAdapter.setNotifyOnChange(true);
 
-        localCrudOperations = ((MyTodoApplication)getApplication()).getLocalCrud();
-        remoteCrudOperations = ((MyTodoApplication)getApplication()).getCRUDOperationsImpl();
+        myTodoApplication = ((MyTodoApplication)getApplication());
+        localCrudOperations = myTodoApplication.getLocalCrud();
+        remoteCrudOperations = myTodoApplication.getCRUDOperationsImpl();
 
         readItemsAndFillListView();
     }
@@ -234,6 +154,7 @@ public class TodoOverviewActivity extends Activity {
 
                   TodoItem updatedItem = (TodoItem) data.getSerializableExtra(TODO_ITEM);
                   updateTodoItem(updatedItem);
+                  listviewTodos.setAdapter(todoListViewAdapter);
                   Toast.makeText(getApplicationContext(), "Änderungen gespeichert", Toast.LENGTH_SHORT).show();
             }
         }
@@ -260,7 +181,11 @@ public class TodoOverviewActivity extends Activity {
 
             if(todoListViewAdapter.getItem(i).getId() == item.getId()){
 
-                 todoListViewAdapter.insert(item,i);
+                todoListViewAdapter.getItem(i).setExpiry(item.getExpiry());
+                todoListViewAdapter.getItem(i).setIsFavourite(item.getIsFavourite());
+                todoListViewAdapter.getItem(i).setName(item.getName());
+                todoListViewAdapter.getItem(i).setDescription(item.getDescription());
+                todoListViewAdapter.getItem(i).setContacts(item.getContacts());
             }
         }
     }
@@ -305,7 +230,7 @@ public class TodoOverviewActivity extends Activity {
             @Override
             protected void onPostExecute(TodoItem result) {
 
-                if (((MyTodoApplication) getApplication()).isConnToRemote()) {
+                if (myTodoApplication.isConnToRemote()) {
 
                     remoteCrudOperations.createTodoItem(result, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
 
@@ -331,6 +256,23 @@ public class TodoOverviewActivity extends Activity {
 
         progressDialog.show();
 
+       TodoItem updatedLocalItem = localCrudOperations.updateTodoItem(item);
+
+        if(updatedLocalItem != null && myTodoApplication.isConnToRemote()){
+
+            remoteCrudOperations.updateTodoItem(item, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
+                    @Override
+                    public void process(TodoItem result) {
+
+                        Log.i(TAG, "");
+                    }
+            });
+        }
+
+        updateTodoItemInList(updatedLocalItem);
+        progressDialog.hide();
+
+        /**
         new AsyncTask<TodoItem, Void, TodoItem>() {
 
             @Override
@@ -358,7 +300,7 @@ public class TodoOverviewActivity extends Activity {
                 }
             }
 
-        }.execute(item);
+        }.execute(item);*/
     }
 
 
@@ -371,8 +313,6 @@ public class TodoOverviewActivity extends Activity {
             remoteCrudOperations.readAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<List<TodoItem>>() {
                 @Override
                 public void process(List<TodoItem> result) {
-
-                    progressDialog.hide();
 
                     if (result != null) {
                         for (TodoItem item : result) {
@@ -392,8 +332,10 @@ public class TodoOverviewActivity extends Activity {
                 }
             }
 
-            progressDialog.hide();
+
         }
+
+        progressDialog.hide();
     }
 
 
@@ -401,6 +343,36 @@ public class TodoOverviewActivity extends Activity {
 
         progressDialog.show();
 
+        boolean deletedLocalItem = localCrudOperations.deleteTodoItem(todoId);
+
+        if(deletedLocalItem && myTodoApplication.isConnToRemote()){
+
+            remoteCrudOperations.deleteTodoItem(todoId, new ITodoItemCRUDAsync.CallbackFunction<Boolean>() {
+
+                @Override
+                public void process(Boolean deleted) {
+
+                    Log.i(TAG, "Remote Item gelöscht: " + deleted);
+                }
+            });
+        }
+
+        progressDialog.hide();
+        if(deletedLocalItem){
+
+            todoListViewAdapter.remove(findTodoItemInList(todoId));
+            Toast.makeText(getApplicationContext(), "TODO gelöscht.", Toast.LENGTH_SHORT).show();
+
+        } else {
+
+            Toast.makeText(getApplicationContext(), "Error: Fehler beim Löschen des Todos aufgetreten.", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
+
+        /**
         new AsyncTask<Long, Void, Boolean>() {
 
             @Override
@@ -437,7 +409,7 @@ public class TodoOverviewActivity extends Activity {
                     }
                 }
             }
-        }.execute(todoId);
+        }.execute(todoId);*/
     }
 
 
@@ -539,5 +511,95 @@ public class TodoOverviewActivity extends Activity {
 
             }
 
+    }
+
+
+
+    private void setViewHolderData(final ItemViewHolder viewHolder, final TodoItem todoItem){
+
+        viewHolder.itemId = todoItem.getId();
+        viewHolder.itemName.setText(todoItem.getName());
+
+        if(todoItem.getExpiry() > 0) {
+            String dateText = DateFormat.format("dd.MM.yyyy", new Date(todoItem.getExpiry())).toString();
+            String timeText = DateFormat.format("HH:mm", new Date(todoItem.getExpiry())).toString();
+            viewHolder.itemDeadline.setText(dateText + " " + timeText);
+            markExpiredTodoItems(viewHolder.itemDeadline, todoItem.getExpiry());
+        }
+
+        if (todoItem.getIsFavourite() == true) {
+            viewHolder.itemIsFavourite.setTag("IS_FAV");
+            viewHolder.itemIsFavourite.setImageResource(R.drawable.yellow_star_1);
+        } else if (todoItem.getIsFavourite() == false) {
+            viewHolder.itemIsFavourite.setTag("IS_NOT_FAV");
+            viewHolder.itemIsFavourite.setImageResource(R.drawable.icons8sternfilled50);
+        }
+
+        if (todoItem.getIsDone() == true) {
+            viewHolder.itemIsDone.setTag("IS_DONE");
+            viewHolder.itemIsDone.setImageResource(R.drawable.filled_checkbox_23);
+        } else if (todoItem.getIsDone() == false) {
+            viewHolder.itemIsDone.setTag("IS_NOT_DONE");
+            viewHolder.itemIsDone.setImageResource(R.drawable.unfilled_checkbox34);
+        }
+
+
+        viewHolder.itemIsDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                boolean isChecked = todoItem.getIsDone();
+
+                if (viewHolder.itemIsDone.getTag().equals("IS_DONE")) {
+
+                    viewHolder.itemIsDone.setImageResource(R.drawable.unfilled_checkbox34);
+                    isChecked = false;
+                    viewHolder.itemIsDone.setTag("IS_NOT_DONE");
+
+                } else if (viewHolder.itemIsDone.getTag().equals("IS_NOT_DONE")) {
+
+                    viewHolder.itemIsDone.setImageResource(R.drawable.filled_checkbox_23);
+                    isChecked = true;
+                    viewHolder.itemIsDone.setTag("IS_DONE");
+                }
+
+                todoItem.setIsDone(isChecked);
+                updateTodoItem(todoItem);
+            }
+        });
+
+        viewHolder.itemIsFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                boolean isChecked = todoItem.getIsFavourite();
+
+                if (viewHolder.itemIsFavourite.getTag().equals("IS_FAV")) {
+
+                    viewHolder.itemIsFavourite.setImageResource(R.drawable.icons8sternfilled50);
+                    viewHolder.itemIsFavourite.setTag("IS_NOT_FAV");
+                    isChecked = false;
+
+                } else if (viewHolder.itemIsFavourite.getTag().equals("IS_NOT_FAV")) {
+
+                    viewHolder.itemIsFavourite.setImageResource(R.drawable.yellow_star_1);
+                    viewHolder.itemIsFavourite.setTag("IS_FAV");
+                    isChecked = true;
+                }
+
+                todoItem.setIsFavourite(isChecked);
+                updateTodoItem(todoItem);
+            }
+        });
+
+
+        viewHolder.basicDataView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.i(TAG, "Klick Item " + todoItem.getId());
+                startShowingDetailView(todoItem);
+            }
+        });
     }
 }

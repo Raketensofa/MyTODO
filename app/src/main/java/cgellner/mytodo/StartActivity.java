@@ -64,9 +64,9 @@ public class StartActivity extends Activity{
         Log.i(TAG, "starting compare Databases...");
 
         final ITodoItemCRUD localDatabase = ((MyTodoApplication) getApplication()).getLocalCrud();
-
         final List<TodoItem> itemList = localDatabase.readAllTodoItems();
         Log.i(TAG, "Local Database Size: " + itemList.size());
+
         if (itemList.size() > 0) {
 
             deleteAllRemoteTodoItems();

@@ -143,7 +143,7 @@ public class TodoDetailActivity extends Activity {
                 setResult(R.integer.UPDATE_TODO, intent);
                 finish();
 
-                return false;
+                return true;
             }
         });
     }
@@ -229,6 +229,7 @@ public class TodoDetailActivity extends Activity {
 
         itemName.setText(todoItem.getName());
         itemDesc.setText(todoItem.getDescription());
+
 
 
         itemDate.setText(DateFormat.format("dd.MM.yyyy", new Date(todoItem.getExpiry())).toString());
