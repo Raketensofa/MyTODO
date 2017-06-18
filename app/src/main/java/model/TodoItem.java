@@ -2,6 +2,7 @@ package model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -164,6 +165,13 @@ public class TodoItem implements Serializable{
         todoValues.put(Queries.COLUMN_ISFAVOURITE, String.valueOf(favourite));
         todoValues.put(Queries.COLUMN_ISDONE, String.valueOf(done));
         todoValues.put(Queries.COLUMN_EXPIRY, expiry);
+
+        Log.i("TotodItem","Id: " +  todoValues.get(Queries.COLUMN_ID));
+        Log.i("TotodItem","Name: " +  todoValues.get(Queries.COLUMN_NAME));
+        Log.i("TotodItem","Description: " +  todoValues.get(Queries.COLUMN_DESCRIPTION));
+        Log.i("TotodItem","Expiry: " +  todoValues.get(Queries.COLUMN_EXPIRY));
+        Log.i("TotodItem","Done: " +  todoValues.get(Queries.COLUMN_ISDONE));
+        Log.i("TotodItem","Favourite: " +  todoValues.get(Queries.COLUMN_ISFAVOURITE));
 
         return todoValues;
     }

@@ -101,8 +101,8 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
 
         }catch (Exception e){
 
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            Log.e(TAG, "readTodoItem: " + e.getMessage());
+           return null;
         }
     }
 
@@ -118,7 +118,7 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
         }catch (Exception e) {
 
             Log.e(TAG, "updateTodoItem: " + e.getMessage());
-            throw new RuntimeException(e);
+            return null;
         }
       }
 
@@ -134,7 +134,7 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
         }catch (Exception e){
 
             Log.e(TAG, "deleteTodoItem(" + todoItemId + "): " + e.getMessage());
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
@@ -150,7 +150,7 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
         }catch (Exception e){
 
             Log.e(TAG, "authorizeUser: " + e.getMessage());
-            throw new RuntimeException(e);
+            return false;
         }
     }
 

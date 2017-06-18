@@ -115,7 +115,10 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
         int result = database.update(Queries.TABLE_TODOS, todoValues, Queries.COLUMN_ID + "=" + item.getId(), null);
 
         if(result > 0) {
-            Log.i(TAG, "Updated Todo-Item:" + item.toString());
+            Log.i(TAG, "Updated local Todo-Item:" + item.toString());
+
+        }else{
+            item = null;
         }
 
         return item;

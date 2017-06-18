@@ -126,9 +126,6 @@ public class TodoOverviewActivity extends Activity {
         remoteCrudOperations = myTodoApplication.getCRUDOperationsImpl();
 
         readItemsAndFillListView();
-
-        sortTodoList();
-
     }
 
 
@@ -159,8 +156,6 @@ public class TodoOverviewActivity extends Activity {
 
 
         sortTodoList();
-
-
     }
 
 
@@ -235,13 +230,20 @@ public class TodoOverviewActivity extends Activity {
                     @Override
                     public void process(TodoItem result) {
 
-                       Log.i(TAG, "Remote Item erstellt");
+                        Log.i(TAG, "Remote Item created: " + result.toString());
+                        todoListViewAdapter.add(result);
+                        sortTodoList();
+                        progressDialog.hide();
                     }
                 });
-            }
 
-            todoListViewAdapter.add(item);
+            }else{
+
+                todoListViewAdapter.add(createdLocalItem);
+            }
         }
+
+        sortTodoList();
 
         progressDialog.hide();
     }
@@ -251,20 +253,31 @@ public class TodoOverviewActivity extends Activity {
 
         progressDialog.show();
 
-       TodoItem updatedLocalItem = localCrudOperations.updateTodoItem(item);
+        TodoItem updatedLocalItem = localCrudOperations.updateTodoItem(item);
+        Log.i(TAG, "updateTodoItem: " + updatedLocalItem.toString());
 
-        if(updatedLocalItem != null && myTodoApplication.isConnToRemote()){
+        if (updatedLocalItem != null) {
 
-            remoteCrudOperations.updateTodoItem(item, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
+            if (myTodoApplication.isConnToRemote()) {
+
+                remoteCrudOperations.updateTodoItem(item, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
                     @Override
                     public void process(TodoItem result) {
 
-                        Log.i(TAG, "");
+                        Log.i(TAG, "Remote Item updated: " + result.toString());
+                        updateTodoItemInList(result);
+                        sortTodoList();
+                        progressDialog.hide();
                     }
-            });
+                });
+
+            }else{
+
+                updateTodoItemInList(updatedLocalItem);
+            }
         }
 
-        updateTodoItemInList(updatedLocalItem);
+        sortTodoList();
         progressDialog.hide();
     }
 
@@ -283,6 +296,7 @@ public class TodoOverviewActivity extends Activity {
                         for (TodoItem item : result) {
                             todoListViewAdapter.add(item);
                         }
+                        sortTodoList();
                     }
                 }
             });
@@ -295,9 +309,8 @@ public class TodoOverviewActivity extends Activity {
                 for (TodoItem item : items) {
                     todoListViewAdapter.add(item);
                 }
+                sortTodoList();
             }
-
-
         }
 
         progressDialog.hide();
@@ -310,28 +323,43 @@ public class TodoOverviewActivity extends Activity {
 
         boolean deletedLocalItem = localCrudOperations.deleteTodoItem(todoId);
 
-        if (deletedLocalItem && myTodoApplication.isConnToRemote()) {
-
-            remoteCrudOperations.deleteTodoItem(todoId, new ITodoItemCRUDAsync.CallbackFunction<Boolean>() {
-
-                @Override
-                public void process(Boolean deleted) {
-
-                    Log.i(TAG, "Remote Item gelöscht: " + deleted);
-                }
-            });
-        }
-
-        progressDialog.hide();
         if (deletedLocalItem) {
 
-            todoListViewAdapter.remove(findTodoItemInList(todoId));
-            Toast.makeText(getApplicationContext(), "TODO gelöscht.", Toast.LENGTH_SHORT).show();
+            if (myTodoApplication.isConnToRemote()) {
 
-        } else {
+                remoteCrudOperations.deleteTodoItem(todoId, new ITodoItemCRUDAsync.CallbackFunction<Boolean>() {
 
-            Toast.makeText(getApplicationContext(), "Error: Fehler beim Löschen des Todos aufgetreten.", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void process(Boolean deleted) {
+
+                        Log.i(TAG, "Remote Item gelöscht: " + deleted);
+
+                        progressDialog.hide();
+                        if (deleted) {
+                            todoListViewAdapter.remove(findTodoItemInList(todoId));
+                            sortTodoList();
+                            Toast.makeText(getApplicationContext(), "Todo gelöscht.", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Fehler beim Löschen", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+            }else{
+
+                todoListViewAdapter.remove(findTodoItemInList(todoId));
+                progressDialog.hide();
+                Toast.makeText(getApplicationContext(), "Todo gelöscht.", Toast.LENGTH_SHORT).show();
+            }
+
+        }else{
+
+            progressDialog.hide();
+            Toast.makeText(getApplicationContext(), "Fehler beim Löschen", Toast.LENGTH_SHORT).show();
         }
+
+        sortTodoList();
     }
 
 
@@ -446,6 +474,9 @@ public class TodoOverviewActivity extends Activity {
             String timeText = DateFormat.format("HH:mm", new Date(todoItem.getExpiry())).toString();
             viewHolder.itemDeadline.setText(dateText + " " + timeText);
             markExpiredTodoItems(viewHolder.itemDeadline, todoItem.getExpiry());
+
+        }else{
+            viewHolder.itemDeadline.setText("");
         }
 
         if (todoItem.getIsFavourite() == true) {
@@ -528,6 +559,7 @@ public class TodoOverviewActivity extends Activity {
             }
         });
     }
+
 
     private void sortTodoList(){
 
