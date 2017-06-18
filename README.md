@@ -95,7 +95,7 @@ This section contains general information about the software.
     <td>6</td>
     <td>Alle Informationsbestandteile, inklusive des Namens, sollen nach Erstellung eines Todo änderbar sein.</td>
     <td>2</td>
-     <td></td>
+     <td>&times;</td>
   </tr>
     <tr>
     <td>Speichern von Todos</td>
@@ -131,7 +131,7 @@ This section contains general information about the software.
     <td>Ist die Webanwendung beim Start der Android Anwendung verfügbar, soll der folgende "Abgleich" implementiert werden:
 - liegen lokale Todos vor, dann werden alle Todos auf Seiten der Web Applikation gelöscht und die lokalen Todos an die Web Applikation übertragen. - liegen keine lokalen Todos vor, dann werden alle Todos von der Web Applikation auf die lokale Datenbank übertragen.</td>
     <td>4</td>
-     <td>&times; (fast)</td>
+     <td>&times;</td>
   </tr>
     <tr>
     <td>Anmeldung</td>
@@ -187,7 +187,7 @@ This section contains general information about the software.
     <td>17</td>
     <td>Die Betätigung des Login Buttons soll nur möglich sein, wenn Werte für Email und Passwort eingegeben wurden.</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
@@ -376,7 +376,7 @@ This section contains general information about the software.
     <td>40</td>
     <td>Erledigtsein</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
       <tr>
     <td></td>
