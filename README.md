@@ -95,7 +95,7 @@ This section contains general information about the software.
     <td>6</td>
     <td>Alle Informationsbestandteile, inklusive des Namens, sollen nach Erstellung eines Todo änderbar sein.</td>
     <td>2</td>
-     <td></td>
+     <td>&times;</td>
   </tr>
     <tr>
     <td>Speichern von Todos</td>
@@ -376,7 +376,7 @@ This section contains general information about the software.
     <td>40</td>
     <td>Erledigtsein</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
       <tr>
     <td></td>
