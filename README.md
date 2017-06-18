@@ -131,7 +131,7 @@ This section contains general information about the software.
     <td>Ist die Webanwendung beim Start der Android Anwendung verfügbar, soll der folgende "Abgleich" implementiert werden:
 - liegen lokale Todos vor, dann werden alle Todos auf Seiten der Web Applikation gelöscht und die lokalen Todos an die Web Applikation übertragen. - liegen keine lokalen Todos vor, dann werden alle Todos von der Web Applikation auf die lokale Datenbank übertragen.</td>
     <td>4</td>
-     <td>&times; (fast)</td>
+     <td>&times;</td>
   </tr>
     <tr>
     <td>Anmeldung</td>
