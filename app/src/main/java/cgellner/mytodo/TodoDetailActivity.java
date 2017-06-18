@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -23,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import database.Queries;
+import elements.DateAndTimePicker;
 import model.TodoItem;
 
 public class TodoDetailActivity extends Activity {
@@ -54,9 +56,34 @@ public class TodoDetailActivity extends Activity {
         setTodoDataToComponents();
 
 
-        // setComponentsEditMode(false);
+        final Switch isFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
+        isFav.setVisibility(View.INVISIBLE);
+        final TextView isFavText = (TextView)findViewById(R.id.todo_detail_view_favourite_textview);
+        isFav.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    isFavText.setText("Hohe Priorität");
+                }else {
+                    isFavText.setText("Normale Priorität");
+                }
+            }
+        });
 
 
+        final Switch isDone = (Switch)findViewById(R.id.todo_detail_view_done_switch);
+        isDone.setVisibility(View.INVISIBLE);
+        final TextView isDoneText = (TextView)findViewById(R.id.todo_detail_view_done_textview);
+        isDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    isDoneText.setText("Erledigt");
+                }else {
+                    isDoneText.setText("Nicht erledigt");
+                }
+            }
+        });
     }
 
 
@@ -217,25 +244,42 @@ public class TodoDetailActivity extends Activity {
 
     private void setTodoDataToComponents() {
 
-        getActionBar().setTitle("TODO Details");
+        getActionBar().setTitle("Todo Details");
 
         EditText itemName = (EditText) findViewById(R.id.todo_detail_view_name_edittext);
         EditText itemDesc = (EditText) findViewById(R.id.todo_detail_view_description_edittext);
         TextView itemDate = (TextView) findViewById(R.id.todo_detail_view_date_textview);
         TextView itemTime = (TextView) findViewById(R.id.todo_detail_view_time_textview);
         Switch itemFav = (Switch) findViewById(R.id.todo_detail_view_favourite_switch);
+        TextView itemFavText = (TextView)findViewById(R.id.todo_detail_view_favourite_textview);
+        Switch itemDone = (Switch) findViewById(R.id.todo_detail_view_done_switch);
+        TextView itemDoneText = (TextView)findViewById(R.id.todo_detail_view_done_textview);
+
+
         ImageView addContac = (ImageView) findViewById(R.id.todo_detail_view_contact_add_icon);
-        //TODO isDone element
 
         itemName.setText(todoItem.getName());
         itemDesc.setText(todoItem.getDescription());
 
-
-
-        itemDate.setText(DateFormat.format("dd.MM.yyyy", new Date(todoItem.getExpiry())).toString());
-        itemTime.setText(DateFormat.format("HH:mm", new Date(todoItem.getExpiry())).toString());
+        if(todoItem.getExpiry() > 0) {
+            itemDate.setText(DateFormat.format("dd.MM.yyyy", new Date(todoItem.getExpiry())).toString());
+            itemTime.setText(DateFormat.format("HH:mm", new Date(todoItem.getExpiry())).toString());
+        }
 
         itemFav.setChecked(todoItem.getIsFavourite());
+        if(todoItem.getIsFavourite()) {
+            itemFavText.setText("Hohe Priorität");
+        }else {
+            itemFavText.setText("Normale Priorität");
+        }
+
+        itemDone.setChecked(todoItem.getIsDone());
+        if(todoItem.getIsDone()) {
+            itemDoneText.setText("Erledigt");
+        }else {
+            itemDoneText.setText("Nicht erledigt");
+        }
+
 
         addContac.setClickable(true);
         addContac.setOnClickListener(new View.OnClickListener() {
@@ -256,7 +300,8 @@ public class TodoDetailActivity extends Activity {
         TextView itemDate = (TextView) findViewById(R.id.todo_detail_view_date_textview);
         TextView itemTime = (TextView) findViewById(R.id.todo_detail_view_time_textview);
         Switch itemFav = (Switch) findViewById(R.id.todo_detail_view_favourite_switch);
-        //TODO: isdone
+        Switch itemDone = (Switch) findViewById(R.id.todo_detail_view_done_switch);
+
         ImageView addContac = (ImageView) findViewById(R.id.todo_detail_view_contact_add_icon);
 
         itemName.setEnabled(isEditMode);
@@ -268,7 +313,17 @@ public class TodoDetailActivity extends Activity {
         itemTime.setEnabled(isEditMode);
         itemTime.setTextColor(Color.BLACK);
         itemFav.setClickable(isEditMode);
-        //TODO: isdone
+        if(isEditMode) {
+            itemFav.setVisibility(View.VISIBLE);
+        }else{
+            itemFav.setVisibility(View.INVISIBLE);
+        }
+        itemDone.setClickable(isEditMode);
+        if(isEditMode) {
+            itemDone.setVisibility(View.VISIBLE);
+        }else{
+            itemDone.setVisibility(View.INVISIBLE);
+        }
 
         if (isEditMode == true) {
             addContac.setVisibility(View.VISIBLE);
@@ -280,24 +335,23 @@ public class TodoDetailActivity extends Activity {
 
     private void setListener() {
 
-        /**
-         //DatePickerDialog oeffnen bei Klick auf Datum-Textbox
-         dateTextview = (TextView) findViewById(R.id.todo_date_textview);
-         dateTextview.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
+        final TextView dateTextview = (TextView) findViewById(R.id.todo_detail_view_date_textview);
+        dateTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        dateTextView.set(DateAndTimePicker.startDatePickerDialog(dateTextview));
-        }
+                DateAndTimePicker.startDatePickerDailog(dateTextview, todoItem.getExpiry());
+            }
         });
 
-         //TimePickerDialog oeffnen bei Klick auf Uhrzeit-Textbox
-         timeTextview = (TextView) findViewById(R.id.todo_time_textview);
-         timeTextview.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
+        final TextView timeTextview = (TextView) findViewById(R.id.todo_detail_view_time_textview);
+        timeTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        timeTextView.set(DateAndTimePicker.startTimePickerDialog(timeTextview));
-        }
-        });*/
+                DateAndTimePicker.startTimePickerDialog(timeTextview, todoItem.getExpiry());
+            }
+        });
     }
 
 
@@ -308,10 +362,12 @@ public class TodoDetailActivity extends Activity {
         TextView date = (TextView)findViewById(R.id.todo_detail_view_date_textview);
         TextView time = (TextView)findViewById(R.id.todo_detail_view_time_textview);
         Switch isFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
+        Switch itemDone = (Switch) findViewById(R.id.todo_detail_view_done_switch);
 
         item.setName(name.getText().toString());
         item.setDescription(descr.getText().toString());
         item.setIsFavourite(isFav.isChecked());
+        item.setIsDone(itemDone.isChecked());
 
         long expiry = 0;
 

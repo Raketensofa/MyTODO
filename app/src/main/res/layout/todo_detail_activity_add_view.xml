@@ -17,6 +17,15 @@
         >
     </Toolbar>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="insideInset"
+        >
+
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -169,11 +178,9 @@
             android:textOn="Hohe Priorität"
             android:textOff="Normale Priorität"
             android:enabled="true"
-            android:hint="Normale Priorität"
             android:textSize="18sp"
             android:splitTrack="false"
-            android:showText="false"
-            style="@android:style/Widget.Material.Light.CompoundButton.Switch" />
+            android:showText="false" />
 
 
     </RelativeLayout>
@@ -183,11 +190,46 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/todo_detail_view_done">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/todo_detail_view_done_icon"
+            android:src="@drawable/icon_checked"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp" />
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/todo_detail_view_done_switch"
+            android:layout_alignTop="@+id/todo_detail_view_done_icon"
+            android:layout_toEndOf="@+id/todo_detail_view_done_icon"
+            android:layout_marginLeft="10dp"
+            android:textOn="Erledigt"
+            android:textOff="Nicht erledigt"
+            android:enabled="true"
+            android:textSize="18sp"
+            android:splitTrack="false"
+            android:showText="false" />
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/todo_detail_view_contacts"
         android:background="@color/colorAccent"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="15dp">
 
 
         <TextView
@@ -201,6 +243,7 @@
             android:layout_marginLeft="10dp"
             android:textSize="16dp" />
 
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -213,15 +256,17 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="20dp" />
 
-
-
     </RelativeLayout>
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/todo_detail_view_contacts_listview"
         android:fastScrollEnabled="false"
-        android:choiceMode="singleChoice"></ListView>
+        android:choiceMode="singleChoice"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"></ListView>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -4,35 +4,37 @@ package cgellner.mytodo;
 import android.app.Activity;
 
 import android.app.ProgressDialog;
+import android.app.usage.UsageEvents;
 import android.content.Intent;
-import android.os.AsyncTask;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 
 import database.IRemoteInitAsync;
 import model.User;
 
 
-/**
- * A login screen that offers login via email/password.
- */
+
 public class LoginActivity extends Activity {
 
-
-    // UI references.
-    private AutoCompleteTextView mEmailView;
+    private EditText mEmailView;
     private EditText mPasswordView;
     private ProgressDialog progressDialog;
+    private  Button mEmailSignInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,24 +42,59 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Toolbar toolbar = (Toolbar)findViewById(R.id.todo_form_toolbar);
+        toolbar.setTitle("MyTodo");
+
         progressDialog = new ProgressDialog(this);
 
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-
+        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setEnabled(false);
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mEmailView = (EditText) findViewById(R.id.email);
+
+
+        mEmailView.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (!TextUtils.isEmpty(mEmailView.getText().toString()) && !TextUtils.isEmpty(mPasswordView.getText().toString()) ){
+                    mEmailSignInButton.setEnabled(true);
+                }else{
+                    mEmailSignInButton.setEnabled(false);
                 }
-                return false;
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+
+        mPasswordView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (!TextUtils.isEmpty(mEmailView.getText().toString()) && !TextUtils.isEmpty(mPasswordView.getText().toString()) ){
+                    mEmailSignInButton.setEnabled(true);
+                }else{
+                    mEmailSignInButton.setEnabled(false);
+                }
+            }
+        });
+
+
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,49 +104,17 @@ public class LoginActivity extends Activity {
     }
 
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     private void attemptLogin() {
 
-        // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        progressDialog.show();
 
-        // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        boolean isEmailCorrect = isEmailTextFieldValid();
+        boolean isPwdCorrect = isPwdTextFieldValid();
 
-        boolean cancel = false;
-        View focusView = null;
+        if (isEmailCorrect && isPwdCorrect) {
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-
-            progressDialog.show();
+            String email = mEmailView.getText().toString();
+            String password = mPasswordView.getText().toString();
 
             User user = new User();
             user.setEmail(email);
@@ -128,24 +133,74 @@ public class LoginActivity extends Activity {
                         finish();
 
                     } else {
-                        mEmailView.setError("Falsche E-Mail-Adresse");
-                        mPasswordView.setError(getString(R.string.error_incorrect_password));
-                        mPasswordView.requestFocus();
+
+                        Toast.makeText(getBaseContext(), "Anmeldung fehlgeschlagen. E-Mail und/oder Passwort falsch.", Toast.LENGTH_LONG).show();
+                        mEmailView.setError("ggf. falsche E-Mail");
+                        mPasswordView.setError("ggf. falsches Passwort");
+                        mEmailView.requestFocus();
                     }
                 }
             });
+
+        }else{
+
+            progressDialog.hide();
         }
     }
+
 
     private boolean isEmailValid(String email) {
 
         return (email.contains("@") && email.contains("."));
     }
 
+
     private boolean isPasswordValid(String password) {
 
         return password.length() == 6;
     }
 
+
+    private boolean isEmailTextFieldValid(){
+
+        boolean isValid = false;
+
+        if (!TextUtils.isEmpty(mEmailView.getText().toString())){
+
+            if (isEmailValid(mEmailView.getText().toString())) {
+
+                isValid = true;
+                mEmailView.setError(null);
+
+            }else{
+
+                mEmailView.setError("Falsches Format");
+            }
+
+        }
+
+        return isValid;
+    }
+
+
+    private boolean isPwdTextFieldValid(){
+
+        boolean isValid = false;
+
+        if (!TextUtils.isEmpty(mPasswordView.getText().toString())){
+
+            if (isPasswordValid(mPasswordView.getText().toString())) {
+
+                isValid = true;
+                mPasswordView.setError(null);
+
+            }else{
+
+                mPasswordView.setError("Passwort muss 6 Zeichen haben");
+            }
+        }
+
+        return isValid;
+    }
 }
 

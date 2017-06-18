@@ -440,6 +440,8 @@ public class TodoOverviewActivity extends Activity {
 
     private void markExpiredTodoItems(TextView view, long expiry) {
 
+        if (expiry > 0) {
+
             try {
 
                 Calendar cal = Calendar.getInstance();
@@ -448,9 +450,8 @@ public class TodoOverviewActivity extends Activity {
 
                     view.setTextColor(Color.WHITE);
                     view.setBackgroundColor(Color.RED);
-                    //view.setBackgroundColor(Color.DKGRAY);
 
-                }else{
+                } else {
 
                     view.setBackgroundColor(Color.WHITE);
                     view.setTextColor(Color.DKGRAY);
@@ -461,6 +462,11 @@ public class TodoOverviewActivity extends Activity {
 
             }
 
+        }else{
+
+            view.setBackgroundColor(Color.WHITE);
+            view.setTextColor(Color.WHITE);
+        }
     }
 
 

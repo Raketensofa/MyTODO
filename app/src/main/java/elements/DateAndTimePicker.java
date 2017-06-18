@@ -2,13 +2,13 @@ package elements;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -19,19 +19,28 @@ public abstract class DateAndTimePicker {
     private static String date;
     private static String time;
 
-    public static void startDatePickerDailog(final TextView v){
-
+    public static void startDatePickerDailog(final TextView v, final long expiry){
 
             final Calendar myCalendar = Calendar.getInstance();
+
+            if(expiry  > 0 ) {
+                Date date = new Date(expiry);
+                myCalendar.set(Calendar.YEAR, date.getYear());
+                myCalendar.set(Calendar.MONTH, date.getMonth());
+                myCalendar.set(Calendar.DAY_OF_MONTH, date.getDay());
+            }
+
             final DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
-                @Override
+
+
                 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
                     myCalendar.set(Calendar.YEAR, year);
                     myCalendar.set(Calendar.MONTH, monthOfYear);
                     myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
                     String myFormat = "dd.MM.yyyy";
-                    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
+                    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMANY);
 
                     date = sdf.format(myCalendar.getTime());
                     v.setText(date);
@@ -42,11 +51,17 @@ public abstract class DateAndTimePicker {
 
 
 
-    public static void startTimePickerDialog(final TextView v){
+    public static void startTimePickerDialog(final TextView v, final long expiry){
 
         final Calendar myCalendar = Calendar.getInstance();
-        final TimePickerDialog.OnTimeSetListener timePickerListener =
-                new TimePickerDialog.OnTimeSetListener() {
+
+        if(expiry  > 0 ) {
+            Date date = new Date(expiry);
+            myCalendar.set(Calendar.HOUR, date.getHours());
+            myCalendar.set(Calendar.MINUTE, date.getMinutes());
+        }
+
+        final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 
                     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
 
@@ -54,8 +69,7 @@ public abstract class DateAndTimePicker {
                         myCalendar.set(Calendar.MINUTE, selectedMinute);
 
                         String myFormat = "HH:mm";
-                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
-
+                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMANY);
 
                         time = sdf.format(myCalendar.getTime());
                         v.setText(time);

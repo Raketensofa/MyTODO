@@ -1,24 +1,21 @@
 package cgellner.mytodo;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import database.Queries;
 import elements.DateAndTimePicker;
 import model.TodoItem;
 
@@ -37,6 +34,25 @@ public class TodoAddNewActivity extends Activity {
         Toolbar toolbar = (Toolbar)findViewById(R.id.todo_form_toolbar);
         setActionBar(toolbar);
         getActionBar().setTitle("Neues TODO");
+
+
+        View isDoneView = findViewById(R.id.todo_detail_view_done);
+        isDoneView.setVisibility(View.INVISIBLE);
+
+
+        final Switch isFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
+        final TextView isFavText = (TextView)findViewById(R.id.todo_detail_view_favourite_textview);
+        isFav.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    isFavText.setText("Hohe Priorität");
+                }else {
+                    isFavText.setText("Normale Priorität");
+                }
+            }
+        });
+
 
         setListener();
     }
@@ -112,7 +128,7 @@ public class TodoAddNewActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-               DateAndTimePicker.startDatePickerDailog(dateTextview);
+               DateAndTimePicker.startDatePickerDailog(dateTextview, 0);
             }
         });
 
@@ -121,7 +137,7 @@ public class TodoAddNewActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-               DateAndTimePicker.startTimePickerDialog(timeTextview);
+               DateAndTimePicker.startTimePickerDialog(timeTextview, 0);
             }
         });
     }
@@ -137,6 +153,7 @@ public class TodoAddNewActivity extends Activity {
         TextView time = (TextView)findViewById(R.id.todo_detail_view_time_textview);
         Switch isFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
 
+        item.setIsDone(false);
         item.setId(-1); //default
         item.setName(name.getText().toString());
         item.setDescription(descr.getText().toString());
