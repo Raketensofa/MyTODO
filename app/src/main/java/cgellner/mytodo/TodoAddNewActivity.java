@@ -3,11 +3,18 @@ package cgellner.mytodo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toolbar;
@@ -17,13 +24,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import elements.DateAndTimePicker;
+import model.Contact;
 import model.TodoItem;
 
 public class TodoAddNewActivity extends Activity {
 
+    private String TAG = TodoAddNewActivity.class.getSimpleName();
+
+
+    static final int PICK_CONTACT_REQUEST = 1;
+
+
     private MenuItem itemCancel;
     private MenuItem itemSave;
 
+    private ArrayAdapter<Contact> contactListViewAdapter;
+    ListView contactlistView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +71,12 @@ public class TodoAddNewActivity extends Activity {
 
 
         setListener();
+
+        initContactListAdapter();
+
+        contactlistView = (ListView)findViewById(R.id.todo_detail_view_contacts_listview);
+        contactlistView.setAdapter(contactListViewAdapter);
+        contactListViewAdapter.setNotifyOnChange(true);
     }
 
 
@@ -140,6 +162,17 @@ public class TodoAddNewActivity extends Activity {
                DateAndTimePicker.startTimePickerDialog(timeTextview, 0);
             }
         });
+
+
+        final ImageView imageViewNewContact = (ImageView) findViewById(R.id.todo_detail_view_contact_add_icon);
+        imageViewNewContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                addContact();
+            }
+        });
+
     }
 
 
@@ -178,8 +211,107 @@ public class TodoAddNewActivity extends Activity {
             item.setIsFavourite(false);
         }
 
-        //TODO Kontakte
+
+        String contacts = null;
+        if(contactListViewAdapter.getCount() > 0){
+            for(int i = 0; i < contactListViewAdapter.getCount(); i++){
+                contacts += contactListViewAdapter.getItem(i).getUri() + ";";
+            }
+        }
+
+        item.setContacts(contacts);
 
         return item;
     }
+
+
+    public void addContact() {
+
+        Intent pickContactIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == PICK_CONTACT_REQUEST && resultCode ==  RESULT_OK){
+
+            TodoContactProvider contactProvider = new TodoContactProvider(this);
+            Log.i(TAG, "URI: " + data.getData().toString());
+            Contact selectedContact = contactProvider.getContactDataFromUri(data.getData());
+            Log.i(TAG, "selected Contact: " + selectedContact.toString());
+
+            contactListViewAdapter.add(selectedContact);
+            contactListViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+
+    public class ItemViewHolder {
+
+        public Contact contact;
+        public TextView contactName;
+
+        public ImageView sendSMS;
+        public ImageView sendMail;
+    }
+
+
+    private void initContactListAdapter(){
+
+        contactListViewAdapter = new ArrayAdapter<Contact>(this, R.layout.contact_list_item) {
+
+            @NonNull
+            @Override
+            public View getView(int position, View itemView, ViewGroup parent) {
+
+                //Initialsierung der View-Elemente
+                if (itemView == null) {
+
+                    itemView = getLayoutInflater().inflate(R.layout.contact_list_item, null);
+                    TextView itemNameView = (TextView) itemView.findViewById(R.id.textview_contact_name);
+                    ImageView sms = (ImageView)itemView.findViewById(R.id.imageview_sms);
+                    ImageView mail = (ImageView)itemView.findViewById(R.id.imageview_mail);
+
+                    ItemViewHolder itemViewHolder = new ItemViewHolder();
+                    itemViewHolder.contactName = itemNameView;
+                    itemViewHolder.sendMail = mail;
+                    itemViewHolder.sendSMS = sms;
+
+                    itemView.setTag(itemViewHolder);
+                }
+
+                final Contact contact = getItem(position);
+                final ItemViewHolder viewHolder = (ItemViewHolder) itemView.getTag();
+
+                viewHolder.contact = contact;
+                viewHolder.contactName.setText(contact.getName());
+
+
+                if(contact.getEmail() != null) {
+                    viewHolder.sendMail.setVisibility(View.VISIBLE);
+
+                    //TODO Mail versenden
+
+
+                }else{
+                    viewHolder.sendMail.setVisibility(View.INVISIBLE);
+                }
+
+                if(contact.getPhone() != null) {
+                    viewHolder.sendSMS.setVisibility(View.VISIBLE);
+
+                    //TODO SMS versenden
+
+
+                }else{
+                    viewHolder.sendSMS.setVisibility(View.INVISIBLE);
+                }
+
+                return itemView;
+            }
+        };
+    }
+
+
 }

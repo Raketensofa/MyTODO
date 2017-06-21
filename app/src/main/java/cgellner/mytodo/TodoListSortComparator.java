@@ -8,15 +8,15 @@ import model.TodoItem;
 /**
  * Created by Carolin on 17.06.2017.
  */
-public class TodoListSort implements Comparator<TodoItem> {
+public class TodoListSortComparator implements Comparator<TodoItem> {
 
 
-    private String TAG = TodoListSort.class.getSimpleName();
+    private String TAG = TodoListSortComparator.class.getSimpleName();
 
     private int SortMode = 0;
     private int SortParam = 0;
 
-    public TodoListSort(int sortMode, int sortParam) {
+    public TodoListSortComparator(int sortMode, int sortParam) {
 
         SortMode = sortMode;
         SortParam = sortParam;
@@ -102,7 +102,6 @@ public class TodoListSort implements Comparator<TodoItem> {
                 }
             }
         }
-
 
         return 0;
     }

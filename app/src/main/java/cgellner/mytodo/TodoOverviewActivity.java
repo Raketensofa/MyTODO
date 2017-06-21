@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
@@ -70,6 +69,9 @@ public class TodoOverviewActivity extends Activity {
 
         setContentView(R.layout.activity_todo_overview);
 
+
+
+
         progressDialog = new ProgressDialog(this);
 
         initToolbar();
@@ -118,6 +120,7 @@ public class TodoOverviewActivity extends Activity {
             }
         };
 
+
         listviewTodos.setAdapter(todoListViewAdapter);
         todoListViewAdapter.setNotifyOnChange(true);
 
@@ -156,6 +159,10 @@ public class TodoOverviewActivity extends Activity {
 
 
         sortTodoList();
+
+
+
+
     }
 
 
@@ -569,9 +576,9 @@ public class TodoOverviewActivity extends Activity {
 
     private void sortTodoList(){
 
-        todoListViewAdapter.sort(new TodoListSort(SortMode, 0));
-        todoListViewAdapter.sort(new TodoListSort(SortMode, 1));
-        todoListViewAdapter.sort(new TodoListSort(SortMode, 2));
+        todoListViewAdapter.sort(new TodoListSortComparator(SortMode, 0));
+        todoListViewAdapter.sort(new TodoListSortComparator(SortMode, 1));
+        todoListViewAdapter.sort(new TodoListSortComparator(SortMode, 2));
         todoListViewAdapter.notifyDataSetChanged();
     }
 

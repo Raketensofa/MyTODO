@@ -8,10 +8,12 @@ import android.app.usage.UsageEvents;
 import android.content.Intent;
 
 import android.graphics.drawable.Drawable;
+import android.media.MediaCodec;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -151,7 +153,13 @@ public class LoginActivity extends Activity {
 
     private boolean isEmailValid(String email) {
 
-        return (email.contains("@") && email.contains("."));
+        boolean isValid = false;
+
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            isValid = true;
+        }
+
+        return isValid;
     }
 
 

@@ -1,11 +1,16 @@
 package cgellner.mytodo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
@@ -29,6 +34,7 @@ import model.TodoItem;
 
 public class TodoDetailActivity extends Activity {
 
+
     private static String TAG = TodoDetailActivity.class.getSimpleName();
 
     private MenuItem itemEdit;
@@ -46,6 +52,10 @@ public class TodoDetailActivity extends Activity {
 
         setContentView(R.layout.todo_detail_activity_add_view);
 
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, RESULT_FIRST_USER);
+
+
         todoItem = new TodoItem();
         todoItem = (TodoItem) getIntent().getExtras().getSerializable("TODO_ITEM");
 
@@ -56,30 +66,30 @@ public class TodoDetailActivity extends Activity {
         setTodoDataToComponents();
 
 
-        final Switch isFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
+        final Switch isFav = (Switch) findViewById(R.id.todo_detail_view_favourite_switch);
         isFav.setVisibility(View.INVISIBLE);
-        final TextView isFavText = (TextView)findViewById(R.id.todo_detail_view_favourite_textview);
+        final TextView isFavText = (TextView) findViewById(R.id.todo_detail_view_favourite_textview);
         isFav.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     isFavText.setText("Hohe Priorität");
-                }else {
+                } else {
                     isFavText.setText("Normale Priorität");
                 }
             }
         });
 
 
-        final Switch isDone = (Switch)findViewById(R.id.todo_detail_view_done_switch);
+        final Switch isDone = (Switch) findViewById(R.id.todo_detail_view_done_switch);
         isDone.setVisibility(View.INVISIBLE);
-        final TextView isDoneText = (TextView)findViewById(R.id.todo_detail_view_done_textview);
+        final TextView isDoneText = (TextView) findViewById(R.id.todo_detail_view_done_textview);
         isDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     isDoneText.setText("Erledigt");
-                }else {
+                } else {
                     isDoneText.setText("Nicht erledigt");
                 }
             }
@@ -251,9 +261,9 @@ public class TodoDetailActivity extends Activity {
         TextView itemDate = (TextView) findViewById(R.id.todo_detail_view_date_textview);
         TextView itemTime = (TextView) findViewById(R.id.todo_detail_view_time_textview);
         Switch itemFav = (Switch) findViewById(R.id.todo_detail_view_favourite_switch);
-        TextView itemFavText = (TextView)findViewById(R.id.todo_detail_view_favourite_textview);
+        TextView itemFavText = (TextView) findViewById(R.id.todo_detail_view_favourite_textview);
         Switch itemDone = (Switch) findViewById(R.id.todo_detail_view_done_switch);
-        TextView itemDoneText = (TextView)findViewById(R.id.todo_detail_view_done_textview);
+        TextView itemDoneText = (TextView) findViewById(R.id.todo_detail_view_done_textview);
 
 
         ImageView addContac = (ImageView) findViewById(R.id.todo_detail_view_contact_add_icon);
@@ -261,22 +271,22 @@ public class TodoDetailActivity extends Activity {
         itemName.setText(todoItem.getName());
         itemDesc.setText(todoItem.getDescription());
 
-        if(todoItem.getExpiry() > 0) {
+        if (todoItem.getExpiry() > 0) {
             itemDate.setText(DateFormat.format("dd.MM.yyyy", new Date(todoItem.getExpiry())).toString());
             itemTime.setText(DateFormat.format("HH:mm", new Date(todoItem.getExpiry())).toString());
         }
 
         itemFav.setChecked(todoItem.getIsFavourite());
-        if(todoItem.getIsFavourite()) {
+        if (todoItem.getIsFavourite()) {
             itemFavText.setText("Hohe Priorität");
-        }else {
+        } else {
             itemFavText.setText("Normale Priorität");
         }
 
         itemDone.setChecked(todoItem.getIsDone());
-        if(todoItem.getIsDone()) {
+        if (todoItem.getIsDone()) {
             itemDoneText.setText("Erledigt");
-        }else {
+        } else {
             itemDoneText.setText("Nicht erledigt");
         }
 
@@ -313,15 +323,15 @@ public class TodoDetailActivity extends Activity {
         itemTime.setEnabled(isEditMode);
         itemTime.setTextColor(Color.BLACK);
         itemFav.setClickable(isEditMode);
-        if(isEditMode) {
+        if (isEditMode) {
             itemFav.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             itemFav.setVisibility(View.INVISIBLE);
         }
         itemDone.setClickable(isEditMode);
-        if(isEditMode) {
+        if (isEditMode) {
             itemDone.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             itemDone.setVisibility(View.INVISIBLE);
         }
 
@@ -355,13 +365,13 @@ public class TodoDetailActivity extends Activity {
     }
 
 
-    private TodoItem readDataFromComponents(TodoItem item){
+    private TodoItem readDataFromComponents(TodoItem item) {
 
-        EditText name = (EditText)findViewById(R.id.todo_detail_view_name_edittext);
-        EditText descr = (EditText)findViewById(R.id.todo_detail_view_description_edittext);
-        TextView date = (TextView)findViewById(R.id.todo_detail_view_date_textview);
-        TextView time = (TextView)findViewById(R.id.todo_detail_view_time_textview);
-        Switch isFav = (Switch)findViewById(R.id.todo_detail_view_favourite_switch);
+        EditText name = (EditText) findViewById(R.id.todo_detail_view_name_edittext);
+        EditText descr = (EditText) findViewById(R.id.todo_detail_view_description_edittext);
+        TextView date = (TextView) findViewById(R.id.todo_detail_view_date_textview);
+        TextView time = (TextView) findViewById(R.id.todo_detail_view_time_textview);
+        Switch isFav = (Switch) findViewById(R.id.todo_detail_view_favourite_switch);
         Switch itemDone = (Switch) findViewById(R.id.todo_detail_view_done_switch);
 
         item.setName(name.getText().toString());
@@ -377,7 +387,7 @@ public class TodoDetailActivity extends Activity {
             Date expiryDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse(dateTime);
             expiry = expiryDate.getTime();
 
-        }catch (ParseException ex){
+        } catch (ParseException ex) {
             expiry = 0;
         }
         item.setExpiry(expiry);
@@ -387,5 +397,8 @@ public class TodoDetailActivity extends Activity {
 
         return item;
     }
+
+
+
 }
 

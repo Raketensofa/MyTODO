@@ -1,10 +1,12 @@
 package cgellner.mytodo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,7 +35,9 @@ public class StartActivity extends Activity{
         remoteCrud = new RemoteDatabaseImpl();
 
         progressDialog = new ProgressDialog(this);
+
         progressDialog.show();
+
 
         ((MyTodoApplication) getApplication()).getRemoteInitImpl().isConnected(new IRemoteInitAsync.CallbackFunction<Boolean>() {
 

@@ -5,43 +5,22 @@ package model;
  */
 public class Contact{
 
-    private long _id;
+    private long id;
     private String name;
     private String email;
     private String phone;
+    private String uri;
 
     public Contact() {
 
     }
 
-    public Contact(String name) {
-        this.name = name;
+    public long getId() {
+        return id;
     }
 
-    public Contact(long _id, String name) {
-        this._id = _id;
-        this.name = name;
-    }
-
-    public Contact(String name, String email, String phone) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-    }
-
-    public Contact(long _id, String name, String email, String phone) {
-        this._id = _id;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-    }
-
-    public long get_id() {
-        return _id;
-    }
-
-    public void set_id(long _id) {
-        this._id = _id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -68,13 +47,22 @@ public class Contact{
         this.phone = phone;
     }
 
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
     @Override
     public String toString() {
         return "Contact{" +
-                "_id=" + _id +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
+                ", uri='" + uri + '\'' +
                 '}';
     }
 }
