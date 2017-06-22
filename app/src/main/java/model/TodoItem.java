@@ -1,15 +1,16 @@
 package model;
 
 import android.content.ContentValues;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
-import database.Queries;
+import cgellner.mytodo.R;
+import database.Columns;
 
 /**
  * Created by Carolin on 21.04.2017.
@@ -130,12 +131,12 @@ public class TodoItem implements Serializable{
 
         if(cursor != null) {
 
-            id = cursor.getLong(cursor.getColumnIndexOrThrow(Queries.COLUMN_ID));
-            name = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_NAME));
-            description = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_DESCRIPTION));
-            expiry = cursor.getLong(cursor.getColumnIndexOrThrow(Queries.COLUMN_EXPIRY));
-            String done = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISDONE));
-            contacts = cursor.getString(cursor.getColumnIndexOrThrow(Queries.TABLE_TODO_CONTACTS));
+            id = cursor.getLong(cursor.getColumnIndexOrThrow(Columns.id.toString()));
+            name = cursor.getString(cursor.getColumnIndexOrThrow(Columns.name.toString()));
+            description = cursor.getString(cursor.getColumnIndexOrThrow(Columns.description.toString()));
+            expiry = cursor.getLong(cursor.getColumnIndexOrThrow(Columns.expiry.toString()));
+            String done = cursor.getString(cursor.getColumnIndexOrThrow(Columns.is_done.toString()));
+            contacts = cursor.getString(cursor.getColumnIndexOrThrow(Columns.contacts.toString()));
 
 
             if(done.equals(Boolean.TRUE.toString())){
@@ -144,7 +145,7 @@ public class TodoItem implements Serializable{
                 this.done = false;
             }
 
-            String favourite = cursor.getString(cursor.getColumnIndexOrThrow(Queries.COLUMN_ISFAVOURITE));
+            String favourite = cursor.getString(cursor.getColumnIndexOrThrow(Columns.is_favourite.toString()));
             if(favourite.equals(Boolean.TRUE.toString())){
                 this.favourite = true;
             }else{
@@ -159,23 +160,14 @@ public class TodoItem implements Serializable{
         ContentValues todoValues = new ContentValues();
 
         if(id > -1){
-            todoValues.put(Queries.COLUMN_ID, id);
+            todoValues.put(Columns.id.toString(), id);
         }
-        todoValues.put(Queries.COLUMN_NAME, name);
-        todoValues.put(Queries.COLUMN_DESCRIPTION, description);
-        todoValues.put(Queries.COLUMN_ISFAVOURITE, String.valueOf(favourite));
-        todoValues.put(Queries.COLUMN_ISDONE, String.valueOf(done));
-        todoValues.put(Queries.COLUMN_EXPIRY, expiry);
-        todoValues.put(Queries.TABLE_TODO_CONTACTS, contacts);
-
-
-        Log.i("TotodItem","Id: " +  todoValues.get(Queries.COLUMN_ID));
-        Log.i("TotodItem","Name: " +  todoValues.get(Queries.COLUMN_NAME));
-        Log.i("TotodItem","Description: " +  todoValues.get(Queries.COLUMN_DESCRIPTION));
-        Log.i("TotodItem","Expiry: " +  todoValues.get(Queries.COLUMN_EXPIRY));
-        Log.i("TotodItem","Done: " +  todoValues.get(Queries.COLUMN_ISDONE));
-        Log.i("TotodItem","Favourite: " +  todoValues.get(Queries.COLUMN_ISFAVOURITE));
-        Log.i("TotodItem","Contacts: " +  todoValues.get(Queries.TABLE_TODO_CONTACTS));
+        todoValues.put(Columns.name.toString(), name);
+        todoValues.put(Columns.description.toString(), description);
+        todoValues.put(Columns.is_favourite.toString(), String.valueOf(favourite));
+        todoValues.put(Columns.is_done.toString(), String.valueOf(done));
+        todoValues.put(Columns.expiry.toString(), expiry);
+        todoValues.put(Columns.contacts.toString(), contacts);
 
         return todoValues;
     }

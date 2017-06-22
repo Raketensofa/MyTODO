@@ -1,49 +1,39 @@
 package cgellner.mytodo;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import database.Queries;
-import elements.DateAndTimePicker;
+import elements.NewAndDetailActivityOperations;
 import model.TodoItem;
 
-public class TodoDetailActivity extends Activity {
+public class DetailTodoActivity extends Activity {
 
-
-    private static String TAG = TodoDetailActivity.class.getSimpleName();
+    private static String TAG = DetailTodoActivity.class.getSimpleName();
 
     private MenuItem itemEdit;
     private MenuItem itemDelete;
     private MenuItem itemCancel;
     private MenuItem itemSave;
 
-    private TodoItem todoItem;
-
+    private TodoItem currentTodoItem;
+    private NewAndDetailActivityOperations operations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,48 +42,13 @@ public class TodoDetailActivity extends Activity {
 
         setContentView(R.layout.todo_detail_activity_add_view);
 
-
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, RESULT_FIRST_USER);
-
-
-        todoItem = new TodoItem();
-        todoItem = (TodoItem) getIntent().getExtras().getSerializable("TODO_ITEM");
+        currentTodoItem = (TodoItem) getIntent().getExtras().getSerializable(String.valueOf(R.string.TODO_ITEM));
 
         initToolbar();
 
-        setListener();
+        operations = new NewAndDetailActivityOperations(this);
 
         setTodoDataToComponents();
-
-
-        final Switch isFav = (Switch) findViewById(R.id.todo_detail_view_favourite_switch);
-        isFav.setVisibility(View.INVISIBLE);
-        final TextView isFavText = (TextView) findViewById(R.id.todo_detail_view_favourite_textview);
-        isFav.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    isFavText.setText("Hohe Priorität");
-                } else {
-                    isFavText.setText("Normale Priorität");
-                }
-            }
-        });
-
-
-        final Switch isDone = (Switch) findViewById(R.id.todo_detail_view_done_switch);
-        isDone.setVisibility(View.INVISIBLE);
-        final TextView isDoneText = (TextView) findViewById(R.id.todo_detail_view_done_textview);
-        isDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    isDoneText.setText("Erledigt");
-                } else {
-                    isDoneText.setText("Nicht erledigt");
-                }
-            }
-        });
     }
 
 
@@ -102,8 +57,8 @@ public class TodoDetailActivity extends Activity {
 
         itemEdit = menu.add(Menu.NONE,
                 R.id.action_edit_todo,
-                1, "Bearbeiten");
-        itemEdit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                1, R.string.edit_label);
+        itemEdit.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         itemEdit.setIcon(R.drawable.ic_mode_edit_white_24dp);
 
         itemEdit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -124,8 +79,8 @@ public class TodoDetailActivity extends Activity {
 
         itemDelete = menu.add(Menu.NONE,
                 R.id.action_delete_todo,
-                2, "Löschen");
-        itemDelete.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                2, R.string.delete_label);
+        itemDelete.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         itemDelete.setIcon(R.drawable.ic_delete_white_24dp);
         itemDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -143,9 +98,9 @@ public class TodoDetailActivity extends Activity {
 
         itemCancel = menu.add(Menu.NONE,
                 R.id.action_cancel_todo,
-                4, "Abbrechen");
+                4, R.string.cancel_label);
         itemCancel.setVisible(false);
-        itemCancel.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        itemCancel.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         itemCancel.setIcon(R.drawable.ic_cancel_white_24dp);
         itemCancel.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -165,18 +120,19 @@ public class TodoDetailActivity extends Activity {
 
         itemSave = menu.add(Menu.NONE,
                 R.id.action_todo_save,
-                3, "Speichern");
+                3, R.string.save_label);
         itemSave.setVisible(false);
-        itemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        itemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         itemSave.setIcon(R.drawable.save_icon_345);
 
         itemSave.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                TodoItem uptatedItem = readDataFromComponents(todoItem);
+                TodoItem uptatedItem = operations.readTodoDataFromComponents();
+                uptatedItem.setId(currentTodoItem.getId());
                 Intent intent = new Intent();
-                intent.putExtra("TODO_ITEM", uptatedItem);
+                intent.putExtra(String.valueOf(R.string.TODO_ITEM), uptatedItem);
                 setResult(R.integer.UPDATE_TODO, intent);
                 finish();
 
@@ -190,21 +146,21 @@ public class TodoDetailActivity extends Activity {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-        alertDialogBuilder.setTitle("TODO löschen");
+        alertDialogBuilder.setTitle(R.string.delete_todo_label);
 
         alertDialogBuilder
-                .setMessage("TODO tatsächlich löschen?")
+                .setMessage(R.string.delete_todo_label_accept)
                 .setCancelable(false)
-                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         Intent intent = new Intent();
-                        intent.putExtra(Queries.COLUMN_ID, todoItem.getId());
+                        intent.putExtra(String.valueOf(R.string.COLUMN_ID), currentTodoItem.getId());
                         setResult(R.integer.DELETE_TODO, intent);
                         finish();
                     }
                 })
-                .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         dialog.cancel();
@@ -243,18 +199,26 @@ public class TodoDetailActivity extends Activity {
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == R.integer.PICK_CONTACT_REQUEST && resultCode ==  RESULT_OK){
+            operations.addNewContactToList(data.getData());
+        }
+    }
+
+
     private void initToolbar() {
 
-        //Initialisierung der Toolbar
         Toolbar toolbar = (android.widget.Toolbar) findViewById(R.id.todo_form_toolbar);
         setActionBar(toolbar);
         getActionBar().setDisplayHomeAsUpEnabled(true); //TODO Farbe weiß eintellen?
 
     }
 
-    private void setTodoDataToComponents() {
 
-        getActionBar().setTitle("Todo Details");
+    //TODO contacts
+    private void setTodoDataToComponents() {
 
         EditText itemName = (EditText) findViewById(R.id.todo_detail_view_name_edittext);
         EditText itemDesc = (EditText) findViewById(R.id.todo_detail_view_description_edittext);
@@ -268,23 +232,23 @@ public class TodoDetailActivity extends Activity {
 
         ImageView addContac = (ImageView) findViewById(R.id.todo_detail_view_contact_add_icon);
 
-        itemName.setText(todoItem.getName());
-        itemDesc.setText(todoItem.getDescription());
+        itemName.setText(currentTodoItem.getName());
+        itemDesc.setText(currentTodoItem.getDescription());
 
-        if (todoItem.getExpiry() > 0) {
-            itemDate.setText(DateFormat.format("dd.MM.yyyy", new Date(todoItem.getExpiry())).toString());
-            itemTime.setText(DateFormat.format("HH:mm", new Date(todoItem.getExpiry())).toString());
+        if (currentTodoItem.getExpiry() > 0) {
+            itemDate.setText(DateFormat.format("dd.MM.yyyy", new Date(currentTodoItem.getExpiry())).toString());
+            itemTime.setText(DateFormat.format("HH:mm", new Date(currentTodoItem.getExpiry())).toString());
         }
 
-        itemFav.setChecked(todoItem.getIsFavourite());
-        if (todoItem.getIsFavourite()) {
+        itemFav.setChecked(currentTodoItem.getIsFavourite());
+        if (currentTodoItem.getIsFavourite()) {
             itemFavText.setText("Hohe Priorität");
         } else {
             itemFavText.setText("Normale Priorität");
         }
 
-        itemDone.setChecked(todoItem.getIsDone());
-        if (todoItem.getIsDone()) {
+        itemDone.setChecked(currentTodoItem.getIsDone());
+        if (currentTodoItem.getIsDone()) {
             itemDoneText.setText("Erledigt");
         } else {
             itemDoneText.setText("Nicht erledigt");
@@ -296,12 +260,21 @@ public class TodoDetailActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                //TODO
+                if(currentTodoItem.getContacts() != null) {
+                    String[] splittetContacts = currentTodoItem.getContacts().split(";");
+
+                    for (int i = 0; i < splittetContacts.length; i++) {
+
+                        Uri uri = Uri.parse(splittetContacts[i]);
+                        operations.addNewContactToList(uri);
+                    }
+                }
             }
         });
 
         setEditMode(false);
     }
+
 
     private void setEditMode(boolean isEditMode) {
 
@@ -341,63 +314,6 @@ public class TodoDetailActivity extends Activity {
             addContac.setVisibility(View.INVISIBLE);
         }
     }
-
-
-    private void setListener() {
-
-        final TextView dateTextview = (TextView) findViewById(R.id.todo_detail_view_date_textview);
-        dateTextview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                DateAndTimePicker.startDatePickerDailog(dateTextview, todoItem.getExpiry());
-            }
-        });
-
-        final TextView timeTextview = (TextView) findViewById(R.id.todo_detail_view_time_textview);
-        timeTextview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                DateAndTimePicker.startTimePickerDialog(timeTextview, todoItem.getExpiry());
-            }
-        });
-    }
-
-
-    private TodoItem readDataFromComponents(TodoItem item) {
-
-        EditText name = (EditText) findViewById(R.id.todo_detail_view_name_edittext);
-        EditText descr = (EditText) findViewById(R.id.todo_detail_view_description_edittext);
-        TextView date = (TextView) findViewById(R.id.todo_detail_view_date_textview);
-        TextView time = (TextView) findViewById(R.id.todo_detail_view_time_textview);
-        Switch isFav = (Switch) findViewById(R.id.todo_detail_view_favourite_switch);
-        Switch itemDone = (Switch) findViewById(R.id.todo_detail_view_done_switch);
-
-        item.setName(name.getText().toString());
-        item.setDescription(descr.getText().toString());
-        item.setIsFavourite(isFav.isChecked());
-        item.setIsDone(itemDone.isChecked());
-
-        long expiry = 0;
-
-        try {
-
-            String dateTime = date.getText().toString() + " " + time.getText().toString();
-            Date expiryDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").parse(dateTime);
-            expiry = expiryDate.getTime();
-
-        } catch (ParseException ex) {
-            expiry = 0;
-        }
-        item.setExpiry(expiry);
-
-
-        //TODO Kontakte
-
-        return item;
-    }
-
 
 
 }

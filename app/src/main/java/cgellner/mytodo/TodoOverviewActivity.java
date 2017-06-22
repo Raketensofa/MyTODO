@@ -25,7 +25,7 @@ import java.util.List;
 
 import database.ITodoItemCRUD;
 import database.ITodoItemCRUDAsync;
-import database.Queries;
+import elements.TodoListSortComparator;
 import model.TodoItem;
 
 public class TodoOverviewActivity extends Activity {
@@ -43,8 +43,6 @@ public class TodoOverviewActivity extends Activity {
     private MyTodoApplication myTodoApplication;
     private ITodoItemCRUDAsync remoteCrudOperations;
     private ITodoItemCRUD localCrudOperations;
-
-    private static String TODO_ITEM = "TODO_ITEM";
 
     private ProgressDialog progressDialog;
 
@@ -138,7 +136,7 @@ public class TodoOverviewActivity extends Activity {
 
         if (requestCode == R.integer.NEWTODO_ACTIVITY && resultCode == R.integer.SAVE_TODO) {
 
-            TodoItem newTodo = (TodoItem) data.getSerializableExtra(TODO_ITEM);
+            TodoItem newTodo = (TodoItem) data.getSerializableExtra(String.valueOf(R.string.TODO_ITEM));
             Log.i(TAG, "New Todo: " + newTodo.toString());
             createAndShowItem(newTodo);
 
@@ -146,12 +144,12 @@ public class TodoOverviewActivity extends Activity {
         if (requestCode == R.integer.DETAIL_ACTIVITY) {
               if (resultCode == R.integer.DELETE_TODO) {
 
-                  long todoId = data.getLongExtra(Queries.COLUMN_ID, -1);
+                  long todoId = data.getLongExtra(String.valueOf(R.string.COLUMN_ID), -1);
                   deleteAndRemoveTodoItem(todoId);
 
             } else if (resultCode == R.integer.UPDATE_TODO) {
 
-                  TodoItem updatedItem = (TodoItem) data.getSerializableExtra(TODO_ITEM);
+                  TodoItem updatedItem = (TodoItem) data.getSerializableExtra(String.valueOf(R.string.TODO_ITEM));
                   updateTodoItem(updatedItem);
                   Toast.makeText(getApplicationContext(), "Änderungen gespeichert", Toast.LENGTH_SHORT).show();
             }
@@ -159,10 +157,6 @@ public class TodoOverviewActivity extends Activity {
 
 
         sortTodoList();
-
-
-
-
     }
 
 
@@ -191,7 +185,7 @@ public class TodoOverviewActivity extends Activity {
                 todoListViewAdapter.getItem(i).setIsDone(item.getIsDone());
                 todoListViewAdapter.getItem(i).setName(item.getName());
                 todoListViewAdapter.getItem(i).setDescription(item.getDescription());
-                //todoListViewAdapter.getItem(i).setContacts(item.getContacts());
+                todoListViewAdapter.getItem(i).setContacts(item.getContacts());
             }
         }
     }
@@ -216,8 +210,8 @@ public class TodoOverviewActivity extends Activity {
      */
     private void startShowingDetailView(TodoItem item) {
 
-        Intent intent = new Intent(this, TodoDetailActivity.class);
-        intent.putExtra(TODO_ITEM, item);
+        Intent intent = new Intent(this, DetailTodoActivity.class);
+        intent.putExtra(String.valueOf(R.string.TODO_ITEM), item);
         startActivityForResult(intent, R.integer.DETAIL_ACTIVITY);
     }
 
@@ -432,7 +426,7 @@ public class TodoOverviewActivity extends Activity {
 
     private void showFormForNewTodo() {
 
-        Intent intent = new Intent(getBaseContext(), TodoAddNewActivity.class);
+        Intent intent = new Intent(getBaseContext(), NewTodoActivity.class);
         startActivityForResult(intent, R.integer.NEWTODO_ACTIVITY);
     }
 

@@ -2,6 +2,7 @@ package database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import cgellner.mytodo.R;
 import model.TodoItem;
 
 /**
@@ -20,14 +22,27 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
     private SQLiteDatabase database;
 
+
     public LocalDatabaseImpl(Context context){
+
 
         database = context.openOrCreateDatabase("mytodoDatabase.sqlite", Context.MODE_PRIVATE, null);
         if(database.getVersion() == 0){
 
             database.setVersion(1);
-            database.execSQL(Queries.CREATE_TABLE_TODOS);
-            database.execSQL(Queries.CREATE_TABLE_TODO_CONTACTS);
+           String CREATE_TABLE_TODOS =
+                    "CREATE TABLE " + Columns.todos.toString() + "(" +
+                             Columns.id.toString() + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            Columns.name.toString() + " TEXT NOT NULL, " +
+                            Columns.description.toString()  + " TEXT," +
+                            Columns.expiry.toString() + " TEXT," +
+                            Columns.is_favourite.toString() + " TEXT NOT NULL,"+
+                            Columns.is_done.toString() + " TEXT NOT NULL," +
+                            Columns.contacts.toString() +  " TEXT)";
+
+                    Log.i(TAG, CREATE_TABLE_TODOS);
+
+            database.execSQL(CREATE_TABLE_TODOS);
         }
 
 
@@ -44,7 +59,7 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
         ContentValues values = todoItem.createContentValues();
 
-        long id = database.insert(Queries.TABLE_TODOS, null, values);
+        long id = database.insert(Columns.todos.toString(), null, values);
 
         todoItem.setId(id);
 
@@ -59,10 +74,18 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
         List<TodoItem> itemList = new ArrayList<TodoItem>();
         Cursor cursor = null;
 
-        cursor = database.query(Queries.TABLE_TODOS, Queries.COLUMNS_TABLE_TODOS, null, null, null, null,
-                    Queries.COLUMN_ISDONE +
-                            "," + Queries.COLUMN_ISDONE +
-                            "," + Queries.COLUMN_EXPIRY + " ASC");
+
+        String[] COLUMNS_TABLE_TODOS = {
+                Columns.id.toString(),
+                Columns.name.toString(),
+                Columns.description.toString() ,
+                Columns.expiry.toString(),
+                Columns.is_favourite.toString(),
+                Columns.is_done.toString(),
+                Columns.contacts.toString()
+        };
+
+        cursor = database.query(Columns.todos.toString(), COLUMNS_TABLE_TODOS, null, null, null, null, null);
 
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
@@ -88,7 +111,19 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
     public TodoItem readTodoItem(long todoItemId) {
 
         TodoItem todoItem = null;
-        Cursor cursor = database.query(Queries.TABLE_TODOS, Queries.COLUMNS_TABLE_TODOS, Queries.COLUMN_ID + " = ?", new String[]{String.valueOf(todoItemId)}, null, null, null);
+
+
+        String[] COLUMNS_TABLE_TODOS = {
+                Columns.id.toString(),
+                Columns.name.toString(),
+                Columns.description.toString() ,
+                Columns.expiry.toString(),
+                Columns.is_favourite.toString(),
+                Columns.is_done.toString(),
+                Columns.contacts.toString()
+        };
+
+        Cursor cursor = database.query(Columns.todos.toString(), COLUMNS_TABLE_TODOS,  Columns.id.toString() + " = ?", new String[]{String.valueOf(todoItemId)}, null, null, null);
 
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
@@ -112,7 +147,7 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
         ContentValues todoValues = item.createContentValues();
 
-        int result = database.update(Queries.TABLE_TODOS, todoValues, Queries.COLUMN_ID + "=" + item.getId(), null);
+        int result = database.update(Columns.todos.toString(), todoValues,  Columns.id.toString() + "=" + item.getId(), null);
 
         if(result > 0) {
             Log.i(TAG, "Updated local Todo-Item:" + item.toString());
@@ -130,7 +165,7 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
         boolean deleted = false;
 
-        int result = database.delete(Queries.TABLE_TODOS, Queries.COLUMN_ID + " = ?", new String[]{String.valueOf(todoItemId)});
+        int result = database.delete(Columns.todos.toString(),  Columns.id.toString() + " = ?", new String[]{String.valueOf(todoItemId)});
 
         Log.i(TAG, "Delete Result: " + result);
 

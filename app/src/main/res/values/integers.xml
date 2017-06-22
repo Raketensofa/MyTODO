@@ -18,5 +18,7 @@
     <integer name="WEBAPI_USER_TRUE">50</integer>
     <integer name="WEBAPI_USER_FALSE">60</integer>
 
+    <integer name="PICK_CONTACT_REQUEST">1</integer>
+
 
 </resources>

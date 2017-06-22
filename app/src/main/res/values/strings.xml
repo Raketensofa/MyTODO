@@ -13,6 +13,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
     <string name="view_mode">ViewMode</string>
@@ -21,6 +22,23 @@
 
     <string name="USER_AUTH">user_auth</string>
     <string name="WEPAPI_CONN">webapi_conn</string>
+
+    <string name="done_label">Erledigt</string>
+    <string name="not_done_label">Nicht erledigt</string>
+    <string name="isfavourite_label">Favourit</string>
+    <string name="is_not_favourite_label">Kein Favourit</string>
+
+    <string name="new_todo_label">Neues Todo</string>
+    <string name="todo_detail_label">Todo Details</string>
+    <string name="save_label">Speichern</string>
+    <string name="cancel_label">Abbrechen</string>
+    <string name="delete_label">Löschen</string>
+    <string name="edit_label">Bearbeiten</string>
+
+    <string name="delete_todo_label">Todo löschen?</string>
+    <string name="delete_todo_label_accept">Todo tatsächlich löschen?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
 
 
 </resources>

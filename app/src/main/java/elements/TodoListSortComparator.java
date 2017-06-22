@@ -1,8 +1,9 @@
-package cgellner.mytodo;
+package elements;
 
 
 import java.util.Comparator;
 
+import cgellner.mytodo.R;
 import model.TodoItem;
 
 /**
