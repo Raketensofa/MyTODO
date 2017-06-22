@@ -411,14 +411,14 @@ This section contains general information about the software.
     <td>44</td>
     <td>Erlauben Sie dem Nutzer, auf Ebene der Detailansicht Todos optional mit einer Liste von Kontakten zu verknüpfen.</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>45</td>
     <td>Die Auswahl der Kontakte soll auf Grundlage einer Darstellung aller verfügbaren Kontakte erfolgen.</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
