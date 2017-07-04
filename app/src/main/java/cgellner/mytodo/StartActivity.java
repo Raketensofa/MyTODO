@@ -1,10 +1,12 @@
 package cgellner.mytodo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,29 +14,27 @@ import android.widget.Toast;
 import java.util.List;
 
 import database.IRemoteInitAsync;
-import database.ITodoItemCRUD;
 import database.ITodoItemCRUDAsync;
-import database.RemoteDatabaseImpl;
 import model.TodoItem;
 
 
-public class StartActivity extends Activity{
+public class    StartActivity extends Activity{
 
     private static String TAG = StartActivity.class.getSimpleName();
     private ProgressDialog progressDialog;
-
-    private ITodoItemCRUD remoteCrud;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        remoteCrud = new RemoteDatabaseImpl();
+        if(!((MyTodoApplication) getApplication()).hasPermission(this, Manifest.permission.INTERNET)){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 0);
+        }
 
         progressDialog = new ProgressDialog(this);
-
+        progressDialog.setTitle("MyTODO");
+        progressDialog.setMessage("Prüfe Verbindung zur externen Datenbank");
         progressDialog.show();
-
 
         ((MyTodoApplication) getApplication()).getRemoteInitImpl().isConnected(new IRemoteInitAsync.CallbackFunction<Boolean>() {
 
@@ -45,27 +45,35 @@ public class StartActivity extends Activity{
 
                 if (result) {
 
-                    new AsyncTask<Void, Void, Boolean>(){
+                    progressDialog.setMessage("Synchronisiere die Datenbanken");
+
+                    new AsyncTask<Void, Boolean, Boolean>(){
 
                         @Override
-                        protected Boolean doInBackground(Void... params) {
-                            return  compareDatabases();
+                        protected Boolean doInBackground(Void... voids) {
+                            return compareDatabases();
                         }
 
                         @Override
                         protected void onPostExecute(Boolean aBoolean) {
 
-                            Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-                            Log.d(TAG, "Starting Activity: " + LoginActivity.class.getSimpleName());
+                           if(aBoolean) {
 
-                            progressDialog.hide();
-                            startActivity(intent);
-                            finish();
+                               progressDialog.setMessage("Starte Anwendung");
+
+                               Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                               Log.e(TAG, "START ACTIVITY: " + LoginActivity.class.getSimpleName());
+
+                               progressDialog.hide();
+                               startActivity(intent);
+                               finish();
+                           }
                         }
-
                     }.execute();
 
                 } else {
+
+                    progressDialog.setMessage("Starte Anwendung im lokalen Modus");
 
                     Intent intent = new Intent(getBaseContext(), TodoOverviewActivity.class);
                     Toast.makeText(getApplicationContext(), "WEB API NICHT VERFÜGBAR - NUTZUNG DER LOKALEN DATENBANK", Toast.LENGTH_LONG).show();
@@ -85,55 +93,33 @@ public class StartActivity extends Activity{
 
         Log.i(TAG, "starting compare Databases...");
 
-        final ITodoItemCRUD localDatabase = ((MyTodoApplication) getApplication()).getLocalCrud();
-        final List<TodoItem> itemList = localDatabase.readAllTodoItems();
+        final List<TodoItem> localItemList  = ((MyTodoApplication) getApplication()).getLocalCrud().readAllTodoItems();
 
-        Log.i(TAG, "Local Database Size: " + itemList.size());
+        Log.i(TAG, "Local Database Size: " + localItemList.size());
 
-        if (itemList.size() > 0) {
+        if (localItemList.size() > 0) {
 
-            List<TodoItem> remoteList = remoteCrud.readAllTodoItems();
-            deleteAllRemoteTodoItems(remoteList);
-            addAllLocalItemsToRemote(itemList);
+            Log.i(TAG, "Start to delete all remote items ...");
 
-        } else if (itemList.size() == 0) {
+            ((MyTodoApplication) getApplication()).getCRUDOperationsImpl().deleteAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<Boolean>() {
+                @Override
+                public void process(Boolean result) {
 
+                    Log.i(TAG, "All remote items deleted: " + result);
+
+                    if(result){
+                        Log.i(TAG, "Start to add all local items to remote...");
+                        addAllLocalItemsToRemote(localItemList);
+                    }
+                }
+            });
+
+        } else {
+            Log.i(TAG, "Start to add all remote items to local...");
             addAllRemoteItemsToLocal();
         }
 
         return true;
-    }
-
-
-    private boolean deleteAllRemoteTodoItems(List<TodoItem> remoteItemList) {
-
-        boolean deletedAll = false;
-        int counter = 0;
-
-        if (remoteItemList != null) {
-
-            Log.i(TAG, "Starting delete " + remoteItemList.size() + " Items from WebApi ...");
-
-            for (final TodoItem todoItem : remoteItemList) {
-
-                boolean deletedItem = remoteCrud.deleteTodoItem(todoItem.getId());
-
-                if (deletedItem) {
-                    counter++;
-                    Log.i(TAG, "Deleted Remote Item: " + todoItem.getId());
-
-                } else {
-                    Log.e(TAG, "ERROR Deleted Remote Item: " + todoItem.getId());
-                }
-            }
-        }
-
-        if(counter == remoteItemList.size() -1){
-
-            deletedAll = true;
-        }
-
-        return deletedAll;
     }
 
 
@@ -145,26 +131,30 @@ public class StartActivity extends Activity{
 
             for (TodoItem item : localTodoItems) {
 
-               TodoItem createdRemoteItem = remoteCrud.createTodoItem(item);
+                ((MyTodoApplication) getApplication()).getCRUDOperationsImpl().createTodoItem(item, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
+                    @Override
+                    public void process(TodoItem result) {
 
-                if(createdRemoteItem != null){
-                    Log.i(TAG, "Remote Item created: " + item.toString());
+                        if(result != null){
+                            Log.i(TAG, "Remote Item created: " + result.toString());
 
-                }else{
-                    Log.e(TAG, "ERROR Remote Item created: " + item.toString());
-                }
+                        }else{
+                            Log.e(TAG, "ERROR Remote Item created: " + result.toString());
+                        }
+                    }
+                });
             }
         }
     }
 
 
-    private void addAllRemoteItemsToLocal(){
+    private void addAllRemoteItemsToLocal() {
 
         ((MyTodoApplication) getApplication()).getCRUDOperationsImpl().readAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<List<TodoItem>>() {
             @Override
             public void process(List<TodoItem> result) {
 
-                if(result.size() > 0){
+                if (result.size() > 0) {
 
                     Log.i(TAG, "Add " + result.size() + " Web Items to local Database ....");
 

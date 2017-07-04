@@ -2,7 +2,6 @@ package database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -10,7 +9,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import cgellner.mytodo.R;
 import model.TodoItem;
 
 /**
@@ -25,14 +23,13 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
     public LocalDatabaseImpl(Context context){
 
-
         database = context.openOrCreateDatabase("mytodoDatabase.sqlite", Context.MODE_PRIVATE, null);
         if(database.getVersion() == 0){
 
             database.setVersion(1);
            String CREATE_TABLE_TODOS =
                     "CREATE TABLE " + Columns.todos.toString() + "(" +
-                             Columns.id.toString() + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            Columns.id.toString() + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                             Columns.name.toString() + " TEXT NOT NULL, " +
                             Columns.description.toString()  + " TEXT," +
                             Columns.expiry.toString() + " TEXT," +
@@ -44,7 +41,6 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
             database.execSQL(CREATE_TABLE_TODOS);
         }
-
 
         if(database.isOpen()){
             Log.i(TAG, "Datenbank ist geoeffnet -  Version:" + database.getVersion());
@@ -151,7 +147,6 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
 
         if(result > 0) {
             Log.i(TAG, "Updated local Todo-Item:" + item.toString());
-
         }else{
             item = null;
         }
@@ -177,5 +172,10 @@ public class LocalDatabaseImpl implements ITodoItemCRUD{
         }
 
         return deleted;
+    }
+
+    @Override
+    public boolean deleteAllTodoItems() {
+        return false;
     }
 }

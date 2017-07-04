@@ -1,6 +1,8 @@
 package cgellner.mytodo;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -22,27 +24,14 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
 
     private static String TAG = MyTodoApplication.class.getSimpleName();
 
-    private boolean CorrectUserLogin;
-
-
-
     private boolean isConnToRemote;
 
     private ITodoItemCRUD localCrud;
     private ITodoItemCRUD remoteSyncCrud;
     private IRemoteInit remoteSyncInit;
 
-
-    public boolean isCorrectUserLogin() {
-        return CorrectUserLogin;
-    }
-
     public boolean isConnToRemote() {
         return isConnToRemote;
-    }
-
-    public void setConnToRemote(boolean connToRemote) {
-        isConnToRemote = connToRemote;
     }
 
     @Override
@@ -53,7 +42,7 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
         remoteSyncCrud = new RemoteDatabaseImpl();
         remoteSyncInit = new RemoteDatabaseImpl();
 
-        Log.i(TAG, "onCreate");
+        Log.i(TAG, "onCreate8)");
     }
 
 
@@ -69,15 +58,18 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
         return this;
     }
 
+
     @Override
     public void createTodoItem(TodoItem todoItem, final ITodoItemCRUDAsync.CallbackFunction<TodoItem> callback) {
+
+        Log.i(TAG, "Start to create item ... ");
 
         new AsyncTask<TodoItem, Void, TodoItem>(){
 
             @Override
             protected TodoItem doInBackground(TodoItem... params) {
 
-                Log.i(TAG, "Create Remote Item");
+
                 return  remoteSyncCrud.createTodoItem(params[0]);
             }
 
@@ -92,6 +84,8 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
 
     @Override
     public void readAllTodoItems(final ITodoItemCRUDAsync.CallbackFunction<List<TodoItem>> callback) {
+
+        Log.i(TAG, "Start to read all items ... ");
 
         new AsyncTask<Void, Void, List<TodoItem>>(){
 
@@ -113,6 +107,8 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
     @Override
     public void readTodoItem(long id, final ITodoItemCRUDAsync.CallbackFunction<TodoItem> callback) {
 
+        Log.i(TAG, "Start to read item ... ");
+
         new AsyncTask<Long, Void, TodoItem>(){
 
             @Override
@@ -133,6 +129,8 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
     @Override
     public void updateTodoItem(TodoItem item, final ITodoItemCRUDAsync.CallbackFunction<TodoItem> callback) {
 
+        Log.i(TAG, "Start to update item ... ");
+
         new AsyncTask<TodoItem, Void, TodoItem>(){
 
             @Override
@@ -152,6 +150,8 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
     @Override
     public void deleteTodoItem(long id, final ITodoItemCRUDAsync.CallbackFunction<Boolean> callback) {
 
+        Log.i(TAG, "Start to delete item ... " + id);
+
         new AsyncTask<Long, Void, Boolean>(){
 
             @Override
@@ -168,8 +168,33 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
         }.execute(id);
     }
 
+
+    @Override
+    public void deleteAllTodoItems(final ITodoItemCRUDAsync.CallbackFunction<Boolean> callback) {
+
+        Log.i(TAG, "Start to delete all items ... ");
+
+        new AsyncTask<Void, Void, Boolean>(){
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+
+                return remoteSyncCrud.deleteAllTodoItems();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                callback.process(result);
+            }
+
+        }.execute();
+    }
+
+
     @Override
     public void authorizeUser(User user, final IRemoteInitAsync.CallbackFunction<Boolean> callback) {
+
+        Log.i(TAG, "Start to authorize user ... ");
 
         new AsyncTask<User, Void, Boolean >(){
 
@@ -180,7 +205,6 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
 
             @Override
             protected void onPostExecute(Boolean result) {
-               CorrectUserLogin = result;
                callback.process(result);
             }
 
@@ -190,6 +214,8 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
 
     @Override
     public void isConnected(final IRemoteInitAsync.CallbackFunction<Boolean> callback) {
+
+        Log.i(TAG, "Start to check remote connection ... ");
 
         new AsyncTask<Void, Void, Boolean>(){
 
@@ -208,10 +234,22 @@ public class MyTodoApplication extends Application implements ITodoItemCRUDAsync
 
             @Override
             protected void onPostExecute(Boolean result) {
-                setConnToRemote(result);
+                isConnToRemote = result;
                 callback.process(result);
             }
 
         }.execute();
+    }
+
+
+    public boolean hasPermission(Context ctx, String permission){
+
+        boolean hasPermission = false;
+
+        if(ctx.getPackageManager().checkPermission(permission, ctx.getPackageName()) == PackageManager.PERMISSION_GRANTED){
+
+            hasPermission = true;
+        }
+        return hasPermission;
     }
 }

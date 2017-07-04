@@ -4,24 +4,17 @@ package cgellner.mytodo;
 import android.app.Activity;
 
 import android.app.ProgressDialog;
-import android.app.usage.UsageEvents;
 import android.content.Intent;
 
-import android.graphics.drawable.Drawable;
-import android.media.MediaCodec;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -103,11 +96,16 @@ public class LoginActivity extends Activity {
                 attemptLogin();
             }
         });
+
+
+
     }
 
 
     private void attemptLogin() {
 
+        progressDialog.setTitle("Login");
+        progressDialog.setMessage("Prüfe Login Daten");
         progressDialog.show();
 
         boolean isEmailCorrect = isEmailTextFieldValid();
@@ -126,15 +124,20 @@ public class LoginActivity extends Activity {
                 @Override
                 public void process(Boolean result) {
 
-                    progressDialog.hide();
-
                     if (result) {
+
+                        progressDialog.setMessage("Login erfolgreich");
+                        progressDialog.hide();
 
                         Intent intent = new Intent(getBaseContext(), TodoOverviewActivity.class);
                         startActivity(intent);
                         finish();
+                        progressDialog.setMessage("Login erfolgreich");
 
                     } else {
+
+                        progressDialog.setMessage("Login nicht erfolgreich");
+                        progressDialog.hide();
 
                         Toast.makeText(getBaseContext(), "Anmeldung fehlgeschlagen. E-Mail und/oder Passwort falsch.", Toast.LENGTH_LONG).show();
                         mEmailView.setError("ggf. falsche E-Mail");
@@ -145,7 +148,7 @@ public class LoginActivity extends Activity {
             });
 
         }else{
-
+            progressDialog.setMessage("Logindaten fehlerhaft");
             progressDialog.hide();
         }
     }
@@ -155,7 +158,7 @@ public class LoginActivity extends Activity {
 
         boolean isValid = false;
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if(Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             isValid = true;
         }
 

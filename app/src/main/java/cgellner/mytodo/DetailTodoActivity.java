@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,7 +21,8 @@ import android.widget.Toolbar;
 
 import java.util.Date;
 
-import elements.NewAndDetailActivityOperations;
+import database.Columns;
+import elements.HandleDetailImpl;
 import model.TodoItem;
 
 public class DetailTodoActivity extends Activity {
@@ -33,20 +35,20 @@ public class DetailTodoActivity extends Activity {
     private MenuItem itemSave;
 
     private TodoItem currentTodoItem;
-    private NewAndDetailActivityOperations operations;
+    private HandleDetailImpl operations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.todo_detail_activity_add_view);
+        setContentView(R.layout.activity_detail_and_add_todo_view);
 
         currentTodoItem = (TodoItem) getIntent().getExtras().getSerializable(String.valueOf(R.string.TODO_ITEM));
 
         initToolbar();
 
-        operations = new NewAndDetailActivityOperations(this);
+        operations = new HandleDetailImpl(this);
 
         setTodoDataToComponents();
     }
@@ -155,7 +157,7 @@ public class DetailTodoActivity extends Activity {
                     public void onClick(DialogInterface dialog, int id) {
 
                         Intent intent = new Intent();
-                        intent.putExtra(String.valueOf(R.string.COLUMN_ID), currentTodoItem.getId());
+                        intent.putExtra(Columns.id.toString(), currentTodoItem.getId());
                         setResult(R.integer.DELETE_TODO, intent);
                         finish();
                     }
@@ -217,7 +219,6 @@ public class DetailTodoActivity extends Activity {
     }
 
 
-    //TODO contacts
     private void setTodoDataToComponents() {
 
         EditText itemName = (EditText) findViewById(R.id.todo_detail_view_name_edittext);
@@ -237,7 +238,7 @@ public class DetailTodoActivity extends Activity {
 
         if (currentTodoItem.getExpiry() > 0) {
             itemDate.setText(DateFormat.format("dd.MM.yyyy", new Date(currentTodoItem.getExpiry())).toString());
-            itemTime.setText(DateFormat.format("HH:mm", new Date(currentTodoItem.getExpiry())).toString());
+            itemTime.setText(DateFormat.format("hh:mm", new Date(currentTodoItem.getExpiry())).toString());
         }
 
         itemFav.setChecked(currentTodoItem.getIsFavourite());
@@ -255,22 +256,18 @@ public class DetailTodoActivity extends Activity {
         }
 
 
-        addContac.setClickable(true);
-        addContac.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if(currentTodoItem.getContacts() != null && currentTodoItem.getContacts().size() > 0) {
+            for (String str : currentTodoItem.getContacts()) {
 
-                if(currentTodoItem.getContacts() != null) {
-                    String[] splittetContacts = currentTodoItem.getContacts().split(";");
-
-                    for (int i = 0; i < splittetContacts.length; i++) {
-
-                        Uri uri = Uri.parse(splittetContacts[i]);
-                        operations.addNewContactToList(uri);
-                    }
+                if(str != null) {
+                    Uri uri = Uri.parse(str);
+                    Log.i(TAG, uri.toString());
+                    operations.addNewContactToList(uri);
                 }
             }
-        });
+        }
+
+        addContac.setClickable(true);
 
         setEditMode(false);
     }

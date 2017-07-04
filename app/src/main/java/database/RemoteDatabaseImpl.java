@@ -41,9 +41,12 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
         @DELETE("/api/todos/{id}")
         public Call<Boolean> deleteTodoItem(@Path("id") long todoItemId);
 
-
         @PUT("/api/users/auth")
         public Call<Boolean> authorizeUser(@Body User user);
+
+        @DELETE("/api/todos/")
+        public Call<Boolean> deleteAllTodoItems();
+
     }
 
 
@@ -51,7 +54,7 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
 
     public RemoteDatabaseImpl(){
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://10.0.3.2:8080/")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://10.0.2.2:8080/")
                 .addConverterFactory(GsonConverterFactory.create()).build();
 
         this.webApi = retrofit.create(IWebApi.class);
@@ -64,6 +67,8 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
 
         try{
             TodoItem created = this.webApi.createTodoItem(todoItem).execute().body();
+            Log.i(TAG, "Remote Item created: " + created.toString());
+
             return created;
 
         }catch (Exception e){
@@ -80,12 +85,13 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
         try{
 
             List<TodoItem> todoItemList = this.webApi.readAllTodoItems().execute().body();
+            Log.i(TAG, "Remote ItemList size: " + todoItemList.size());
 
             return todoItemList;
 
         }catch (Exception e){
 
-            Log.e(TAG, "readAllodoItems: " + e.getMessage());
+            Log.e(TAG, "readAllTodoItems: " + e.getMessage());
             return null;
         }
     }
@@ -134,6 +140,22 @@ public class RemoteDatabaseImpl implements ITodoItemCRUD, IRemoteInit {
         }catch (Exception e){
 
             Log.e(TAG, "deleteTodoItem(" + todoItemId + "): " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    @Override
+    public boolean deleteAllTodoItems() {
+
+        try{
+
+            boolean deleted = this.webApi.deleteAllTodoItems().execute().body();
+            return deleted;
+
+        }catch (Exception e){
+
+            Log.e(TAG, "Error delete " + e.getMessage());
             return false;
         }
     }

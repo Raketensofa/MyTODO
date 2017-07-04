@@ -8,6 +8,9 @@ import android.util.Log;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import cgellner.mytodo.R;
 import database.Columns;
@@ -38,7 +41,7 @@ public class TodoItem implements Serializable{
     private long expiry;
 
     @SerializedName("contacts")
-    private String contacts;
+    private ArrayList<String> contacts;
 
     //endregion
 
@@ -50,7 +53,15 @@ public class TodoItem implements Serializable{
 //region Getter und Setter
 
 
-   public long getExpiry() {
+    public ArrayList<String> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(ArrayList<String> contacts) {
+        this.contacts = contacts;
+    }
+
+    public long getExpiry() {
        return expiry;
    }
 
@@ -74,13 +85,7 @@ public class TodoItem implements Serializable{
         this.favourite = favourite;
     }
 
-    public String getContacts() {
-        return contacts;
-    }
 
-    public void setContacts(String contacts) {
-        this.contacts = contacts;
-    }
 
     public long getId() {
         return id;
@@ -124,9 +129,6 @@ public class TodoItem implements Serializable{
 
     //endregion
 
-
-
-
     public void setAllDataFromCursor(Cursor cursor) {
 
         if(cursor != null) {
@@ -136,7 +138,10 @@ public class TodoItem implements Serializable{
             description = cursor.getString(cursor.getColumnIndexOrThrow(Columns.description.toString()));
             expiry = cursor.getLong(cursor.getColumnIndexOrThrow(Columns.expiry.toString()));
             String done = cursor.getString(cursor.getColumnIndexOrThrow(Columns.is_done.toString()));
-            contacts = cursor.getString(cursor.getColumnIndexOrThrow(Columns.contacts.toString()));
+            String conStr =  cursor.getString(cursor.getColumnIndexOrThrow(Columns.contacts.toString()));
+
+            List<String> list = Arrays.asList(conStr);
+            contacts = new ArrayList<String>(list);
 
 
             if(done.equals(Boolean.TRUE.toString())){
@@ -167,10 +172,23 @@ public class TodoItem implements Serializable{
         todoValues.put(Columns.is_favourite.toString(), String.valueOf(favourite));
         todoValues.put(Columns.is_done.toString(), String.valueOf(done));
         todoValues.put(Columns.expiry.toString(), expiry);
-        todoValues.put(Columns.contacts.toString(), contacts);
+
+
+       // todoValues.put(Columns.contacts.toString(), Arrays.t);
 
         return todoValues;
     }
 
-
+    @Override
+    public String toString() {
+        return "TodoItem{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", done=" + done +
+                ", favourite=" + favourite +
+                ", expiry=" + expiry +
+                ", contacts='" + contacts + '\'' +
+                '}';
+    }
 }

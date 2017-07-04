@@ -8,36 +8,38 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toolbar;
 
-import elements.NewAndDetailActivityOperations;
+import elements.HandleDetailImpl;
 import model.TodoItem;
 
-public class NewTodoActivity extends Activity {
+public class NewTodoActivity extends Activity{
 
     private String TAG = NewTodoActivity.class.getSimpleName();
 
     private MenuItem itemCancel;
     private MenuItem itemSave;
-    private NewAndDetailActivityOperations operations;
+    private HandleDetailImpl operations;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.todo_detail_activity_add_view);
+        setContentView(R.layout.activity_detail_and_add_todo_view);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.todo_form_toolbar);
         setActionBar(toolbar);
         getActionBar().setTitle(R.string.new_todo_label);
 
-        Log.i(TAG, "init NewAndDetailOperations...");
-        operations = new NewAndDetailActivityOperations(this);
+        operations = new HandleDetailImpl(this);
+
+        Log.i(TAG, "onCreate()");
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
+        Log.i(TAG, "Create Options Menu ... ");
         createNewTodoMenu(menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -45,6 +47,9 @@ public class NewTodoActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        Log.i(TAG, "Options Item Selected: " + item.getItemId());
+
         switch (item.getItemId()) {
 
                 case android.R.id.home:
@@ -60,6 +65,9 @@ public class NewTodoActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(requestCode == R.integer.PICK_CONTACT_REQUEST && resultCode ==  RESULT_OK){
+
+            Log.i(TAG, "onActivityResult - Pick contact");
+
             operations.addNewContactToList(data.getData());
         }
     }
@@ -72,6 +80,7 @@ public class NewTodoActivity extends Activity {
                 1, R.string.save_label);
         itemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         itemSave.setIcon(R.drawable.save_icon_345);
+
         itemSave.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -100,6 +109,4 @@ public class NewTodoActivity extends Activity {
             }
         });
     }
-
-
 }

@@ -30,26 +30,29 @@ public class TodoContactProvider {
         Contact contact = new Contact();
 
         Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
 
-        //contact.setId(cursor.getLong(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID)));
-        contact.setName(cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME)));
+        if(cursor != null) {
+            cursor.moveToFirst();
 
-        /**
-        int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
+            //contact.setId(cursor.getLong(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID)));
+            contact.setName(cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME)));
 
-        if (hasPhoneNumber > 0) {
+            /**
+             int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
 
-            int phoneType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA2));
-            if(phoneType == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE) {
-                contact.setPhone(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-            }
+             if (hasPhoneNumber > 0) {
 
+             int phoneType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA2));
+             if(phoneType == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE) {
+             contact.setPhone(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+             }
+
+             }
+             contact.setEmail(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)));*/
+
+
+            contact.setUri(uri.toString());
         }
-        contact.setEmail(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)));*/
-
-
-        contact.setUri(uri.toString());
 
         return contact;
     }

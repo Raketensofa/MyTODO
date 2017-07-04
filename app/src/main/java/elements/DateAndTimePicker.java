@@ -68,7 +68,7 @@ public abstract class DateAndTimePicker {
                         myCalendar.set(Calendar.HOUR, selectedHour);
                         myCalendar.set(Calendar.MINUTE, selectedMinute);
 
-                        String myFormat = "HH:mm";
+                        String myFormat = "hh:mm";
                         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMANY);
 
                         time = sdf.format(myCalendar.getTime());

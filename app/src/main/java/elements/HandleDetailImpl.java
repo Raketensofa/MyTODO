@@ -1,12 +1,10 @@
 package elements;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +18,7 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import cgellner.mytodo.R;
@@ -31,16 +30,16 @@ import model.TodoItem;
 /**
  * Created by Carolin on 22.06.2017.
  */
-public class NewAndDetailActivityOperations {
+public class HandleDetailImpl {
 
-    private String TAG = NewAndDetailActivityOperations.class.getSimpleName();
+    private String TAG = HandleDetailImpl.class.getSimpleName();
 
 
     private ArrayAdapter<Contact> contactListViewAdapter;
     private ListView contactlistView;
     private Activity baseActivity;
 
-    public NewAndDetailActivityOperations(Activity baseActivity){
+    public HandleDetailImpl(Activity baseActivity){
          this.baseActivity = baseActivity;
 
         setComponentListener();
@@ -48,8 +47,6 @@ public class NewAndDetailActivityOperations {
         initContactListAdapter();
 
         initDoneAndFavourite(baseActivity);
-
-        ActivityCompat.requestPermissions(baseActivity, new String[]{Manifest.permission.READ_CONTACTS}, 0);
 
         contactlistView = (ListView)baseActivity.findViewById(R.id.todo_detail_view_contacts_listview);
         contactlistView.setAdapter(contactListViewAdapter);
@@ -103,10 +100,10 @@ public class NewAndDetailActivityOperations {
         }
 
 
-        String contacts = null;
+        ArrayList<String> contacts = new ArrayList<>();
         if(contactListViewAdapter.getCount() > 0){
             for(int i = 0; i < contactListViewAdapter.getCount(); i++){
-                contacts += contactListViewAdapter.getItem(i).getUri() + ";";
+                contacts.add(contactListViewAdapter.getItem(i).getUri());
             }
         }
 
@@ -213,6 +210,8 @@ public class NewAndDetailActivityOperations {
     }
 
 
+
+    //TODO Mail und SMS versenden
     private void initContactListAdapter() {
 
         contactListViewAdapter = new ArrayAdapter<Contact>(baseActivity, R.layout.contact_list_item) {
@@ -221,7 +220,6 @@ public class NewAndDetailActivityOperations {
             @Override
             public View getView(int position, View itemView, ViewGroup parent) {
 
-                //Initialsierung der View-Elemente
                 if (itemView == null) {
 
                     itemView = baseActivity.getLayoutInflater().inflate(R.layout.contact_list_item, null);

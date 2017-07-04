@@ -1,11 +1,13 @@
 package cgellner.mytodo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import database.Columns;
 import database.ITodoItemCRUD;
 import database.ITodoItemCRUDAsync;
 import elements.TodoListSortComparator;
@@ -66,9 +69,6 @@ public class TodoOverviewActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_todo_overview);
-
-
-
 
         progressDialog = new ProgressDialog(this);
 
@@ -118,7 +118,6 @@ public class TodoOverviewActivity extends Activity {
             }
         };
 
-
         listviewTodos.setAdapter(todoListViewAdapter);
         todoListViewAdapter.setNotifyOnChange(true);
 
@@ -127,6 +126,14 @@ public class TodoOverviewActivity extends Activity {
         remoteCrudOperations = myTodoApplication.getCRUDOperationsImpl();
 
         readItemsAndFillListView();
+
+
+        if(!myTodoApplication.hasPermission(this, Manifest.permission.READ_CONTACTS)){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 0);
+        }
+        if(!myTodoApplication.hasPermission(this, Manifest.permission.SEND_SMS)){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 0);
+        }
     }
 
 
@@ -144,7 +151,7 @@ public class TodoOverviewActivity extends Activity {
         if (requestCode == R.integer.DETAIL_ACTIVITY) {
               if (resultCode == R.integer.DELETE_TODO) {
 
-                  long todoId = data.getLongExtra(String.valueOf(R.string.COLUMN_ID), -1);
+                  long todoId = data.getLongExtra(Columns.id.toString(), -1);
                   deleteAndRemoveTodoItem(todoId);
 
             } else if (resultCode == R.integer.UPDATE_TODO) {
@@ -575,5 +582,8 @@ public class TodoOverviewActivity extends Activity {
         todoListViewAdapter.sort(new TodoListSortComparator(SortMode, 2));
         todoListViewAdapter.notifyDataSetChanged();
     }
+
+
+
 
 }
