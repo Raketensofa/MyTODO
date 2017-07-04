@@ -2,6 +2,7 @@ package elements;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -127,6 +128,8 @@ public class HandleDetailImpl {
 
         public ImageView sendSMS;
         public ImageView sendMail;
+
+        public ImageView deleteContact;
     }
 
 
@@ -210,6 +213,22 @@ public class HandleDetailImpl {
     }
 
 
+    public void showAllDeleteContactViews(boolean show){
+
+        if(contactListViewAdapter != null && contactListViewAdapter.getCount() > 0){
+
+            for( int i = 1; i < contactlistView.getAdapter().getCount(); i++){
+
+                if(show) {
+                    contactlistView.getChildAt(i).findViewById(R.id.imageview_delete_contact).setVisibility(View.VISIBLE);
+
+                }else{
+                    contactlistView.getChildAt(i).findViewById(R.id.imageview_delete_contact).setVisibility(View.INVISIBLE);
+                }
+            }
+        }
+    }
+
 
     //TODO Mail und SMS versenden
     private void initContactListAdapter() {
@@ -226,11 +245,13 @@ public class HandleDetailImpl {
                     TextView itemNameView = (TextView) itemView.findViewById(R.id.textview_contact_name);
                     ImageView sms = (ImageView) itemView.findViewById(R.id.imageview_sms);
                     ImageView mail = (ImageView) itemView.findViewById(R.id.imageview_mail);
+                    ImageView delete = (ImageView) itemView.findViewById(R.id.imageview_delete_contact);
 
                     ContactItemViewHolder itemViewHolder = new ContactItemViewHolder();
                     itemViewHolder.contactName = itemNameView;
                     itemViewHolder.sendMail = mail;
                     itemViewHolder.sendSMS = sms;
+                    itemViewHolder.deleteContact = delete;
 
                     itemView.setTag(itemViewHolder);
                 }
@@ -262,12 +283,20 @@ public class HandleDetailImpl {
                     viewHolder.sendSMS.setVisibility(View.INVISIBLE);
                 }
 
+
+                viewHolder.deleteContact.setClickable(true);
+                viewHolder.deleteContact.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        contactListViewAdapter.remove(contact);
+                        contactListViewAdapter.notifyDataSetChanged();
+                    }
+                });
+
+
                 return itemView;
             }
         };
-
-
     }
-
 
 }

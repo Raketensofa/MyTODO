@@ -305,11 +305,13 @@ public class DetailTodoActivity extends Activity {
             itemDone.setVisibility(View.INVISIBLE);
         }
 
-        if (isEditMode == true) {
+        if (isEditMode) {
             addContac.setVisibility(View.VISIBLE);
         } else {
             addContac.setVisibility(View.INVISIBLE);
         }
+
+        operations.showAllDeleteContactViews(isEditMode);
     }
 
 
