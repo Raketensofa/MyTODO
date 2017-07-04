@@ -404,7 +404,7 @@ This section contains general information about the software.
     <td>43</td>
     <td>Erlauben Sie auf Ebene des Datenmodells die Assoziation eines Todo mit einer Menge von Kontakten.</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
   <tr>
     <td></td>
@@ -425,7 +425,7 @@ This section contains general information about the software.
     <td>46</td>
     <td>Zeigen Sie die verknüpften Kontakte in der Detailansicht für Todos an.</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
