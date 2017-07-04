@@ -1,10 +1,10 @@
 package elements;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import model.Contact;
 
@@ -16,9 +16,6 @@ public class TodoContactProvider {
     private static String TAG = TodoContactProvider.class.getSimpleName();
 
     private Context context;
-
-
-    //SPEICHERN DER Uri der Kontakte in der DB und dann darüber immer die Daten auslesen
 
     public TodoContactProvider(Context context) {
         this.context = context;
@@ -32,105 +29,88 @@ public class TodoContactProvider {
         Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
 
         if(cursor != null) {
+
             cursor.moveToFirst();
 
-            //contact.setId(cursor.getLong(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID)));
+            contact.setId(cursor.getLong(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID)));
             contact.setName(cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME)));
-
-            /**
-             int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
-
-             if (hasPhoneNumber > 0) {
-
-             int phoneType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA2));
-             if(phoneType == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE) {
-             contact.setPhone(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-             }
-
-             }
-             contact.setEmail(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)));*/
-
-
+            contact.setPhone(getPhoneNumberFromUri(uri));
+            contact.setEmail(getEmailAddressFromUri(uri));
             contact.setUri(uri.toString());
         }
+
+        Log.i(TAG, contact.toString());
 
         return contact;
     }
 
 
+    public String getPhoneNumberFromUri(Uri uri){
 
-  public String getPhoneNumberFromUri(Uri uri){
+      String phoneNumber = "";
 
-        String phoneNumber = null;
+      Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+
+      if(cursor != null) {
+
+          cursor.moveToFirst();
+
+           String contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+
+           int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
+
+           if (hasPhoneNumber == 1) {
+
+               Cursor phoneCursor = context.getContentResolver().query(
+                               ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                               ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " +
+                                       contactID, null, null);
 
 
+               while (phoneCursor.moveToNext()) {
 
-        return phoneNumber;
+                   int phoneType = phoneCursor.getInt(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA2));
+                   if (phoneType == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE) {
+                       phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                   }
+               }
+           }
+      }
+
+       Log.i(TAG, "Phone Number: " + phoneNumber);
+
+       return phoneNumber;
     }
 
 
     public String getEmailAddressFromUri(Uri uri){
 
-        String email = null;
+        String email = "";
 
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
 
+        if(cursor != null) {
 
-        return email;
-    }
+            cursor.moveToFirst();
 
+            String contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
 
+            if (cursor != null) {
 
-    private String getPhonNumber(Cursor cursor, ContentResolver contentResolver, long contact_id){
+                Cursor mailCursor = context.getContentResolver().query(
+                        ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
+                        ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " +
+                                contactID, null, null);
 
-        String PhoneNumer = null;
-
-        int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
-
-        if (hasPhoneNumber > 0) {
-
-            Cursor phoneCursor = contentResolver.query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI
-                    , null
-                    , ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?"
-                    , new String[]{String.valueOf(contact_id)}
-                    , null);
-
-
-            while (phoneCursor.moveToNext()) {
-
-                int phoneType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA2));
-                if(phoneType == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE) {
-                    PhoneNumer = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                while (mailCursor.moveToNext()) {
+                    email = mailCursor.getString(mailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
                 }
             }
-            phoneCursor.close();
+
         }
 
-        return PhoneNumer;
-    }
-
-    private String getMailAdress(Cursor cursor, ContentResolver contentResolver, long contact_id){
-
-        String email = null;
-
-        Cursor mailCursor = contentResolver.query(
-                    ContactsContract.CommonDataKinds.Email.CONTENT_URI
-                    , null
-                    , ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?"
-                    , new String[]{String.valueOf(contact_id)}
-                    , null);
-
-
-            while (mailCursor.moveToNext()) {
-                email = mailCursor.getString(mailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
-            }
-
-            mailCursor.close();
+        Log.i(TAG, "E-mail: " + email);
 
         return email;
     }
-
-
-
-
 }

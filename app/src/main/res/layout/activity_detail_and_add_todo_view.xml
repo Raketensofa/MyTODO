@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:scrollbars="vertical"
-        android:scrollbarStyle="insideInset"
+        android:scrollbarStyle="insideOverlay"
         >
 
 
@@ -179,7 +179,8 @@
                 android:layout_toEndOf="@id/todo_detail_view_favourite_icon"
                 android:layout_centerVertical="true"
                 android:hint="Normale Priorität"
-                android:textSize="18dp" />
+                android:textSize="18dp"
+                android:textColor="@android:color/black" />
 
 
             <Switch
@@ -232,7 +233,8 @@
                 android:layout_toEndOf="@id/todo_detail_view_done_icon"
                 android:layout_centerVertical="true"
                 android:hint="Nicht erledigt"
-                android:textSize="18dp" />
+                android:textSize="18dp"
+                android:textColor="@android:color/black" />
 
             <Switch
                 android:layout_width="wrap_content"

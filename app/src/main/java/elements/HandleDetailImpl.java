@@ -1,11 +1,16 @@
 package elements;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -15,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,12 +41,18 @@ public class HandleDetailImpl {
     private String TAG = HandleDetailImpl.class.getSimpleName();
 
 
+    public ArrayAdapter<Contact> getContactListViewAdapter() {
+        return contactListViewAdapter;
+    }
+
     private ArrayAdapter<Contact> contactListViewAdapter;
     private ListView contactlistView;
     private Activity baseActivity;
+    private TodoItem currentTodoItem;
 
-    public HandleDetailImpl(Activity baseActivity){
+    public HandleDetailImpl(Activity baseActivity, TodoItem currentTodoItem){
          this.baseActivity = baseActivity;
+         this.currentTodoItem = currentTodoItem;
 
         setComponentListener();
 
@@ -51,6 +63,8 @@ public class HandleDetailImpl {
         contactlistView = (ListView)baseActivity.findViewById(R.id.todo_detail_view_contacts_listview);
         contactlistView.setAdapter(contactListViewAdapter);
         contactListViewAdapter.setNotifyOnChange(true);
+
+        //showContactItemEements(true);
     }
 
     public void addNewContactToList(Uri uri){
@@ -127,6 +141,8 @@ public class HandleDetailImpl {
 
         public ImageView sendSMS;
         public ImageView sendMail;
+
+        public ImageView deleteContact;
     }
 
 
@@ -210,8 +226,46 @@ public class HandleDetailImpl {
     }
 
 
+    public void showContactItemEements(boolean isEditMode){
 
-    //TODO Mail und SMS versenden
+        if(contactListViewAdapter != null && contactListViewAdapter.getCount() > 0){
+
+            for( int i = 0; i < contactListViewAdapter.getCount(); i++){
+
+                //View item = contactlistView.getChildAt(i+1);
+
+                View item = null;
+                item = contactListViewAdapter.getView(i, item, contactlistView );
+
+
+                if(isEditMode) {
+                    item.findViewById(R.id.imageview_delete_contact).setVisibility(View.VISIBLE);
+                    item.findViewById(R.id.imageview_mail).setVisibility(View.INVISIBLE);
+                    item.findViewById(R.id.imageview_sms).setVisibility(View.INVISIBLE);
+
+                }else {
+
+                    item.findViewById(R.id.imageview_delete_contact).setVisibility(View.INVISIBLE);
+
+                    if (contactListViewAdapter.getItem(i).getEmail().length() > 0 && contactlistView != null) {
+                        item.findViewById(R.id.imageview_mail).setVisibility(View.VISIBLE);
+                    } else {
+                        item.findViewById(R.id.imageview_mail).setVisibility(View.INVISIBLE);
+                    }
+
+                    if (contactListViewAdapter.getItem(i).getPhone().length() > 0 && contactlistView != null) {
+                        item.findViewById(R.id.imageview_sms).setVisibility(View.VISIBLE);
+                    } else {
+                        item.findViewById(R.id.imageview_sms).setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+
+            contactListViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+
     private void initContactListAdapter() {
 
         contactListViewAdapter = new ArrayAdapter<Contact>(baseActivity, R.layout.contact_list_item) {
@@ -226,11 +280,13 @@ public class HandleDetailImpl {
                     TextView itemNameView = (TextView) itemView.findViewById(R.id.textview_contact_name);
                     ImageView sms = (ImageView) itemView.findViewById(R.id.imageview_sms);
                     ImageView mail = (ImageView) itemView.findViewById(R.id.imageview_mail);
+                    ImageView delete = (ImageView) itemView.findViewById(R.id.imageview_delete_contact);
 
                     ContactItemViewHolder itemViewHolder = new ContactItemViewHolder();
                     itemViewHolder.contactName = itemNameView;
                     itemViewHolder.sendMail = mail;
                     itemViewHolder.sendSMS = sms;
+                    itemViewHolder.deleteContact = delete;
 
                     itemView.setTag(itemViewHolder);
                 }
@@ -242,32 +298,71 @@ public class HandleDetailImpl {
                 viewHolder.contactName.setText(contact.getName());
 
 
-                if (contact.getEmail() != null) {
+                if (contact.getEmail().length() > 0) {
                     viewHolder.sendMail.setVisibility(View.VISIBLE);
-
-                    //TODO Mail versenden
-
+                    viewHolder.sendMail.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendEMail(contact.getEmail(), currentTodoItem.getName(), currentTodoItem.getDescription());
+                        }
+                    });
 
                 } else {
                     viewHolder.sendMail.setVisibility(View.INVISIBLE);
                 }
 
-                if (contact.getPhone() != null) {
+                if (contact.getPhone().length() > 0) {
                     viewHolder.sendSMS.setVisibility(View.VISIBLE);
 
-                    //TODO SMS versenden
-
+                    viewHolder.sendSMS.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendSMS(contact.getPhone(),currentTodoItem.getName() ,currentTodoItem.getDescription());
+                        }
+                    });
 
                 } else {
                     viewHolder.sendSMS.setVisibility(View.INVISIBLE);
                 }
 
+
+                viewHolder.deleteContact.setClickable(true);
+                viewHolder.deleteContact.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        contactListViewAdapter.remove(contact);
+                        contactListViewAdapter.notifyDataSetChanged();
+                    }
+                });
+
                 return itemView;
             }
         };
-
-
     }
 
 
+    private void sendSMS(String phoneNumber, String todoTitle, String todoDescription) {
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("sms:" + phoneNumber));
+        intent.putExtra("sms_body", "## TODO: " + todoTitle + " ##\n\n" + todoDescription);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        baseActivity.startActivity(intent);
+    }
+
+
+    private void sendEMail(String mail, String title, String mail_body){
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.putExtra(Intent.EXTRA_SUBJECT,"TODO: " +  title);
+        intent.putExtra(Intent.EXTRA_TEXT, mail_body);
+        intent.setData(Uri.parse("mailto:" + mail));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        try {
+            baseActivity.startActivity(Intent.createChooser(intent, "Choose an Email client :"));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(baseActivity, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

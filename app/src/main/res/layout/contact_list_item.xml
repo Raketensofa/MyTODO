@@ -15,7 +15,7 @@
          />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Name des Kontakts"
@@ -25,25 +25,57 @@
         android:layout_alignParentTop="false"
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
-        android:textSize="18dp" />
+        android:textSize="18dp"
+        />
 
-    <ImageView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageview_sms"
-        android:src="@drawable/ic_sms_black_24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="10dp"
-        android:layout_centerVertical="true"
+        android:orientation="horizontal"
+        android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/textview_contact_name"
-       />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentStart="false">
+
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:id="@+id/imageview_sms"
+        android:src="@drawable/sms"
+        android:layout_alignTop="@+id/textview_contact_name"
+        android:layout_toEndOf="@+id/textview_contact_name"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="10dp" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:id="@+id/imageview_mail"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_mail_outline_black_24dp"
-        android:layout_marginRight="20dp"
-        android:layout_toStartOf="@id/imageview_sms" />
+        android:src="@drawable/email"
+        android:layout_marginRight="10dp"
+        android:layout_toStartOf="@id/imageview_sms"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp" />
+
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/imageview_delete_contact"
+        android:layout_centerVertical="true"
+        android:src="@drawable/stornieren"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="3dp" />
+
+    </LinearLayout>
 </RelativeLayout>

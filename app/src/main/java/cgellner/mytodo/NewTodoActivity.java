@@ -30,7 +30,7 @@ public class NewTodoActivity extends Activity{
         setActionBar(toolbar);
         getActionBar().setTitle(R.string.new_todo_label);
 
-        operations = new HandleDetailImpl(this);
+        operations = new HandleDetailImpl(this, null);
 
         Log.i(TAG, "onCreate()");
     }

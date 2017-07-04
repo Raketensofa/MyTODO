@@ -46,6 +46,7 @@ public abstract class DateAndTimePicker {
                     v.setText(date);
                 }
             };
+
             new DatePickerDialog(v.getContext(), datePicker, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
@@ -55,20 +56,14 @@ public abstract class DateAndTimePicker {
 
         final Calendar myCalendar = Calendar.getInstance();
 
-        if(expiry  > 0 ) {
-            Date date = new Date(expiry);
-            myCalendar.set(Calendar.HOUR, date.getHours());
-            myCalendar.set(Calendar.MINUTE, date.getMinutes());
-        }
-
         final TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 
                     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
 
-                        myCalendar.set(Calendar.HOUR, selectedHour);
+                        myCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                         myCalendar.set(Calendar.MINUTE, selectedMinute);
 
-                        String myFormat = "hh:mm";
+                        String myFormat = "HH:mm";
                         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMANY);
 
                         time = sdf.format(myCalendar.getTime());
@@ -76,7 +71,16 @@ public abstract class DateAndTimePicker {
                     }
                 };
 
-        new TimePickerDialog(v.getContext(), timePickerListener, myCalendar.get(Calendar.HOUR), myCalendar.get(Calendar.MINUTE), true).show();
+
+        if(expiry  > 0 ) {
+            Date date = new Date(expiry);
+            myCalendar.set(Calendar.HOUR_OF_DAY, date.getHours());
+            myCalendar.set(Calendar.MINUTE, date.getMinutes());
+        }
+
+        TimePickerDialog timePickerDialog= new TimePickerDialog(v.getContext(), timePickerListener, myCalendar.get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE), true);
+        timePickerDialog.show();
+
     }
 
 }

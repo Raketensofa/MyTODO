@@ -140,9 +140,9 @@ public class TodoItem implements Serializable{
             String done = cursor.getString(cursor.getColumnIndexOrThrow(Columns.is_done.toString()));
             String conStr =  cursor.getString(cursor.getColumnIndexOrThrow(Columns.contacts.toString()));
 
-            List<String> list = Arrays.asList(conStr);
+            String[] contac = conStr.split(";");
+            List<String> list = Arrays.asList(contac);
             contacts = new ArrayList<String>(list);
-
 
             if(done.equals(Boolean.TRUE.toString())){
                 this.done = true;
@@ -173,8 +173,13 @@ public class TodoItem implements Serializable{
         todoValues.put(Columns.is_done.toString(), String.valueOf(done));
         todoValues.put(Columns.expiry.toString(), expiry);
 
-
-       // todoValues.put(Columns.contacts.toString(), Arrays.t);
+        String allContacts = "";
+        if(contacts != null && contacts.size() > 0) {
+            for (String contact : contacts) {
+                allContacts += contact + ";";
+            }
+        }
+        todoValues.put(Columns.contacts.toString(), allContacts);
 
         return todoValues;
     }
