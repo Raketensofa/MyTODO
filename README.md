@@ -439,14 +439,14 @@ This section contains general information about the software.
     <td>48</td>
     <td>Ermöglichen Sie außerdem, dass dem Nutzer für jeden Kontakt die Möglichkeit der Kontaktaufnahme per Mail oder SMS gegeben wird, falls eine Mailadresse oder Mobilfunknummer vorhanden sind.</td>
     <td>2</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
     <td>49</td>
     <td>Bei Kontaktaufnahme sollen die Mailadresse/Mobilfunknummer, der Titel und die Beschreibung des Todos der jeweils verwendeten Android App übermittelt werden.</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td>Dokumentation</td>
