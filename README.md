@@ -432,7 +432,7 @@ This section contains general information about the software.
     <td>47</td>
     <td>Ermöglichen Sie das Entfernen von Kontakten zur Liste der verknüpften Kontakte eines Todo</td>
     <td>1</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
     <tr>
     <td></td>
