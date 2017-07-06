@@ -1,4 +1,4 @@
-package cgellner.mytodo.database;
+package cgellner.mytodo.database.interfaces;
 
 import cgellner.mytodo.model.User;
 

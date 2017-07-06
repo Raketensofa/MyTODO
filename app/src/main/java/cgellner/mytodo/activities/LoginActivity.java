@@ -21,7 +21,7 @@ import android.widget.Toolbar;
 
 import cgellner.mytodo.basic_operations.MyTodoApplication;
 import cgellner.mytodo.R;
-import cgellner.mytodo.database.IRemoteInitAsync;
+import cgellner.mytodo.database.interfaces.IRemoteInitAsync;
 import cgellner.mytodo.model.User;
 
 

@@ -9,12 +9,13 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import cgellner.mytodo.database.interfaces.ITodoItemCRUD;
 import cgellner.mytodo.model.TodoItem;
 
 /**
  * Created by Carolin on 08.06.2017.
  */
-public class LocalDatabaseImpl implements ITodoItemCRUD{
+public class LocalDatabaseImpl implements ITodoItemCRUD {
 
     protected static String TAG = LocalDatabaseImpl.class.getSimpleName();
 

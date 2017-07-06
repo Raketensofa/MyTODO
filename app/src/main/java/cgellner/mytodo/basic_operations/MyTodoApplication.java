@@ -8,10 +8,10 @@ import android.util.Log;
 
 import java.util.List;
 
-import cgellner.mytodo.database.IRemoteInit;
-import cgellner.mytodo.database.ITodoItemCRUD;
-import cgellner.mytodo.database.ITodoItemCRUDAsync;
-import cgellner.mytodo.database.IRemoteInitAsync;
+import cgellner.mytodo.database.interfaces.IRemoteInit;
+import cgellner.mytodo.database.interfaces.ITodoItemCRUD;
+import cgellner.mytodo.database.interfaces.ITodoItemCRUDAsync;
+import cgellner.mytodo.database.interfaces.IRemoteInitAsync;
 import cgellner.mytodo.database.LocalDatabaseImpl;
 import cgellner.mytodo.database.RemoteDatabaseImpl;
 import cgellner.mytodo.model.TodoItem;

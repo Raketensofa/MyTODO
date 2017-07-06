@@ -5,6 +5,8 @@ import android.util.Log;
 
 import java.util.List;
 
+import cgellner.mytodo.database.interfaces.IRemoteInit;
+import cgellner.mytodo.database.interfaces.ITodoItemCRUD;
 import cgellner.mytodo.model.TodoItem;
 import cgellner.mytodo.model.User;
 import retrofit2.Call;

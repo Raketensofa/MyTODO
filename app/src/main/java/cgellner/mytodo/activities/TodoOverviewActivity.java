@@ -28,8 +28,8 @@ import java.util.List;
 import cgellner.mytodo.basic_operations.MyTodoApplication;
 import cgellner.mytodo.R;
 import cgellner.mytodo.database.Columns;
-import cgellner.mytodo.database.ITodoItemCRUD;
-import cgellner.mytodo.database.ITodoItemCRUDAsync;
+import cgellner.mytodo.database.interfaces.ITodoItemCRUD;
+import cgellner.mytodo.database.interfaces.ITodoItemCRUDAsync;
 import cgellner.mytodo.elements.TodoListSortComparator;
 import cgellner.mytodo.model.TodoItem;
 

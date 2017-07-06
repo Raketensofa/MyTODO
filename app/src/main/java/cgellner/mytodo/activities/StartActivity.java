@@ -14,9 +14,9 @@ import android.widget.Toast;
 import java.util.List;
 
 import cgellner.mytodo.basic_operations.MyTodoApplication;
-import cgellner.mytodo.database.IRemoteInitAsync;
-import cgellner.mytodo.database.ITodoItemCRUD;
-import cgellner.mytodo.database.ITodoItemCRUDAsync;
+import cgellner.mytodo.database.interfaces.IRemoteInitAsync;
+import cgellner.mytodo.database.interfaces.ITodoItemCRUD;
+import cgellner.mytodo.database.interfaces.ITodoItemCRUDAsync;
 import cgellner.mytodo.model.TodoItem;
 
 
