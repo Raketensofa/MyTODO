@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.Toolbar;
 
 import cgellner.mytodo.R;
-import cgellner.mytodo.basic_operations.HandleDetailImpl;
+import cgellner.mytodo.basic_operations.BasicDetailViewOperations;
 import cgellner.mytodo.model.TodoItem;
 
 public class NewTodoActivity extends Activity{
@@ -18,7 +18,7 @@ public class NewTodoActivity extends Activity{
 
     private MenuItem itemCancel;
     private MenuItem itemSave;
-    private HandleDetailImpl operations;
+    private BasicDetailViewOperations basicOperations;
 
 
     @Override
@@ -31,7 +31,7 @@ public class NewTodoActivity extends Activity{
         setActionBar(toolbar);
         getActionBar().setTitle(R.string.new_todo_label);
 
-        operations = new HandleDetailImpl(this, null);
+        basicOperations = new BasicDetailViewOperations(this, null);
 
         Log.i(TAG, "onCreate()");
     }
@@ -69,7 +69,7 @@ public class NewTodoActivity extends Activity{
 
             Log.i(TAG, "onActivityResult - Pick contact");
 
-            operations.addNewContactToList(data.getData());
+            basicOperations.addNewContactToList(data.getData());
         }
     }
 
@@ -86,7 +86,7 @@ public class NewTodoActivity extends Activity{
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                TodoItem newItem = operations.readTodoDataFromComponents();
+                TodoItem newItem = basicOperations.readTodoDataFromComponents();
 
                 Intent intent = new Intent();
                 intent.putExtra(String.valueOf(R.string.TODO_ITEM), newItem);

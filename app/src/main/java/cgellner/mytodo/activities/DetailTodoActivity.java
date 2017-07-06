@@ -23,7 +23,7 @@ import java.util.Date;
 
 import cgellner.mytodo.R;
 import cgellner.mytodo.database.Columns;
-import cgellner.mytodo.basic_operations.HandleDetailImpl;
+import cgellner.mytodo.basic_operations.BasicDetailViewOperations;
 import cgellner.mytodo.model.TodoItem;
 
 public class DetailTodoActivity extends Activity {
@@ -36,7 +36,7 @@ public class DetailTodoActivity extends Activity {
     private MenuItem itemSave;
 
     private TodoItem currentTodoItem;
-    private HandleDetailImpl operations;
+    private BasicDetailViewOperations basicOperations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class DetailTodoActivity extends Activity {
 
         initToolbar();
 
-        operations = new HandleDetailImpl(this, currentTodoItem);
+        basicOperations = new BasicDetailViewOperations(this, currentTodoItem);
 
         setTodoDataToComponents();
     }
@@ -132,7 +132,7 @@ public class DetailTodoActivity extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                TodoItem uptatedItem = operations.readTodoDataFromComponents();
+                TodoItem uptatedItem = basicOperations.readTodoDataFromComponents();
                 uptatedItem.setId(currentTodoItem.getId());
                 Intent intent = new Intent();
                 intent.putExtra(String.valueOf(R.string.TODO_ITEM), uptatedItem);
@@ -206,7 +206,7 @@ public class DetailTodoActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(requestCode == R.integer.PICK_CONTACT_REQUEST && resultCode ==  RESULT_OK){
-            operations.addNewContactToList(data.getData());
+            basicOperations.addNewContactToList(data.getData());
         }
     }
 
@@ -258,13 +258,13 @@ public class DetailTodoActivity extends Activity {
 
 
         if(currentTodoItem.getContacts() != null && currentTodoItem.getContacts().size() > 0) {
-            operations.getContactListViewAdapter().clear();
+            basicOperations.getContactListViewAdapter().clear();
             for (String str : currentTodoItem.getContacts()) {
 
                 if(str != null) {
                     Uri uri = Uri.parse(str);
                     Log.i(TAG, uri.toString());
-                    operations.addNewContactToList(uri);
+                    basicOperations.addNewContactToList(uri);
                 }
             }
         }
@@ -313,7 +313,7 @@ public class DetailTodoActivity extends Activity {
             addContac.setVisibility(View.INVISIBLE);
         }
 
-        operations.showContactItemEements(isEditMode);
+        basicOperations.showContactItemEements(isEditMode);
     }
 
 

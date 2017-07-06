@@ -33,9 +33,9 @@ import cgellner.mytodo.model.TodoItem;
 /**
  * Created by Carolin on 22.06.2017.
  */
-public class HandleDetailImpl {
+public class BasicDetailViewOperations {
 
-    private String TAG = HandleDetailImpl.class.getSimpleName();
+    private String TAG = BasicDetailViewOperations.class.getSimpleName();
 
     public ArrayAdapter<Contact> getContactListViewAdapter() {
           return contactListViewAdapter;
@@ -46,7 +46,7 @@ public class HandleDetailImpl {
     private Activity baseActivity;
     private TodoItem currentTodoItem;
 
-    public HandleDetailImpl(Activity baseActivity, TodoItem currentTodoItem){
+    public BasicDetailViewOperations(Activity baseActivity, TodoItem currentTodoItem){
          this.baseActivity = baseActivity;
         this.currentTodoItem = currentTodoItem;
 
@@ -259,8 +259,6 @@ public class HandleDetailImpl {
     }
 
 
-
-    //TODO Mail und SMS versenden
     private void initContactListAdapter() {
 
         contactListViewAdapter = new ArrayAdapter<Contact>(baseActivity, R.layout.contact_list_item) {
