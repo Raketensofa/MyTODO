@@ -1,4 +1,4 @@
-package cgellner.mytodo;
+package cgellner.mytodo.activities;
 
 
 import android.app.Activity;
@@ -19,8 +19,10 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 
-import database.IRemoteInitAsync;
-import model.User;
+import cgellner.mytodo.basic_operations.MyTodoApplication;
+import cgellner.mytodo.R;
+import cgellner.mytodo.database.IRemoteInitAsync;
+import cgellner.mytodo.model.User;
 
 
 

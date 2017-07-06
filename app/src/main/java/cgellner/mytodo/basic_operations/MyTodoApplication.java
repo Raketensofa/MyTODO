@@ -1,4 +1,4 @@
-package cgellner.mytodo;
+package cgellner.mytodo.basic_operations;
 
 import android.app.Application;
 import android.content.Context;
@@ -8,14 +8,14 @@ import android.util.Log;
 
 import java.util.List;
 
-import database.IRemoteInit;
-import database.ITodoItemCRUD;
-import database.ITodoItemCRUDAsync;
-import database.IRemoteInitAsync;
-import database.LocalDatabaseImpl;
-import database.RemoteDatabaseImpl;
-import model.TodoItem;
-import model.User;
+import cgellner.mytodo.database.IRemoteInit;
+import cgellner.mytodo.database.ITodoItemCRUD;
+import cgellner.mytodo.database.ITodoItemCRUDAsync;
+import cgellner.mytodo.database.IRemoteInitAsync;
+import cgellner.mytodo.database.LocalDatabaseImpl;
+import cgellner.mytodo.database.RemoteDatabaseImpl;
+import cgellner.mytodo.model.TodoItem;
+import cgellner.mytodo.model.User;
 
 /**
  * Created by Carolin on 15.06.2017.

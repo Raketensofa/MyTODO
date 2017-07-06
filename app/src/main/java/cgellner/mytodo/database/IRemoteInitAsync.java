@@ -1,6 +1,6 @@
-package database;
+package cgellner.mytodo.database;
 
-import model.User;
+import cgellner.mytodo.model.User;
 
 /**
  * Created by Carolin on 16.06.2017.

@@ -1,12 +1,12 @@
-package database;
+package cgellner.mytodo.database;
 
 
 import android.util.Log;
 
 import java.util.List;
 
-import model.TodoItem;
-import model.User;
+import cgellner.mytodo.model.TodoItem;
+import cgellner.mytodo.model.User;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

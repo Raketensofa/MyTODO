@@ -1,4 +1,4 @@
-package database;
+package cgellner.mytodo.database;
 
 /**
  * Created by Carolin on 22.06.2017.

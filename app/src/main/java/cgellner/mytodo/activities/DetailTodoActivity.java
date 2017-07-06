@@ -1,4 +1,4 @@
-package cgellner.mytodo;
+package cgellner.mytodo.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,9 +21,10 @@ import android.widget.Toolbar;
 
 import java.util.Date;
 
-import database.Columns;
-import elements.HandleDetailImpl;
-import model.TodoItem;
+import cgellner.mytodo.R;
+import cgellner.mytodo.database.Columns;
+import cgellner.mytodo.basic_operations.HandleDetailImpl;
+import cgellner.mytodo.model.TodoItem;
 
 public class DetailTodoActivity extends Activity {
 

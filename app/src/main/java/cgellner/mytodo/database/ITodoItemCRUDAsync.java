@@ -1,8 +1,8 @@
-package database;
+package cgellner.mytodo.database;
 
 import java.util.List;
 
-import model.TodoItem;
+import cgellner.mytodo.model.TodoItem;
 
 /**
  * Created by Carolin on 15.06.2017.

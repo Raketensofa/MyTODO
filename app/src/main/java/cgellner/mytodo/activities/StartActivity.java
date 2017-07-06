@@ -1,4 +1,4 @@
-package cgellner.mytodo;
+package cgellner.mytodo.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -13,10 +13,11 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import database.IRemoteInitAsync;
-import database.ITodoItemCRUD;
-import database.ITodoItemCRUDAsync;
-import model.TodoItem;
+import cgellner.mytodo.basic_operations.MyTodoApplication;
+import cgellner.mytodo.database.IRemoteInitAsync;
+import cgellner.mytodo.database.ITodoItemCRUD;
+import cgellner.mytodo.database.ITodoItemCRUDAsync;
+import cgellner.mytodo.model.TodoItem;
 
 
 public class    StartActivity extends Activity{

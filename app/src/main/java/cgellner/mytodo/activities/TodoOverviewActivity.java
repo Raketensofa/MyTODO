@@ -1,4 +1,4 @@
-package cgellner.mytodo;
+package cgellner.mytodo.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -25,11 +25,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import database.Columns;
-import database.ITodoItemCRUD;
-import database.ITodoItemCRUDAsync;
-import elements.TodoListSortComparator;
-import model.TodoItem;
+import cgellner.mytodo.basic_operations.MyTodoApplication;
+import cgellner.mytodo.R;
+import cgellner.mytodo.database.Columns;
+import cgellner.mytodo.database.ITodoItemCRUD;
+import cgellner.mytodo.database.ITodoItemCRUDAsync;
+import cgellner.mytodo.elements.TodoListSortComparator;
+import cgellner.mytodo.model.TodoItem;
 
 public class TodoOverviewActivity extends Activity {
 

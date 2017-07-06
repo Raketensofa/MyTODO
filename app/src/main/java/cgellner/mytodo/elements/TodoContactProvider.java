@@ -1,4 +1,4 @@
-package elements;
+package cgellner.mytodo.elements;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
 
-import model.Contact;
+import cgellner.mytodo.model.Contact;
 
 /**
  * Created by Carolin on 22.05.2017.

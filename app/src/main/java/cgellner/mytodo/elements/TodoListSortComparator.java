@@ -1,10 +1,10 @@
-package elements;
+package cgellner.mytodo.elements;
 
 
 import java.util.Comparator;
 
 import cgellner.mytodo.R;
-import model.TodoItem;
+import cgellner.mytodo.model.TodoItem;
 
 /**
  * Created by Carolin on 17.06.2017.

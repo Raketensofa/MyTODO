@@ -1,4 +1,4 @@
-package cgellner.mytodo;
+package cgellner.mytodo.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,8 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toolbar;
 
-import elements.HandleDetailImpl;
-import model.TodoItem;
+import cgellner.mytodo.R;
+import cgellner.mytodo.basic_operations.HandleDetailImpl;
+import cgellner.mytodo.model.TodoItem;
 
 public class NewTodoActivity extends Activity{
 

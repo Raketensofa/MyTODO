@@ -1,4 +1,4 @@
-package elements;
+package cgellner.mytodo.basic_operations;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,10 +23,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import cgellner.mytodo.R;
-import cgellner.mytodo.NewTodoActivity;
-import cgellner.mytodo.DetailTodoActivity;
-import model.Contact;
-import model.TodoItem;
+import cgellner.mytodo.activities.NewTodoActivity;
+import cgellner.mytodo.activities.DetailTodoActivity;
+import cgellner.mytodo.elements.DateAndTimePicker;
+import cgellner.mytodo.elements.TodoContactProvider;
+import cgellner.mytodo.model.Contact;
+import cgellner.mytodo.model.TodoItem;
 
 /**
  * Created by Carolin on 22.06.2017.

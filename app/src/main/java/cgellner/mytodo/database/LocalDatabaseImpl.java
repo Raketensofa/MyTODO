@@ -1,4 +1,4 @@
-package database;
+package cgellner.mytodo.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.TodoItem;
+import cgellner.mytodo.model.TodoItem;
 
 /**
  * Created by Carolin on 08.06.2017.

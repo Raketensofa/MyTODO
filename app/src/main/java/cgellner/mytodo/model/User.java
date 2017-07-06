@@ -1,4 +1,4 @@
-package model;
+package cgellner.mytodo.model;
 
 /**
  * Created by Carolin on 21.04.2017.

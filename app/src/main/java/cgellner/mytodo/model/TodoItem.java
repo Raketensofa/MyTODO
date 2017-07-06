@@ -1,9 +1,7 @@
-package model;
+package cgellner.mytodo.model;
 
 import android.content.ContentValues;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -12,8 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cgellner.mytodo.R;
-import database.Columns;
+import cgellner.mytodo.database.Columns;
 
 /**
  * Created by Carolin on 21.04.2017.
