@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import database.IRemoteInitAsync;
+import database.ITodoItemCRUD;
 import database.ITodoItemCRUDAsync;
 import model.TodoItem;
 
@@ -23,6 +24,11 @@ public class    StartActivity extends Activity{
     private static String TAG = StartActivity.class.getSimpleName();
     private ProgressDialog progressDialog;
 
+    private ITodoItemCRUD localCrud;
+    private ITodoItemCRUDAsync remoteCrud;
+    private IRemoteInitAsync initAsync;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,12 +37,17 @@ public class    StartActivity extends Activity{
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 0);
         }
 
+        localCrud = ((MyTodoApplication) getApplication()).getLocalCrud();
+        remoteCrud =  ((MyTodoApplication) getApplication()).getCRUDOperationsImpl();
+        initAsync = ((MyTodoApplication) getApplication()).getRemoteInitImpl();
+
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("MyTODO");
         progressDialog.setMessage("Prüfe Verbindung zur externen Datenbank");
         progressDialog.show();
 
-        ((MyTodoApplication) getApplication()).getRemoteInitImpl().isConnected(new IRemoteInitAsync.CallbackFunction<Boolean>() {
+        initAsync.isConnected(new IRemoteInitAsync.CallbackFunction<Boolean>() {
 
             @Override
             public void process(Boolean result) {
@@ -93,7 +104,7 @@ public class    StartActivity extends Activity{
 
         Log.i(TAG, "starting compare Databases...");
 
-        final List<TodoItem> localItemList  = ((MyTodoApplication) getApplication()).getLocalCrud().readAllTodoItems();
+        final List<TodoItem> localItemList  = localCrud.readAllTodoItems();
 
         Log.i(TAG, "Local Database Size: " + localItemList.size());
 
@@ -101,7 +112,7 @@ public class    StartActivity extends Activity{
 
             Log.i(TAG, "Start to delete all remote items ...");
 
-            ((MyTodoApplication) getApplication()).getCRUDOperationsImpl().deleteAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<Boolean>() {
+            remoteCrud.deleteAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<Boolean>() {
                 @Override
                 public void process(Boolean result) {
 
@@ -131,7 +142,7 @@ public class    StartActivity extends Activity{
 
             for (TodoItem item : localTodoItems) {
 
-                ((MyTodoApplication) getApplication()).getCRUDOperationsImpl().createTodoItem(item, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
+                remoteCrud.createTodoItem(item, new ITodoItemCRUDAsync.CallbackFunction<TodoItem>() {
                     @Override
                     public void process(TodoItem result) {
 
@@ -150,7 +161,7 @@ public class    StartActivity extends Activity{
 
     private void addAllRemoteItemsToLocal() {
 
-        ((MyTodoApplication) getApplication()).getCRUDOperationsImpl().readAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<List<TodoItem>>() {
+        remoteCrud.readAllTodoItems(new ITodoItemCRUDAsync.CallbackFunction<List<TodoItem>>() {
             @Override
             public void process(List<TodoItem> result) {
 
@@ -160,7 +171,7 @@ public class    StartActivity extends Activity{
 
                     for (TodoItem item : result) {
 
-                        ((MyTodoApplication) getApplication()).getLocalCrud().createTodoItem(item);
+                        localCrud.createTodoItem(item);
                         Log.i(TAG, "Local Item created: " + item.toString());
                     }
                 }
