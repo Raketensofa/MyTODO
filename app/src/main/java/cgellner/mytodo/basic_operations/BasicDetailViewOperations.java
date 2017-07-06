@@ -241,13 +241,13 @@ public class BasicDetailViewOperations {
 
                     item.findViewById(R.id.imageview_delete_contact).setVisibility(View.INVISIBLE);
 
-                    if (contactListViewAdapter.getItem(i).getEmail().length() > 0 && contactlistView != null) {
+                    if (contactListViewAdapter.getItem(i).getEmail() != null && contactListViewAdapter.getItem(i).getEmail().length() > 0) {
                         item.findViewById(R.id.imageview_mail).setVisibility(View.VISIBLE);
                     } else {
                         item.findViewById(R.id.imageview_mail).setVisibility(View.INVISIBLE);
                     }
 
-                    if (contactListViewAdapter.getItem(i).getPhone().length() > 0 && contactlistView != null) {
+                    if (contactListViewAdapter.getItem(i).getPhone() != null && contactListViewAdapter.getItem(i).getPhone().length() > 0) {
                         item.findViewById(R.id.imageview_sms).setVisibility(View.VISIBLE);
                     } else {
                         item.findViewById(R.id.imageview_sms).setVisibility(View.INVISIBLE);
@@ -284,49 +284,56 @@ public class BasicDetailViewOperations {
                     itemView.setTag(itemViewHolder);
                 }
 
+
                 final Contact contact = getItem(position);
-                final ContactItemViewHolder viewHolder = (ContactItemViewHolder) itemView.getTag();
 
-                viewHolder.contact = contact;
-                viewHolder.contactName.setText(contact.getName());
+                if(contact != null) {
+                    final ContactItemViewHolder viewHolder = (ContactItemViewHolder) itemView.getTag();
 
+                    viewHolder.contact = contact;
 
-                if (contact.getEmail().length() > 0) {
-                    viewHolder.sendMail.setVisibility(View.VISIBLE);
-
-                    viewHolder.sendMail.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            sendEMail(contact.getEmail(), currentTodoItem.getName(), currentTodoItem.getDescription());
-                        }
-                    });
-
-                } else {
-                    viewHolder.sendMail.setVisibility(View.INVISIBLE);
-                }
-
-                if (contact.getPhone().length() > 0) {
-                    viewHolder.sendSMS.setVisibility(View.VISIBLE);
-                    viewHolder.sendSMS.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            sendSMS(contact.getPhone(), currentTodoItem.getName(), currentTodoItem.getDescription());
-                        }
-                    });
-
-                } else {
-                    viewHolder.sendSMS.setVisibility(View.INVISIBLE);
-                }
-
-
-                viewHolder.deleteContact.setClickable(true);
-                viewHolder.deleteContact.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        contactListViewAdapter.remove(contact);
-                        contactListViewAdapter.notifyDataSetChanged();
+                    if(contact.getName() != null) {
+                        viewHolder.contactName.setText(contact.getName());
                     }
-                });
+
+                    if (contact.getEmail() != null && contact.getEmail().length() > 0) {
+                        viewHolder.sendMail.setVisibility(View.VISIBLE);
+
+                        viewHolder.sendMail.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                sendEMail(contact.getEmail(), currentTodoItem.getName(), currentTodoItem.getDescription());
+                            }
+                        });
+
+                    } else {
+                        viewHolder.sendMail.setVisibility(View.INVISIBLE);
+                    }
+
+                    if (contact.getPhone() != null && contact.getPhone().length() > 0) {
+                        viewHolder.sendSMS.setVisibility(View.VISIBLE);
+                        viewHolder.sendSMS.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                sendSMS(contact.getPhone(), currentTodoItem.getName(), currentTodoItem.getDescription());
+                            }
+                        });
+
+                    } else {
+                        viewHolder.sendSMS.setVisibility(View.INVISIBLE);
+                    }
+
+
+                    viewHolder.deleteContact.setClickable(true);
+                    viewHolder.deleteContact.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            contactListViewAdapter.remove(contact);
+                            contactListViewAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+
 
                 return itemView;
             }

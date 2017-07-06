@@ -264,9 +264,10 @@ public class TodoOverviewActivity extends Activity {
         progressDialog.show();
 
         TodoItem updatedLocalItem = localCrudOperations.updateTodoItem(item);
-        Log.i(TAG, "updateTodoItem: " + updatedLocalItem.toString());
 
         if (updatedLocalItem != null) {
+
+            Log.i(TAG, "updateTodoItem: " + updatedLocalItem.toString());
 
             if (myTodoApplication.isConnToRemote()) {
 
@@ -450,12 +451,11 @@ public class TodoOverviewActivity extends Activity {
 
     private void markExpiredTodoItems(TextView view, long expiry) {
 
-        if (expiry > 0) {
-
+        if(expiry > 0){
             try {
 
                 Calendar cal = Calendar.getInstance();
-
+                cal.setTime(new Date());
                 if (expiry < cal.getTime().getTime()) {
 
                     view.setTextColor(Color.WHITE);
@@ -485,28 +485,30 @@ public class TodoOverviewActivity extends Activity {
         viewHolder.itemId = todoItem.getId();
         viewHolder.itemName.setText(todoItem.getName());
 
+
         if(todoItem.getExpiry() > 0) {
             String dateText = DateFormat.format("dd.MM.yyyy", new Date(todoItem.getExpiry())).toString();
             String timeText = DateFormat.format("HH:mm", new Date(todoItem.getExpiry())).toString();
             viewHolder.itemDeadline.setText(dateText + " " + timeText);
             markExpiredTodoItems(viewHolder.itemDeadline, todoItem.getExpiry());
 
+
         }else{
             viewHolder.itemDeadline.setText("");
         }
 
-        if (todoItem.getIsFavourite() == true) {
+        if (todoItem.getIsFavourite()) {
             viewHolder.itemIsFavourite.setTag("IS_FAV");
             viewHolder.itemIsFavourite.setImageResource(R.drawable.yellow_star_1);
-        } else if (todoItem.getIsFavourite() == false) {
+        } else  {
             viewHolder.itemIsFavourite.setTag("IS_NOT_FAV");
             viewHolder.itemIsFavourite.setImageResource(R.drawable.icons8sternfilled50);
         }
 
-        if (todoItem.getIsDone() == true) {
+        if (todoItem.getIsDone()) {
             viewHolder.itemIsDone.setTag("IS_DONE");
             viewHolder.itemIsDone.setImageResource(R.drawable.filled_checkbox_23);
-        } else if (todoItem.getIsDone() == false) {
+        } else {
             viewHolder.itemIsDone.setTag("IS_NOT_DONE");
             viewHolder.itemIsDone.setImageResource(R.drawable.unfilled_checkbox34);
         }
