@@ -460,7 +460,7 @@ This section contains general information about the software.
     <td>50</td>
     <td>Die architektonisch relevanten Klassen der Anwendung sollen hinsichtlich ihrer relevanten Attribute und Methoden dokumentiert und zueinander in Beziehung gesetzt werden.</td>
     <td>6</td>
-    <td></td>
+    <td>&times;</td>
   </tr>
   
 </table>
