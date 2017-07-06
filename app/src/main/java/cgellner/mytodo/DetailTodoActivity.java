@@ -48,7 +48,7 @@ public class DetailTodoActivity extends Activity {
 
         initToolbar();
 
-        operations = new HandleDetailImpl(this);
+        operations = new HandleDetailImpl(this, currentTodoItem);
 
         setTodoDataToComponents();
     }
@@ -238,7 +238,7 @@ public class DetailTodoActivity extends Activity {
 
         if (currentTodoItem.getExpiry() > 0) {
             itemDate.setText(DateFormat.format("dd.MM.yyyy", new Date(currentTodoItem.getExpiry())).toString());
-            itemTime.setText(DateFormat.format("hh:mm", new Date(currentTodoItem.getExpiry())).toString());
+            itemTime.setText(DateFormat.format("HH:mm", new Date(currentTodoItem.getExpiry())).toString());
         }
 
         itemFav.setChecked(currentTodoItem.getIsFavourite());
@@ -257,6 +257,7 @@ public class DetailTodoActivity extends Activity {
 
 
         if(currentTodoItem.getContacts() != null && currentTodoItem.getContacts().size() > 0) {
+            operations.getContactListViewAdapter().clear();
             for (String str : currentTodoItem.getContacts()) {
 
                 if(str != null) {
@@ -305,11 +306,13 @@ public class DetailTodoActivity extends Activity {
             itemDone.setVisibility(View.INVISIBLE);
         }
 
-        if (isEditMode == true) {
+        if (isEditMode) {
             addContac.setVisibility(View.VISIBLE);
         } else {
             addContac.setVisibility(View.INVISIBLE);
         }
+
+        operations.showContactItemEements(isEditMode);
     }
 
 
