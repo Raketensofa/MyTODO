@@ -19,7 +19,11 @@ This section contains general information about the software.
     <td>Uni Project | single - no teamwork | subject: mobile application development</td>
    <tr>
     <td>Period</td>
-    <td>summer semester 2017 | finished 06.07.2017</td>
+    <td>summer semester 2017 | started: 21.04.2017 - finished 06.07.2017</td>
+   <tr>
+    <td>Result</td>
+    <td>98% - grade: 1.0 </td>
+  </tr>
    <tr>
     <td>Function</td>
     <td>Manage your todos</td>
