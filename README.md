@@ -1,13 +1,14 @@
 # MyTodo [Android App | Uni Project]
 
-<p>
-This readme contains the most important information about the android application MyTodo and logs the implemented requirements.
+<p align="center">
+  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201603.png" width="250" title="Startseite">
+  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201628.png" width="250" title="Neues Todo anlegen">
+  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201655.png" width="250" title="Todo Detail">
 </p>
 
 <h2><b>General Information</b></h2>
 
 <p>
-This section contains general information about the software.
 </p>
 <table>
   <tr>
@@ -469,11 +470,3 @@ This section contains general information about the software.
   
 </table>
 
-
-
-
-<p align="center">
-  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201603.png" width="250" title="Startseite">
-  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201628.png" width="250" title="Neues Todo anlegen">
-  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201655.png" width="250" title="Todo Detail">
-</p>
