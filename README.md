@@ -473,7 +473,7 @@ This section contains general information about the software.
 
 
 <p align="center">
-  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201603.png" width="300" title="Startseite">
-  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201628.png" width="300" title="Todo Detail">
-  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201655.png" width="300" title="Todo Detail 2">
+  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201603.png" width="250" title="Startseite">
+  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201628.png" width="250" title="Neues Todo anlegen">
+  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201655.png" width="250" title="Todo Detail">
 </p>
