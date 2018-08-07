@@ -472,7 +472,8 @@ This section contains general information about the software.
 
 
 
-![alt text]()
 <p align="center">
-  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201603.png" width="50" title="hover text">
+  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201603.png" width="200" title="hover text">
+  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201628.png" width="200" title="hover text">
+  <img src="https://github.com/carolingellner/MyTODO/blob/master/Screenshot_20180807-201655.png" width="200" title="hover text">
 </p>
