@@ -1,4 +1,4 @@
-# MyTodo [Android App | Uni Project]
+# MyTodo [Android App | Uni Project (Master)]
 
 <h2><b>General Information</b></h2>
 
